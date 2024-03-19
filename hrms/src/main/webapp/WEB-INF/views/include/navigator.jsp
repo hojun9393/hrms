@@ -44,7 +44,7 @@
 			</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" href="/sign/main.do"> 
+			<a class="nav-link" href="${pageContext.request.contextPath}/sign/main.do"> 
 				<i class="fas fa-fw fa-file-signature"></i> 
 				<span>결재</span>
 			</a>

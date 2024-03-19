@@ -11,7 +11,7 @@
 	<!-- } -->
 	
 	<!-- 캘린더(데이트피커) 스타일 (jquery-ui.css 파일호출 보다 아래에 있어야 합니다.) { -->
-	<link href="css/sign.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/resources/css/sign.css" rel="stylesheet">
 </head>
 <body id="page-top">
 	<!-- Begin Page Content -->
@@ -34,9 +34,8 @@
 				</div>
 			</div>
 			<div class="card-body">
-				<!-- 적용은 input에 class="datepicker" 만 추가하시면 됩니다. { -->
-
 				<div class="row">
+					<!--datepicker{ -->
 					<div class="mb-3 col">
 						<input type="text" name="" value="" id="startDate" class="datepicker inp" placeholder="시작일 선택" readonly="true">
 						<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)"
@@ -59,12 +58,7 @@
 							<i class="fas fa-lg fa-search text-white"></i>
 						</div>
 					</div>
-
-				</div>
-
-
-				<!-- 캘린더 옵션 { -->
-				<script src="js/calendar2.js"></script>
+				</div>				
 
 				<div class="table-responsive">
 					<table class="table table-bordered text-center docuTable" id="dataTable" width="100%" cellspacing="0">
@@ -245,6 +239,8 @@
 		</div>
 
 	</div>
+<!-- 캘린더 옵션 { -->
+<script src="${pageContext.request.contextPath}/resources/js/calendar2.js"></script>
 <!-- /.container-fluid -->
-<script src="resources/js/sign_main.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
 <%@ include file="../include/footer.jsp"%>
