@@ -22,7 +22,6 @@
     <link href="resources/css/calendar.css" rel="stylesheet">
     <link href="resources/css/modal.css" rel="stylesheet">
     <link href="resources/css/modal2.css" rel="stylesheet">
-    <link href="resources/css/table.css" rel="stylesheet">
     <link href="resources/css/etc.css" rel="stylesheet">
 </head>
 
