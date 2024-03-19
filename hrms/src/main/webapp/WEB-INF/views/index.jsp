@@ -24,10 +24,10 @@
 							<div class="h5 mb-2 font-weight-bold text-gray-800">08:50:30</div>
 						</div>
 						<div class="col-auto">
-							<a href="#" class="btn btn-primary btn-icon-split mini"> 
+							<a href="#" class="btn btn-primary btn-icon-split"> 
 								<span class="text">출근</span>
 							</a> 
-							<a href="#" class="btn btn-danger btn-icon-split mini"> 
+							<a href="#" class="btn btn-danger btn-icon-split"> 
 								<span class="text">퇴근</span>
 							</a>
 						</div>
