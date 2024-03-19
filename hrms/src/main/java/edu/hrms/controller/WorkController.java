@@ -23,6 +23,7 @@ public class WorkController {
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
 	public String main(Model model) {
+		
 		return "/work/main";
 	}
 	
