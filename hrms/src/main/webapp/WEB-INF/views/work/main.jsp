@@ -24,14 +24,28 @@
 							<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">오늘 근무 시간</div>
 							<div class="h5 mb-0 font-weight-bold text-gray-800">
 								<span id="goToWorkClock"></span> ~
-								<span id="leaveClock"></span>
+								<span id="leaveWorkClock"></span>
 							</div>
-							<button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="goToWorkFn()">
-								출근하기
-							</button>
-							<button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-								퇴근하기
-							</button>
+							<c:if test="${start == null}">
+								<button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="workFn('GO')">
+									출근하기
+								</button>
+							</c:if>
+							<c:if test="${start != null}">
+								<button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" onclick="workFn('GO')">
+									출근하기
+								</button>
+							</c:if>
+							<c:if test="${end == null }">
+								<button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="workFn('LEAVE')">
+									퇴근하기
+								</button>
+							</c:if>
+							<c:if test="${end != null }">
+								<button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" onclick="workFn('LEAVE')">
+									퇴근하기
+								</button>
+							</c:if>
 						</div>
 						<div class="col-auto">
 							<i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -48,7 +62,8 @@
 					<div class="row no-gutters align-items-center">
 						<div class="col mr-2">
 							<div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-								금주 누적 근무</div>
+								금주 누적 근무
+							</div>
 							<div class="row no-gutters align-items-center">
 								<div class="col-auto">
 									<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">8:30:30</div>
@@ -266,47 +281,80 @@
 	const goToWorkClock = document.querySelector("#goToWorkClock");
 	const leaveWorkClock = document.querySelector("#leaveWorkClock");
 	
+	let start = '${start}';
+	let end = '${end}';
+	
+	console.log(start);
+	console.log(end);
+	
 	function getClock() {
-	    const date = new Date();
-	    const hours = String(date.getHours()).padStart(2, "0");
-	    const min = String(date.getMinutes()).padStart(2, "0");
-	    const sec = String(date.getSeconds()).padStart(2, "0");
-	    //clock.innerText = `${hours}:${min}:${sec}`;
-	    goToWorkClock.innerText = hours+":"+min+":"+sec;
+	   const date = new Date();
+	   const hours = String(date.getHours()).padStart(2, "0");
+	   const min = String(date.getMinutes()).padStart(2, "0");
+	   const sec = String(date.getSeconds()).padStart(2, "0");
+	   //clock.innerText = `${hours}:${min}:${sec}`;
+	   if(start==""){
+	   	goToWorkClock.innerText = hours+":"+min+":"+sec;
+	   }else{
+	   	goToWorkClock.innerText = start;
+		   if(end==""){
+		   	leaveWorkClock.innerText = hours+":"+min+":"+sec;
+		   }else{
+			   leaveWorkClock.innerText = end;
+		   }
+	   }
 	}
 	
 	getClock();
 	let clockVar = setInterval(getClock, 1000);
 	
-	// 출근 시간 표시
-	function goToWorkFn(){
-		if(isGoToWork==false){
-			clearInterval(clockVar);
-			const date = new Date();
-			const year = date.getFullYear();
-			const month = ('0' + (date.getMonth() + 1)).slice(-2);
-			const day = ('0' + date.getDate()).slice(-2);
-		   const hours = String(date.getHours()).padStart(2, "0");
-		   const min = String(date.getMinutes()).padStart(2, "0");
-		   const sec = String(date.getSeconds()).padStart(2, "0");
-		   
-			const dateStr = year+"-"+month+"-"+day;
-			const startStr = hours+":"+min+":"+sec;
+	function workFn(obj){
+		const date = new Date();
+		const year = date.getFullYear();
+		const month = ('0' + (date.getMonth() + 1)).slice(-2);
+		const day = ('0' + date.getDate()).slice(-2);
+	   const hours = String(date.getHours()).padStart(2, "0");
+	   const min = String(date.getMinutes()).padStart(2, "0");
+	   const sec = String(date.getSeconds()).padStart(2, "0");
+	   
+		const dateStr = year+"-"+month+"-"+day;
+		const timeStr = hours+":"+min+":"+sec;
+		
+		if(obj=="GO"){
+			if(start==""){
+				clearInterval(clockVar);
+				let goOrLeave = "GO";
+			   $.ajax({
+					url:"workInsert.do",
+					data: {dateStr : dateStr, timeStr : timeStr, goOrLeave : goOrLeave},
+					success:function(data){
+						alert("출근 처리 되었습니다.");
+						location.href="main.do";
+					}
+				});
+			   
+			}else{
+				alert("이미 출근 처리되었습니다.");
+			}
 			
-		   $.ajax({
-				url:"goToWork.do",
-				data: {dateStr : dateStr, startStr : startStr},
-				success:function(data){
-					alert("출근 처리 되었습니다.");
-				}
-			});
-		   
-		}else{
-			alert("이미 출근 처리되었습니다.");
+		}else if(obj=="LEAVE"){
+			if(start==""){
+				alert("출근 처리가 완료되지 않았습니다.");
+			}else{
+				clearInterval(clockVar);
+				let goOrLeave = "LEAVE";
+			   $.ajax({
+					url:"workInsert.do",
+					data: {dateStr : dateStr, timeStr : timeStr, goOrLeave : goOrLeave},
+					success:function(data){
+						alert("퇴근 처리 되었습니다.");
+						location.href="main.do";
+					}
+				});
+			}
 		}
 	   
 	}
-	
 	
 	
 </script>

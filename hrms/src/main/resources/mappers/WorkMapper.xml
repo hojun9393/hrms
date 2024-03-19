@@ -3,16 +3,28 @@
 			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.hrms.mappers.workMapper">
 	
+	<select id="select" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
+		SELECT * FROM work
+			WHERE userid = #{userid} 
+				AND DATE = #{now}
+	</select>
+	
 	<insert id="insert" parameterType="java.util.Map">	
-		insert into work(userid
+		INSERT INTO work(userid
 		     		   , date
-		     		   , start
-		     		   , end) 
-		          values(10001
+		     		   , start) 
+		          VALUES (#{userid}
 		               , #{date}
-		               , #{start}
-		               , #{end})
+		               , #{time})
 	</insert>
+	
+	<update id="update" parameterType="java.util.Map">
+		UPDATE work 
+			SET end = #{time}
+		   WHERE userid = #{userid}
+		   	AND date = #{date}
+	</update>
+	
 </mapper>
 
 

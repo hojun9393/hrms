@@ -29,7 +29,7 @@ public class UserAuthenticationService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	
 		Map<String, Object> user = 
-				sqlSession.selectOne("edu.springboard.mapper.userMapper.selectLogin", username);
+				sqlSession.selectOne("edu.hrms.mappers.userMapper.selectLogin", username);
 		
 		if(user == null) {
 			throw new UsernameNotFoundException(username);
