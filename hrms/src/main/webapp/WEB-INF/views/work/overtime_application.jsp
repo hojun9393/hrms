@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="include/navigator.jsp"%>
+<%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -118,7 +118,7 @@
 
 </div>
 
-<script src="js/modal2.js"></script>
-<script src="js/calendar.js"></script>
+<script src="resources/js/modal2.js"></script>
+<script src="resources/js/calendar.js"></script>
 <!-- /.container-fluid -->
-<%@ include file="include/footer.jsp"%>
+<%@ include file="../include/footer.jsp"%>

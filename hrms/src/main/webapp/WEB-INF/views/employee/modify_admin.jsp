@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="include/navigator.jsp"%>
+<%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -13,7 +13,7 @@
 
 			<div class="card mb-4 py-3 border-bottom-primary">
 				<div class="card-body">
-					<span class="content-head">사원 정보 수정</span>
+					<span class="content-head">내 정보 수정</span>
 				</div>
 			</div>
 			<div class="card o-hidden border-0 shadow-lg my-5">
@@ -29,12 +29,44 @@
 										<span class="text-content">100001</span>
 									</div>
 									<div class="row my-info-content">
+										<span class="text-head2">현재 비밀번호</span>
+										<input type="password" class="form-control-custom">
+									</div>
+									<div class="row my-info-content">
 										<span class="text-head2">새 비밀번호</span>
 										<input type="password" class="form-control-custom">
 									</div>
 									<div class="row my-info-content">
 										<span class="text-head2">새 비밀번호 확인</span>
 										<input type="password" class="form-control-custom">
+									</div>
+									<div class="row my-info-content">
+										<span class="text-head2">이름</span>
+										<input type="text" class="form-control-custom">
+									</div>
+									<div class="row my-info-content">
+										<span class="text-head2">부서</span>
+										<select>
+											<option>개발부</option>
+											<option>영업부</option>
+											<option>기획부</option>
+										</select>
+									</div>
+									<div class="row my-info-content">
+										<span class="text-head2">직급</span>
+										<select>
+											<option>사원</option>
+											<option>팀장</option>
+											<option>부장</option>
+										</select>
+									</div>
+									<div class="row my-info-content">
+										<span class="text-head2">상태</span>
+										<select>
+											<option>재직</option>
+											<option>휴직</option>
+											<option>퇴사</option>
+										</select>
 									</div>
 									<div class="row my-info-content">
 										<span class="text-head2">연락처</span>
@@ -73,4 +105,4 @@
 	</div>
 </div>
 <!-- /.container-fluid -->
-<%@ include file="include/footer.jsp"%>
+<%@ include file="../include/footer.jsp"%>

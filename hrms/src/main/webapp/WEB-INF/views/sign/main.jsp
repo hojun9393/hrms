@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="include/navigator.jsp"%>
+<%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -245,6 +245,6 @@
 		</div>
 
 	</div>
-	<!-- /.container-fluid -->
-	<script src="js/sign_main.js"></script>
-	<%@ include file="include/footer.jsp"%>
+<!-- /.container-fluid -->
+<script src="resources/js/sign_main.js"></script>
+<%@ include file="../include/footer.jsp"%>

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="include/navigator.jsp"%>
+<%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -187,7 +187,7 @@
 
 <!-- End of Main Content -->
 
-<script src="js/menu.js"></script>
-<script src="js/jquery-3.7.1.min.js"></script>
-<script src="js/modal.js"></script>
-<%@ include file="/include/footer.jsp"%>
+<script src="resources/js/menu.js"></script>
+<script src="resources/js/jquery-3.7.1.min.js"></script>
+<script src="resources/js/modal.js"></script>
+<%@ include file="../include/footer.jsp"%>

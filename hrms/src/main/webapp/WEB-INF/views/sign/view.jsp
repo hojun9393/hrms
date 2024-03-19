@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="include/navigator.jsp" %>
+<%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
 <link href="css/sign_view.css" rel="stylesheet">
 
@@ -97,4 +97,4 @@
 
 </div>
 <!-- /.container-fluid -->
-<%@ include file="include/footer.jsp"%>
+<%@ include file="../include/footer.jsp"%>

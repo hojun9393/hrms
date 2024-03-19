@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ include file="include/navigator.jsp"%>
+<%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
 		<!-- Begin Page Content -->
 		<div class="container-fluid">
@@ -257,7 +257,7 @@
 		</div>
 
 <!-- End of Main Content -->
-<script src="js/work_menu.js"></script>
-<script src="js/clock.js"></script>
-<script src="js/modal2.js"></script>
-<%@ include file="/include/footer.jsp"%>
+<script src="resources/js/work_menu.js"></script>
+<script src="resources/js/clock.js"></script>
+<script src="resources/js/modal2.js"></script>
+<%@ include file="../include/footer.jsp"%>
