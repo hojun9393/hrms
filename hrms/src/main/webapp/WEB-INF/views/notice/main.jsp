@@ -56,7 +56,7 @@
 							id="dataTable_previous">
 							<a href="#" aria-controls="dataTable" data-dt-idx="0"
 							tabindex="0" class="page-link">Previous</a>
-							</li>
+							</li> 
 							<li class="paginate_button page-item active">
 							<a href="#" aria-controls="dataTable" data-dt-idx="1"
 							tabindex="0" class="page-link">1</a>
