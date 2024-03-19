@@ -27,6 +27,7 @@
 	<context:component-scan base-package="edu.hrms.service" />
 	<context:component-scan base-package="edu.hrms.dao" />
 	<context:component-scan base-package="edu.hrms.vo" />
+	<context:component-scan base-package="edu.hrms.util" />
 	
 	<security:global-method-security secured-annotations="enabled"/>
 	

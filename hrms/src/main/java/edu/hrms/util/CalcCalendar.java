@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class CalcCalendar {
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
@@ -18,6 +21,7 @@ public class CalcCalendar {
 		
 		return calendar.get(Calendar.WEEK_OF_YEAR);
 	}
+	
 	
 	
 
