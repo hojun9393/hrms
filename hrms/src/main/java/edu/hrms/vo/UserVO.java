@@ -11,10 +11,36 @@ public class UserVO extends User {
 	private String name;
 	private String password;
 	private String authority;
+	private String email;
+	private String dept;
+	private String position;
+	private String joinDate;
+	private String retireDate;
+	private int state;
+	private String phone;
+	private String addr;
+	private int keepVaca;
+	private int useVaca;
 
+	
+	public UserVO(String username, String password, boolean enabled, boolean accountNonExpired,
+			boolean credentialsNonExpired, boolean accountNonLocked,
+			Collection<? extends GrantedAuthority> authorities,String authority,String name) {
+		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+		
+		// security 외 필요한 유저 정보를 추가한다.
+		this.userid =username;
+		this.password = password;
+		this.authority = authority;
+		this.name=name;
+	}
+	
+	
 	public UserVO(String username, String password, boolean enabled, boolean accountNonExpired,
 					boolean credentialsNonExpired, boolean accountNonLocked,
-					Collection<? extends GrantedAuthority> authorities, String authority, String name) {
+					Collection<? extends GrantedAuthority> authorities, String authority, String name,
+					String email, String dept, String position, String joinDate, String retireDate, int state,
+					String phone, String addr, int keepVaca, int useVaca) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		
 		// security 외 필요한 유저 정보를 추가한다.
@@ -22,6 +48,97 @@ public class UserVO extends User {
 		this.name = name;
 		this.password = password;
 		this.authority = authority;
+		this.email = email;
+		this.dept = dept;
+		this.position = position;
+		this.joinDate = joinDate;
+		this.retireDate = retireDate;
+		this.state = state;
+		this.phone = phone;
+		this.addr = addr;
+		this.keepVaca = keepVaca;
+		this.useVaca = useVaca;
+	}
+
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getDept() {
+		return dept;
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public String getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(String joinDate) {
+		this.joinDate = joinDate;
+	}
+
+	public String getRetireDate() {
+		return retireDate;
+	}
+
+	public void setRetireDate(String retireDate) {
+		this.retireDate = retireDate;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAddr() {
+		return addr;
+	}
+
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+
+	public int getKeepVaca() {
+		return keepVaca;
+	}
+
+	public void setKeepVaca(int keepVaca) {
+		this.keepVaca = keepVaca;
+	}
+
+	public int getUseVaca() {
+		return useVaca;
+	}
+
+	public void setUseVaca(int useVaca) {
+		this.useVaca = useVaca;
 	}
 
 	public String getUserid() {
