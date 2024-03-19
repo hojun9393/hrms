@@ -71,6 +71,82 @@
 							</tr>
 						</thead>
 						<tbody>
+							<c:forEach items="${list.docVO}" var="vo">
+					 			<tr>
+									<td>
+										<c:choose>
+											<c:when test="${vo.dept eq 'M'}">
+												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">관리부</div>
+											</c:when>
+											<c:when test="${vo.dept eq 'D'}">
+												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">개발부</div>
+											</c:when>
+											<c:when test="${vo.dept eq 'S'}">
+												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">영업부</div>
+											</c:when>
+											<c:when test="${vo.dept eq 'P'}">
+												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
+											</c:when>
+											<c:when test="${vo.dept eq 'H'}">
+												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">인사부</div>
+											</c:when>
+											<c:otherwise>
+												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">부서미정</div>
+											</c:otherwise>
+										</c:choose>
+										<span class="text-dark font-weight-bold">${vo.name}</span> 
+										<c:choose>
+											<c:when test="${vo.position eq 'A'}">
+												<span class="text-xs font-weight-bold">관리자</span>
+											</c:when>
+											<c:when test="${vo.position eq 'C'}">
+												<span class="text-xs font-weight-bold">대표</span>
+											</c:when>
+											<c:when test="${vo.position eq 'D'}">
+												<span class="text-xs font-weight-bold">부장</span>
+											</c:when>
+											<c:when test="${vo.position eq 'L'}">
+												<span class="text-xs font-weight-bold">팀장</span>
+											</c:when>
+											<c:when test="${vo.position eq 'E'}">
+												<span class="text-xs font-weight-bold">사원</span>
+											</c:when>
+											<c:otherwise>
+												<span class="text-xs font-weight-bold">직급미정</span>
+											</c:otherwise>
+										</c:choose>
+									</td>
+									<td>
+										<c:choose>
+											<c:when test="${vo.position eq 'A'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+											</c:when>
+											<c:when test="${vo.position eq 'C'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+											</c:when>
+											<c:when test="${vo.position eq 'D'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+											</c:when>
+											<c:when test="${vo.position eq 'L'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+											</c:when>
+											<c:when test="${vo.position eq 'E'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+											</c:when>
+											<c:otherwise>
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+											</c:otherwise>
+										</c:choose>
+										<a href="view.do">AccountantAccountantAccountant</a>
+									</td>
+									<td>
+										<div class="text-dark">${vo.date}</div>
+									</td>
+									<td>
+										<div class="d-inline card bg-info text-white text-center px-3 py-1">승인 완료</div>
+									</td>
+								</tr>
+					 		</c:forEach>
 							<tr>
 								<td>
 									<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
@@ -79,7 +155,7 @@
 								</td>
 								<td>
 									<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
-									<a href="signView.jsp">AccountantAccountantAccountant</a>
+									<a href="view.do">AccountantAccountantAccountant</a>
 								</td>
 								<td>
 									<div class="text-dark">2024-03-18</div>
