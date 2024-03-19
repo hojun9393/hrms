@@ -187,7 +187,7 @@
 
 <!-- End of Main Content -->
 
-<script src="${pageContext.request.contextPath}/resources/js/menu.js"></script>
+<script src="/resources/js/menu.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/jquery-3.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/modal.js"></script>
 <%@ include file="../include/footer.jsp"%>

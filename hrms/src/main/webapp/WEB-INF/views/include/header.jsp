@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +19,7 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
+    <script src="${pageContext.request.contextPath}/resources/js/jquery-3.7.1.min.js"></script>
     <link href="${pageContext.request.contextPath}/resources/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/calendar.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/modal.css" rel="stylesheet">

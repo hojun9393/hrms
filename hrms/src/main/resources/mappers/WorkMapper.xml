@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.hrms.mappers.workMapper">
+	
+	<insert id="insert" parameterType="java.util.Map">	
+		insert into work(userid
+		     		   , date
+		     		   , start
+		     		   , end) 
+		          values(10001
+		               , #{date}
+		               , #{start}
+		               , #{end})
+	</insert>
+</mapper>
+
+
+
