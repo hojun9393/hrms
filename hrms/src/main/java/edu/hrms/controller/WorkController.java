@@ -1,8 +1,11 @@
 package edu.hrms.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +26,7 @@ public class WorkController {
 	WorkService workService;
 	
 	@Autowired
-	CalcCalendar calCalendar;
+	CalcCalendar calcCalendar;
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
 	public String main(Model model) {
@@ -36,17 +39,16 @@ public class WorkController {
 		map.put("userid", userid);
 		map.put("now", now);
 		
-		WorkVO vo = workService.selectStart(map);
+		WorkVO vo = workService.select(map);
 
 		if(vo!=null) {
 			model.addAttribute("start", vo.getStart());
 			model.addAttribute("end", vo.getEnd());
 		}
 		
-		int thisWeek = calCalendar.getWeekOfYear(now);
-		
-		System.out.println(thisWeek);
-		
+		Map<String, String> workTimeMap = calcCalendar.getFirstLastDays(now);
+		String workTime = workService.selectThisWeek(workTimeMap);
+		model.addAttribute("workTime", workTime);
 		
 		return "/work/main";
 	}
@@ -71,8 +73,34 @@ public class WorkController {
 		return "ajax success";
 	}
 	
+	@RequestMapping(value = "/overtimeApplication.do", method = RequestMethod.GET)
+	public String overtimeApplication() {
+		return "/work/overtime_application";
+	}
 	
-	
+	@RequestMapping(value = "/overtimeApplication.do", method = RequestMethod.POST)
+	public void overtimeApplication(HttpServletResponse response, String date, String start, String end, String content) throws IOException {
+		
+		Map<String, String> map = new HashMap<>();
+		String userid = "10001";
+		map.put("userid", userid);
+		map.put("date", date);
+		map.put("start", start);
+		map.put("end", end);
+		map.put("content", content);
+		
+		int result = workService.insertOvertime(map);
+		
+		response.setContentType("text/html; charset=utf-8");
+		response.setCharacterEncoding("UTF-8");
+		
+		if(result>0) {
+			response.getWriter().append("<script>alert('초과근무 신청이 완료되었습니다.');location.href='controller/work/main.do';</script>");
+		}else {
+			response.getWriter().append("<script>alert('오류가 발생하였습니다.');location.href='controller/work/main.do';</script>");
+		}
+		response.getWriter().flush();
+	}
 	
 	
 	

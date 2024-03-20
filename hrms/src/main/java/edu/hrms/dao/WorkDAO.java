@@ -20,12 +20,20 @@ public class WorkDAO {
 		return sqlSession.selectOne(namespace+".select", map);
 	}
 	
+	public String selectThisWeek(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".selectThisWeek", map);
+	}
+	
 	public int insert(Map<String, String> map) {
 		return sqlSession.insert(namespace+".insert", map);
 	}
 	
 	public int update(Map<String, String> map) {
 		return sqlSession.update(namespace+".update", map);
+	}
+	
+	public int insertOvertime(Map<String, String> map) {
+		return sqlSession.insert(namespace+".insertOvertime", map);
 	}
 	
 }

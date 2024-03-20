@@ -15,8 +15,13 @@ public class WorkServiceImpl implements WorkService {
 	WorkDAO workDAO;
 	
 	@Override
-	public WorkVO selectStart(Map<String, String> map) {
+	public WorkVO select(Map<String, String> map) {
 		return workDAO.select(map);
+	}
+	
+	@Override
+	public String selectThisWeek(Map<String, String> map) {
+		return workDAO.selectThisWeek(map);
 	}
 	
 	@Override
@@ -29,5 +34,9 @@ public class WorkServiceImpl implements WorkService {
 		return workDAO.update(map);
 	}
 	
+	@Override
+	public int insertOvertime(Map<String, String> map) {
+		return workDAO.insertOvertime(map);
+	}
 	
 }
