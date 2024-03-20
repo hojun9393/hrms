@@ -28,8 +28,29 @@
 	</update>
 	
 	<insert id="insertOvertime" parameterType="java.util.Map">	
-		INSERT INTO overtime (userid, date, start, end, content ) 
+		INSERT INTO overtime (userid, date, start, end, content) 
 						VALUES   (#{userid}, #{date}, #{start}, #{end}, #{content})
+	</insert>
+	
+	<select id="getSignLineList" parameterType="java.util.Map" resultType="edu.hrms.vo.SignLineVO">
+		SELECT s.signLineNo, s.userid, u.position, s.type, s.signOrder 
+			FROM signline s 
+			INNER JOIN user u ON s.userid = u.userid
+			WHERE (type='O' OR type='A') AND
+		  			(SUBSTRING(s.userid,1,2) = SUBSTRING(#{userid},1,2) OR s.userid='99000') AND
+		  			u.position IN 
+		  			<foreach item="item" index="index" collection="positionArr" open="(" separator="," close=")">
+		  				#{item}
+		  			</foreach>
+	</select>
+	
+	<select id="getMaxNoByUserId" parameterType="String" resultType="int">
+		SELECT * FROM overtime 
+			WHERE overtimeno = (SELECT MAX(overtimeNo) FROM overtime WHERE userid = #{userid})
+	</select>
+	
+	<insert id="insertSign" parameterType="List">
+		INSERT INTO overtimesign ()
 	</insert>
 	
 </mapper>

@@ -34,7 +34,7 @@
 							<div class="col-lg-3 d-none d-lg-block"></div>
 							<div class="col-lg-6">
 								<div class="p-5">
-									<form class="user" onsubmit="return submitFn()">
+									<form class="user" onsubmit="return submitFn()" method="post">
 										<div class="form-group">
 											결재
 											<div class="row">
@@ -55,7 +55,7 @@
 												<input type="text" name="date" id="startDate" class="datepicker inp" placeholder="날짜 선택" readonly="true">
 												<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)" style="cursor: pointer;"></i>
 												&nbsp;&nbsp;&nbsp;
-												<select name="start" id="startTime">
+												<select name="start" id="startTime" onchange="itemChange()">
 													<option value="NONE">시작 시간</option>
 													<option value="18:00">18:00</option>
 													<option value="19:00">19:00</option>
@@ -66,12 +66,6 @@
 												</select> ~ 
 												<select name="end" id="endTime">
 													<option value="NONE">종료 시간</option>
-													<option value="19:00">19:00</option>
-													<option value="20:00">20:00</option>
-													<option value="21:00">21:00</option>
-													<option value="22:00">22:00</option>
-													<option value="23:00">23:00</option>
-													<option value="24:00">24:00</option>
 												</select> 
 											</div>
 										</div>
@@ -85,7 +79,7 @@
 												<a href="main.do" class="btn btn-secondary btn-user btn-block">목록으로</a> 
 											</div>
 											<div class="col-lg-6">
-												<button class="btn btn-primary btn-user btn-block">작성완료</button> 
+												<button class="btn btn-primary btn-user btn-block">초과신청</button> 
 											</div>
 										</div>
 									</form>
@@ -121,12 +115,41 @@
 			alert("종료 시간을 선택해주세요.");
 			return false;
 		}
-		let msg = confirm("추가근무를 신청하시겠습니까?");
+		let msg = confirm("초과근무를 신청하시겠습니까?");
 		if(msg===true){
 			return true;
 		}
 		return false;
 	}
+	
+	function itemChange() {
+		let endTimeArr = ["19:00", "20:00", "21:00", "22:00", "23:00", "24:00"];
+		
+		var selectItem = $("#startTime").val();
+		var changeItem;
+		if (selectItem === "18:00" ) {
+			changeItem = endTimeArr;
+		}else if (selectItem === "19:00") {
+			changeItem = endTimeArr.slice().splice(1);
+		}else if (selectItem === "20:00") {
+			changeItem = endTimeArr.slice().splice(2);
+		}else if (selectItem === "21:00") {
+			changeItem = endTimeArr.slice().splice(3);
+		}else if (selectItem === "22:00") {
+			changeItem = endTimeArr.slice().splice(4);
+		}else if (selectItem === "23:00") {
+			changeItem = endTimeArr.slice().splice(5);
+		}
+		
+		$('#endTime').empty();
+		let firstOption = $("<option value='NONE'>종료 시간</option>");
+		$('#endTime').append(firstOption);
+		for(let i=0; i < changeItem.length; i++) {
+			let option = $("<option>" + changeItem[i] + "</option>");
+			$('#endTime').append(option);
+		}
+	}
+	
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/calendar2.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>

@@ -1,11 +1,13 @@
 package edu.hrms.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.hrms.dao.WorkDAO;
+import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.WorkVO;
 
 @Service
@@ -37,6 +39,16 @@ public class WorkServiceImpl implements WorkService {
 	@Override
 	public int insertOvertime(Map<String, String> map) {
 		return workDAO.insertOvertime(map);
+	}
+	
+	@Override
+	public List<SignLineVO> getSignLineList(Map<String, Object> map) {
+		return workDAO.getSignLineList(map);
+	}
+	
+	@Override
+	public int getMaxNoByUserId(String arg) {
+		return workDAO.getMaxNoByUserId(arg);
 	}
 	
 }

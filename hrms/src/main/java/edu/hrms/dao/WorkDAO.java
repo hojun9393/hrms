@@ -1,11 +1,13 @@
 package edu.hrms.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.WorkVO;
 
 @Repository
@@ -34,6 +36,14 @@ public class WorkDAO {
 	
 	public int insertOvertime(Map<String, String> map) {
 		return sqlSession.insert(namespace+".insertOvertime", map);
+	}
+	
+	public List<SignLineVO> getSignLineList(Map<String, Object> map) {
+		return sqlSession.selectList(namespace+".getSignLineList", map);
+	}
+	
+	public int getMaxNoByUserId(String arg) {
+		return sqlSession.selectOne(namespace+".getMaxNoByUserId", arg);
 	}
 	
 }

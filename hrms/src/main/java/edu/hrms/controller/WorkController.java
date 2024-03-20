@@ -3,6 +3,7 @@ package edu.hrms.controller;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.hrms.service.WorkService;
 import edu.hrms.util.CalcCalendar;
+import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.WorkVO;
 
 @Controller
@@ -81,6 +84,7 @@ public class WorkController {
 	@RequestMapping(value = "/overtimeApplication.do", method = RequestMethod.POST)
 	public void overtimeApplication(HttpServletResponse response, String date, String start, String end, String content) throws IOException {
 		
+		
 		Map<String, String> map = new HashMap<>();
 		String userid = "10001";
 		map.put("userid", userid);
@@ -91,13 +95,36 @@ public class WorkController {
 		
 		int result = workService.insertOvertime(map);
 		
+		String myPosition = "E";
+		String position = "";
+		if(myPosition.equals("E")) {
+			position = "C,D,L";
+		}else if(myPosition.equals("L")) {
+			position = "C,D";
+		}else if(myPosition.equals("D")) {
+			position = "C";
+		}
+		String[] positionArr = position.split(",");
+		
+		Map<String, Object> signLineMap = new HashMap<>();
+		signLineMap.put("userid", userid);
+		signLineMap.put("positionArr", positionArr);
+		for(int i=0; i<positionArr.length; i++) {
+			System.out.println(positionArr[i]);
+		}
+		
+		List<SignLineVO> list = workService.getSignLineList(signLineMap);
+		
+		
+		
+		
 		response.setContentType("text/html; charset=utf-8");
 		response.setCharacterEncoding("UTF-8");
 		
 		if(result>0) {
-			response.getWriter().append("<script>alert('초과근무 신청이 완료되었습니다.');location.href='controller/work/main.do';</script>");
+			response.getWriter().append("<script>alert('초과근무 신청이 완료되었습니다.');location.href='main.do';</script>");
 		}else {
-			response.getWriter().append("<script>alert('오류가 발생하였습니다.');location.href='controller/work/main.do';</script>");
+			response.getWriter().append("<script>alert('오류가 발생하였습니다.');location.href='main.do';</script>");
 		}
 		response.getWriter().flush();
 	}

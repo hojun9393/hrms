@@ -43,6 +43,22 @@ public class CalcCalendar {
 		return map;
 	}
 	
+	public String getDateFormat(String dateParam) {
+		String[] arr = dateParam.split("\\.");
+		String year = arr[0];
+		String month= arr[1];
+		String day = arr[2];
+		
+		if(month.length()==1) {
+			month = "0"+month;
+		}
+		if(day.length()==1) {
+			day = "0"+day;
+		}
+		
+		String result = year+"-"+month+"-"+day;
+		return result;
+	}
 	
 	
 
