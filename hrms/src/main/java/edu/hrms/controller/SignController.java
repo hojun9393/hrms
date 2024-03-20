@@ -24,10 +24,11 @@ public class SignController {
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
 	public String main(Model model, HttpSession session, HttpServletResponse response, HttpServletRequest request) throws IOException {
-		SignVO vo = new SignVO();
-		vo.setDocVO(signService.selectAllDoc());
-		vo.setVacaVO(signService.selectAllVaca());
-		vo.setOverVO(signService.selectAllOver());
+		SignVO vo = new SignVO(
+				signService.selectAllDoc(),
+				signService.selectAllVaca(),
+				signService.selectAllOver()
+		);
 		model.addAttribute("list", vo);
 		
 		return "/sign/main";
