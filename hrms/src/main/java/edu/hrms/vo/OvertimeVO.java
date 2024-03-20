@@ -1,13 +1,14 @@
 package edu.hrms.vo;
 
-public class WorkVO {
+public class OvertimeVO {
 
-	private int wNo;
+	private int overtimeNo;
 	private String userid;
 	private String date;
 	private String start;
 	private String end;
-	private String overtime;
+	private String state;
+	private String content;
 	private String total;
 	
 	
@@ -17,17 +18,11 @@ public class WorkVO {
 	public void setTotal(String total) {
 		this.total = total;
 	}
-	public String getOvertime() {
-		return overtime;
+	public int getOvertimeNo() {
+		return overtimeNo;
 	}
-	public void setOvertime(String overtime) {
-		this.overtime = overtime;
-	}
-	public int getwNo() {
-		return wNo;
-	}
-	public void setwNo(int wNo) {
-		this.wNo = wNo;
+	public void setOvertimeNo(int overtimeNo) {
+		this.overtimeNo = overtimeNo;
 	}
 	public String getUserid() {
 		return userid;
@@ -53,13 +48,17 @@ public class WorkVO {
 	public void setEnd(String end) {
 		this.end = end;
 	}
-	
-	
-	@Override
-	public String toString() {
-		return "WorkVO [wNo=" + wNo + ", userid=" + userid + ", date=" + date + ", start=" + start + ", end=" + end
-				+ ", overtime=" + overtime + ", total=" + total + "]";
+	public String getState() {
+		return state;
 	}
-	
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
 	
 }

@@ -1,6 +1,8 @@
 package edu.hrms.util;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -12,9 +14,9 @@ import org.springframework.stereotype.Repository;
 public class CalcCalendar {
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	Calendar calendar = Calendar.getInstance();   
 	
 	public int getWeekOfYear(String date) {    
-		Calendar calendar = Calendar.getInstance();   
 		String[] dates = date.split("-");    
 		int year = Integer.parseInt(dates[0]);    
 		int month = Integer.parseInt(dates[1]);    
@@ -25,7 +27,6 @@ public class CalcCalendar {
 	}
 	
 	public Map<String, String> getFirstLastDays(String date) {
-		Calendar calendar = Calendar.getInstance();   
 		String[] dates = date.split("-");    
 		int year = Integer.parseInt(dates[0]);    
 		int month = Integer.parseInt(dates[1]);    
@@ -60,6 +61,12 @@ public class CalcCalendar {
 		return result;
 	}
 	
+	public String getTodayDate() {
+		LocalDateTime now = LocalDateTime.now();
+		String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		
+		return formatedNow;
+	}
 	
 
 }

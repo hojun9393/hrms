@@ -24,6 +24,9 @@ td, th {
  vertical-align: middle;
  text-align: center;
 }
+tbody > tr > td:nth-child(2){
+	text-align:center;
+}
   
  td {
   border-bottom: 1px solid rgba(0,0,0,.1);

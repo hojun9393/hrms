@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.hrms.dao.WorkDAO;
+import edu.hrms.vo.OvertimeSignVO;
+import edu.hrms.vo.OvertimeVO;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.WorkVO;
 
@@ -47,8 +49,22 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public int getMaxNoByUserId(String arg) {
-		return workDAO.getMaxNoByUserId(arg);
+	public int getMaxNoByUserId(String userid) {
+		return workDAO.getMaxNoByUserId(userid);
 	}
 	
+	@Override
+	public int insertOvertimeSign(List<OvertimeSignVO> list) {
+		return workDAO.insertOvertimeSign(list);
+	}
+	
+	@Override
+	public List<WorkVO> selectAllWork(Map<String, String> map) {
+		return workDAO.selectAllWork(map);
+	}
+	
+	@Override
+	public List<OvertimeVO> selectAllOvertime(String userid) {
+		return workDAO.selectAllOvertime(userid);
+	}
 }

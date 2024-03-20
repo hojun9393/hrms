@@ -2,6 +2,7 @@ package edu.hrms.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,11 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.hrms.service.WorkService;
 import edu.hrms.util.CalcCalendar;
+import edu.hrms.vo.OvertimeSignVO;
+import edu.hrms.vo.OvertimeVO;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.WorkVO;
 
@@ -50,8 +52,27 @@ public class WorkController {
 		}
 		
 		Map<String, String> workTimeMap = calcCalendar.getFirstLastDays(now);
+		workTimeMap.put("table","work");
 		String workTime = workService.selectThisWeek(workTimeMap);
+		workTimeMap.put("table","overtime");
+		String overtimeTime = workService.selectThisWeek(workTimeMap);
 		model.addAttribute("workTime", workTime);
+		model.addAttribute("overtimeTime", overtimeTime);
+		
+		Map<String, String> listMap = new HashMap<>();
+		String startDate = null;
+		String endDate = null;
+		listMap.put("userid", userid);
+		listMap.put("startDate", startDate);
+		if(endDate==null) {
+			endDate = calcCalendar.getTodayDate();
+		}
+		listMap.put("endDate", endDate);
+		
+		List<WorkVO> workList = workService.selectAllWork(listMap);
+		model.addAttribute("workList", workList);
+		List<OvertimeVO> overtimeList = workService.selectAllOvertime(userid);
+		model.addAttribute("overtimeList", overtimeList);
 		
 		return "/work/main";
 	}
@@ -84,7 +105,6 @@ public class WorkController {
 	@RequestMapping(value = "/overtimeApplication.do", method = RequestMethod.POST)
 	public void overtimeApplication(HttpServletResponse response, String date, String start, String end, String content) throws IOException {
 		
-		
 		Map<String, String> map = new HashMap<>();
 		String userid = "10001";
 		map.put("userid", userid);
@@ -93,7 +113,8 @@ public class WorkController {
 		map.put("end", end);
 		map.put("content", content);
 		
-		int result = workService.insertOvertime(map);
+		workService.insertOvertime(map);
+		int overtimeNo = workService.getMaxNoByUserId(userid);
 		
 		String myPosition = "E";
 		String position = "";
@@ -109,28 +130,45 @@ public class WorkController {
 		Map<String, Object> signLineMap = new HashMap<>();
 		signLineMap.put("userid", userid);
 		signLineMap.put("positionArr", positionArr);
-		for(int i=0; i<positionArr.length; i++) {
-			System.out.println(positionArr[i]);
+		
+		List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
+		
+		List<OvertimeSignVO> overtimeSignList = new ArrayList<>();
+		
+		for(SignLineVO vo : signLineList) {
+			OvertimeSignVO ovo = new OvertimeSignVO();
+			ovo.setOvertimeNo(overtimeNo);
+			ovo.setSignLineNo(vo.getSignLineNo());
+			overtimeSignList.add(ovo);
 		}
 		
-		List<SignLineVO> list = workService.getSignLineList(signLineMap);
-		
-		
-		
+		workService.insertOvertimeSign(overtimeSignList);
 		
 		response.setContentType("text/html; charset=utf-8");
 		response.setCharacterEncoding("UTF-8");
 		
-		if(result>0) {
-			response.getWriter().append("<script>alert('초과근무 신청이 완료되었습니다.');location.href='main.do';</script>");
-		}else {
-			response.getWriter().append("<script>alert('오류가 발생하였습니다.');location.href='main.do';</script>");
-		}
+		response.getWriter().append("<script>alert('초과근무 신청이 완료되었습니다.');location.href='main.do';</script>");
 		response.getWriter().flush();
 	}
 	
 	
-	
+	@RequestMapping(value = "/reloadList.do")
+	@ResponseBody
+	public List<WorkVO> reloadList(String startDate, String endDate) {
+		
+		String userid="10001";
+		Map<String, String> listMap = new HashMap<>();
+		listMap.put("userid", userid);
+		listMap.put("startDate", startDate);
+		if(endDate==null || endDate.equals("")) {
+			endDate = calcCalendar.getTodayDate();
+		}
+		listMap.put("endDate", endDate);
+		
+		List<WorkVO> list = workService.selectAllWork(listMap);
+		
+		return list;
+	}
 	
 	
 	

@@ -11,7 +11,7 @@
 	
 	<select id="selectThisWeek" parameterType="java.util.Map" resultType="String">
 		SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(SUBTIME(end, start))))
-			FROM work 
+			FROM ${table} 
     		WHERE date BETWEEN #{startDay} and #{endDay}
 	</select>
 	
@@ -42,6 +42,7 @@
 		  			<foreach item="item" index="index" collection="positionArr" open="(" separator="," close=")">
 		  				#{item}
 		  			</foreach>
+		  	ORDER BY signOrder
 	</select>
 	
 	<select id="getMaxNoByUserId" parameterType="String" resultType="int">
@@ -49,9 +50,37 @@
 			WHERE overtimeno = (SELECT MAX(overtimeNo) FROM overtime WHERE userid = #{userid})
 	</select>
 	
-	<insert id="insertSign" parameterType="List">
-		INSERT INTO overtimesign ()
+	<insert id="insertOvertimeSign" parameterType="java.util.List">
+		INSERT INTO overtimesign (overtimeNo, signLineNo) VALUES
+			<foreach collection="list" index="index" item="item" separator=",">
+				(#{item.overtimeNo}, #{item.signLineNo})
+			</foreach>
 	</insert>
+	
+	
+	<select id="selectAllWork" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
+		SELECT w.*
+				, IFNULL(SEC_TO_TIME((TIME_TO_SEC(SUBTIME(o.end, o.start)))),'-') AS overtime 
+         	, SEC_TO_TIME((TIME_TO_SEC(ADDTIME(SUBTIME(w.end, w.start),IFNULL(SEC_TO_TIME((TIME_TO_SEC(SUBTIME(o.end, o.start)))),0))))) AS total
+			FROM work w
+			LEFT JOIN overtime o ON w.userid = o.userid AND w.date = o.date
+			WHERE w.userid = #{userid}
+				<if test='startDate == null'>
+					AND w.date <![CDATA[<=]]> #{endDate}
+	 			</if>
+				<if test='startDate != null'>
+					AND w.date BETWEEN #{startDate} AND #{endDate}
+	 			</if>
+			
+			ORDER BY date DESC
+	</select>
+	
+	<select id="selectAllOvertime" parameterType="String" resultType="edu.hrms.vo.OvertimeVO">
+		SELECT *, SEC_TO_TIME((TIME_TO_SEC(SUBTIME(end, start)))) AS total 
+			FROM overtime
+   		WHERE userid = #{userid}
+   		ORDER BY date DESC
+	</select>
 	
 </mapper>
 
