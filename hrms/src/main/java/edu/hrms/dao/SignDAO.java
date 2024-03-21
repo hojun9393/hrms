@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import edu.hrms.vo.DocVO;
 import edu.hrms.vo.OverVO;
+import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.VacaVO;
 
 @Repository
@@ -28,5 +29,13 @@ public class SignDAO {
 	
 	public List<OverVO> selectAllOver(){
 		return sqlSession.selectList(namespace+".selectAllOver");
+	}
+	
+	public List<SignLineVO> selectSignLineFromDocNo(int docNo){
+		return sqlSession.selectList(namespace+".selectSignLineFromDocNo", docNo);
+	}
+	
+	public DocVO selectDocFromDocNo(int docNo) {
+		return sqlSession.selectOne(namespace+".selectDocFromDocNo", docNo);
 	}
 }

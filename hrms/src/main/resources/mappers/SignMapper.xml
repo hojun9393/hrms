@@ -4,6 +4,36 @@
 <mapper namespace="edu.hrms.mapper.signMapper">
 	
 	<select id="selectAllDoc" resultType="docVO">
+		SELECT d.*, u.name, u.dept, position, s.state as mySignState 
+		FROM doc d inner join user u on d.userid = u.userid inner join docsign s on d.docNo = s.docNo 
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = 10001 and (type = 'D' or type = 'A'));
+	</select>
+	
+	<select id="selectAllVaca" resultType="vacaVO">
+		SELECT d.*, u.name, u.dept, position, s.state as mySignState 
+		FROM doc d inner join user u on d.userid = u.userid inner join docsign s on d.docNo = s.docNo 
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = 10001 and (type = 'V' or type = 'A'));
+	</select>
+	
+	<select id="selectAllOver" resultType="overVO">
+		SELECT d.*, u.name, u.dept, position, s.state as mySignState 
+		FROM doc d inner join user u on d.userid = u.userid inner join docsign s on d.docNo = s.docNo 
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = 10001 and (type = 'O' or type = 'A'));
+	</select>
+	
+	<select id="selectSignLineFromDocNo" parameterType="int" resultType="signLineVO">
+		SELECT u.userid, u.name, u.dept, u.position, s.signOrder, ds.state 
+		FROM user u inner join signLine s on u.userid = s.userid inner join docsign ds on s.signLineNo = ds.signLineNo 
+		WHERE ds.docNo = #{docNo};
+	</select>
+	
+	<select id="selectDocFromDocNo" parameterType="int" resultType="docVO">
+		SELECT d.*, u.name, u.dept, position, s.state as mySignState 
+		FROM doc d inner join user u on d.userid = u.userid inner join docsign s on d.docNo = s.docNo 
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = 10001 and (type = 'D' or type = 'A')) and d.docNo = #{docNo};
+	</select>
+	
+	<!-- <select id="selectAllDoc" resultType="docVO">
 		SELECT d.*, u.name, u.dept, position 
 		FROM doc d inner join user u on d.userid = u.userid;
 	</select>
@@ -16,5 +46,5 @@
 	<select id="selectAllOver" resultType="overVO">
 		SELECT o.*, u.name, u.dept, position 
 		FROM overtime o inner join user u on o.userid = u.userid;
-	</select>
+	</select> -->
 </mapper>

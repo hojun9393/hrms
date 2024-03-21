@@ -118,32 +118,41 @@
 									</td>
 									<td>
 										<c:choose>
-											<c:when test="${vo.position eq 'A'}">
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+											<c:when test="${vo.mySignState eq '0'}">
+												<div class="d-inline card text-danger text-center px-2 mr-1 border-danger font-weight-bold">진행</div>
 											</c:when>
-											<c:when test="${vo.position eq 'C'}">
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+											<c:when test="${vo.mySignState eq '2'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
 											</c:when>
-											<c:when test="${vo.position eq 'D'}">
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
-											</c:when>
-											<c:when test="${vo.position eq 'L'}">
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
-											</c:when>
-											<c:when test="${vo.position eq 'E'}">
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+											<c:when test="${vo.mySignState eq '3'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">반려</div>
 											</c:when>
 											<c:otherwise>
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-info"></div>
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-secondary">오류</div>
 											</c:otherwise>
 										</c:choose>
-										<a href="view.do">AccountantAccountantAccountant</a>
+										<a href="view.do?docNo=${vo.docNo}">${vo.content}</a>
 									</td>
 									<td>
 										<div class="text-dark">${vo.date}</div>
 									</td>
 									<td>
-										<div class="d-inline card bg-info text-white text-center px-3 py-1">승인 완료</div>
+										<c:choose>
+											<c:when test="${vo.mySignState eq '0'}">
+												<div class="d-inline card bg-danger text-white text-center px-3 py-1">
+													<i class="fas fa-fw fa-file-signature"></i>결재 대기
+												</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '2'}">
+												<div class="d-inline card bg-info text-white text-center px-3 py-1">승인 완료</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '3'}">
+												<div class="d-inline card bg-dark text-white text-center px-4 py-1">반려</div>
+											</c:when>
+											<c:otherwise>
+												<div class="d-inline card bg-secondary text-white text-center px-4 py-1">오류</div>
+											</c:otherwise>
+										</c:choose>
 									</td>
 								</tr>
 					 		</c:forEach>
@@ -179,7 +188,7 @@
 								</td>
 								<td>
 									<div class="d-inline card bg-danger text-white text-center px-3 py-1">
-										<i class="fas fa-fw fa-file-signature"> </i>결재 대기
+										<i class="fas fa-fw fa-file-signature"></i>결재 대기
 									</div>
 								</td>
 							</tr>
@@ -204,7 +213,9 @@
 								<td>Cedric Kelly</td>
 								<td>Senior Javascript Developer</td>
 								<td>Edinburgh</td>
-								<td>22</td>
+								<td>
+									<div class="d-inline card bg-secondary text-white text-center px-4 py-1">오류</div>
+								</td>
 							</tr>
 							<tr>
 								<td>Paul Byrd</td>

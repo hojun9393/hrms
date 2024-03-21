@@ -21,15 +21,54 @@
 						<div class="my-4">
 							<span class="d-inline bg-primary card text-white py-1 px-3">초과근무</span>
 							<h1 class="d-inline h4 text-gray-900 font-weight-bold">
-								[기획부]박사원 사원 초과근무 신청서
+								<c:choose>
+									<c:when test="${vo.dept eq 'M'}">
+										[관리부]${vo.name}
+									</c:when>
+									<c:when test="${vo.dept eq 'D'}">
+										[개발부]${vo.name}
+									</c:when>
+									<c:when test="${vo.dept eq 'S'}">
+										[영업부]${vo.name}
+									</c:when>
+									<c:when test="${vo.dept eq 'P'}">
+										[기획부]${vo.name}
+									</c:when>
+									<c:when test="${vo.dept eq 'H'}">
+										[인사부]${vo.name}
+									</c:when>
+									<c:otherwise>
+										[부서미정]${vo.name}
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${vo.position eq 'A'}">
+										관리자
+									</c:when>
+									<c:when test="${vo.position eq 'C'}">
+										대표
+									</c:when>
+									<c:when test="${vo.position eq 'D'}">
+										부장
+									</c:when>
+									<c:when test="${vo.position eq 'L'}">
+										팀장
+									</c:when>
+									<c:when test="${vo.position eq 'E'}">
+										사원
+									</c:when>
+									<c:otherwise>
+										직급미정
+									</c:otherwise>
+								</c:choose> ${vo.title}
 							</h1>
 						</div>
 						<hr>
 						<div class="py-2">
 							<span class="d-inline font-weight-bold text-gray-800">작성자</span>
-							|&nbsp; 박사원 
+							|&nbsp; ${vo.name}
 							<span class="d-inline font-weight-bold text-gray-800 ml-5">등록일</span>
-							|&nbsp; 2024-03-18 11:14
+							|&nbsp; ${vo.date}
 						</div>
 						<div class="py-2">
 							<span class="d-inline font-weight-bold text-gray-800">초과근무 날짜</span> 
@@ -38,7 +77,7 @@
 						<hr>
 						<div class="py-2">
 							<span class="d-block font-weight-bold text-gray-800 mb-3">신청내용</span>
-							문서작업
+							${vo.content }
 						</div>
 					</div>
 				</div>

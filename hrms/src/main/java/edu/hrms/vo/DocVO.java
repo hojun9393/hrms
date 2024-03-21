@@ -1,5 +1,7 @@
 package edu.hrms.vo;
 
+import java.util.List;
+
 public class DocVO {
 	private int docNo;
 	private int userId;
@@ -11,11 +13,16 @@ public class DocVO {
 	private String name;
 	private String dept;
 	private String position;
-
+	
+	private String mySignState;
+	private int mySignOrder;
+	
+	private List<SignLineVO> signLineVO;
+	
 	public DocVO() {}
 
 	public DocVO(int docNo, int userId, String title, String content, String state, String date, String name,
-			String dept, String position) {
+			String dept, String position, String mySignState, int mySignOrder, List<SignLineVO> signLineVO) {
 		this.docNo = docNo;
 		this.userId = userId;
 		this.title = title;
@@ -25,6 +32,9 @@ public class DocVO {
 		this.name = name;
 		this.dept = dept;
 		this.position = position;
+		this.mySignState = mySignState;
+		this.mySignOrder = mySignOrder;
+		this.signLineVO = signLineVO;
 	}
 
 	public int getDocNo() {
@@ -63,28 +73,40 @@ public class DocVO {
 	public void setDate(String date) {
 		this.date = date;
 	}
-	
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public String getDept() {
 		return dept;
 	}
-
 	public void setDept(String dept) {
 		this.dept = dept;
 	}
-
 	public String getPosition() {
 		return position;
 	}
-
 	public void setPosition(String position) {
 		this.position = position;
+	}
+	public String getMySignState() {
+		return mySignState;
+	}
+	public void setMySignState(String mySignState) {
+		this.mySignState = mySignState;
+	}
+	public int getMySignOrder() {
+		return mySignOrder;
+	}
+	public void setMySignOrder(int mySignOrder) {
+		this.mySignOrder = mySignOrder;
+	}
+	public List<SignLineVO> getSignLineVO() {
+		return signLineVO;
+	}
+	public void setSignLineVO(List<SignLineVO> signLineVO) {
+		this.signLineVO = signLineVO;
 	}
 }

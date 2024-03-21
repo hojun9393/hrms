@@ -27,8 +27,6 @@ public class OverVO {
 		this.position = position;
 	}
 
-
-
 	public int getOverTimeNo() {
 		return overTimeNo;
 	}

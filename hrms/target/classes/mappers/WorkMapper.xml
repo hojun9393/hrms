@@ -9,13 +9,15 @@
 				AND DATE = #{now}
 	</select>
 	
+	<select id="selectThisWeek" parameterType="java.util.Map" resultType="String">
+		SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(SUBTIME(end, start))))
+			FROM work 
+    		WHERE date BETWEEN #{startDay} and #{endDay}
+	</select>
+	
 	<insert id="insert" parameterType="java.util.Map">	
-		INSERT INTO work(userid
-		     		   , date
-		     		   , start) 
-		          VALUES (#{userid}
-		               , #{date}
-		               , #{time})
+		INSERT INTO work (userid, date, start) 
+		          VALUES (#{userid} , #{date} , #{time})
 	</insert>
 	
 	<update id="update" parameterType="java.util.Map">
@@ -24,6 +26,11 @@
 		   WHERE userid = #{userid}
 		   	AND date = #{date}
 	</update>
+	
+	<insert id="insertOvertime" parameterType="java.util.Map">	
+		INSERT INTO overtime (userid, date, start, end, content ) 
+						VALUES   (#{userid}, #{date}, #{start}, #{end}, #{content})
+	</insert>
 	
 </mapper>
 

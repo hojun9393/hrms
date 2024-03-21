@@ -66,12 +66,12 @@
 							</div>
 							<div class="row no-gutters align-items-center">
 								<div class="col-auto">
-									<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">8:30:30</div>
+									<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">${workTime }</div>
 								</div>
 								<div class="col">
 									<div class="progress progress-sm mr-2">
 										<div class="progress-bar bg-info" role="progressbar"
-											style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+											style="width:50%;" aria-valuenow="90" aria-valuemin="0"
 											aria-valuemax="100"></div>
 									</div>
 								</div>
@@ -143,7 +143,7 @@
 						2024-03-02 ~ 2024-03-13
 						<i class="fas fa-calendar fa-2x text-gray-300" onclick="openModal()"></i>
 						<div id="overtimeReqDiv" class="float-right">
-							<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
+							<a href="overtimeApplication.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
 								<i class="fas fa-fw fa-briefcase"></i> 초과근무 신청
 							</a>
 						</div>
