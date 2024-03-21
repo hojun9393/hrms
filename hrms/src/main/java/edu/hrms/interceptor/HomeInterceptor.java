@@ -59,8 +59,9 @@ public class HomeInterceptor implements HandlerInterceptor {
 		}else if(uris[0].equals("notice")) {
 			navSelected = "notice";
 		}
-		
-		modelAndView.addObject("navSelected", navSelected);
+		if(modelAndView!=null) {
+			modelAndView.addObject("navSelected", navSelected);
+		}
 	}
 
 	@Override
