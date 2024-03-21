@@ -26,9 +26,20 @@ public interface WorkService {
 	
 	int insertOvertimeSign(List<OvertimeSignVO> list);
 	
+	int withdrawal(int overtimeNo);
+	
+	int overtimeDelete(int overtimeNo);
+	
+	int isOvertimeApplicationToday(Map<String, String> map);
 	
 	List<WorkVO> selectAllWork(Map<String, String> map);
 	
-	List<OvertimeVO> selectAllOvertime(String userid);
+	List<OvertimeVO> selectAllOvertime(Map<String, String> map);
+	
+	OvertimeVO selectOvertime(int overtimeNo);
+	
+	List<OvertimeSignVO> getOvertimeSignList(int overtimeNo);
+	
+	
 	
 }

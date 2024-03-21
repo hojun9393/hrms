@@ -10,8 +10,22 @@ public class OvertimeVO {
 	private String state;
 	private String content;
 	private String total;
+	private String rdate;
+	private String name;
 	
 	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getRdate() {
+		return rdate;
+	}
+	public void setRdate(String rdate) {
+		this.rdate = rdate;
+	}
 	public String getTotal() {
 		return total;
 	}
@@ -60,5 +74,14 @@ public class OvertimeVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "OvertimeVO [overtimeNo=" + overtimeNo + ", userid=" + userid + ", date=" + date + ", start=" + start
+				+ ", end=" + end + ", state=" + state + ", content=" + content + ", total=" + total + ", rdate=" + rdate
+				+ "]";
+	}
+	
 	
 }

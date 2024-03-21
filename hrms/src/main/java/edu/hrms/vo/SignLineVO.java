@@ -7,6 +7,7 @@ public class SignLineVO {
 	private String position;
 	private int signOrder;
 	private String state;
+	private int signLineNo;
 	
 	public SignLineVO() {}
 	
@@ -19,6 +20,13 @@ public class SignLineVO {
 		this.state = state;
 	}
 	
+	
+	public int getSignLineNo() {
+		return signLineNo;
+	}
+	public void setSignLineNo(int signLineNo) {
+		this.signLineNo = signLineNo;
+	}
 	public int getUserId() {
 		return userId;
 	}

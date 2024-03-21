@@ -149,27 +149,19 @@
 					</div>
 					<!-- Card Body -->
 					<div class="card-body">
-						<div>
-							<div class="mb-3 col">
-								<input type="text" name="" value="" id="startDate" class="datepicker inp" placeholder="시작일 선택" readonly="true" onchange="reloadListFn(1)">
-								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)" style="cursor: pointer;"></i> ~ 
-								<input type="text" name="" value="" id="endDate" class="datepicker inp" placeholder="종료일 선택" readonly="true"> 
-								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate)" style="cursor: pointer;"></i>
-							</div>
-							<div id="overtimeReqDiv" class="float-right">
-								<a href="overtimeApplication.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
-									<i class="fas fa-fw fa-briefcase"></i> 초과근무 신청
-								</a>
-							</div>
-							<div id="searchDiv" class="float-right display-none">
-								<form>
-									<input type="text">
-									<button>검색</button>
-								</form>
-							</div>
-						</div>
 						<!-- 내 근무 -->
 						<div id="menu1">
+							<div class="mb-3 col">
+								<input type="text" name="" value="" id="startDate1" class="datepicker inp" placeholder="시작일 선택" readonly="true" onchange="reloadListFn(1)">
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate1)" style="cursor: pointer;"></i> ~ 
+								<input type="text" name="" value="${today }" id="endDate1" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(1)"> 
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate1)" style="cursor: pointer;"></i>
+								<div class="float-right">
+									<a onclick="overtime_aplicationFn()" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
+										<i class="fas fa-fw fa-briefcase"></i> 초과근무 신청
+									</a>
+								</div>
+							</div>
 							<table>
 								<thead>
 									<tr>
@@ -196,6 +188,17 @@
 						
 						<!-- 내 초과근무 -->
 						<div id="menu2" class="display-none">
+							<div class="mb-3 col">
+								<input type="text" name="" value="" id="startDate2" class="datepicker inp" placeholder="시작일 선택" readonly="true" onchange="reloadListFn(2)">
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate2)" style="cursor: pointer;"></i> ~ 
+								<input type="text" name="" value="${today }" id="endDate2" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(2)"> 
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate2)" style="cursor: pointer;"></i>
+								<div class="float-right">
+									<a href="overtime_application.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
+										<i class="fas fa-fw fa-briefcase"></i> 초과근무 신청
+									</a>
+								</div>
+							</div>
 							<table>
 								<thead>
 									<tr>
@@ -230,10 +233,13 @@
 													<c:when test="${item.state == 3 }">
 														<span class="btn-gradient mini btn-secondary">반려</span>
 													</c:when>
+													<c:when test="${item.state == 9 }">
+														<span class="btn-gradient mini btn-secondary">철회</span>
+													</c:when>
 												</c:choose>
 											</td>
 											<td>
-												<a href="overtimeView.do">
+												<a href="overtime_view.do?no=${item.overtimeNo }">
 													<img class="icon-box" src="${pageContext.request.contextPath}/resources/img/document_icon.png">
 												</a>
 											</td>
@@ -245,6 +251,18 @@
 						
 						<!-- 근무 조회 -->
 						<div id="menu3" class="display-none">
+							<div class="mb-3 col">
+								<input type="text" name="" value="" id="startDate3" class="datepicker inp" placeholder="시작일 선택" readonly="true" onchange="reloadListFn(3)">
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate3)" style="cursor: pointer;"></i> ~ 
+								<input type="text" name="" value="${today }" id="endDate3" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(3)"> 
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate3)" style="cursor: pointer;"></i>
+								<div id="searchDiv" class="float-right">
+									<form>
+										<input type="text">
+										<button>검색</button>
+									</form>
+								</div>
+							</div>
 							<table>
 								<thead>
 									<tr>
@@ -287,48 +305,49 @@
 	const menu1 = document.querySelector("#menu1");
 	const menu2 = document.querySelector("#menu2");
 	const menu3 = document.querySelector("#menu3");
-	const overtimeReqDiv = document.querySelector("#overtimeReqDiv");
-	const searchDiv = document.querySelector("#searchDiv");
+	
+	const today = '${today}';
 	
 	function displayFn(obj){
 		if(obj==1){
 			menu1.style.display = "block";
 			menu2.style.display = "none";
 			menu3.style.display = "none";
-			overtimeReqDiv.style.display = "block";
-			searchDiv.style.display = "none";
-			$("#startDate").attr("onchange","reloadListFn(1)");
 			
 		}else if(obj==2){
 			menu1.style.display = "none";
 			menu2.style.display = "block";
 			menu3.style.display = "none";
-			overtimeReqDiv.style.display = "block";
-			searchDiv.style.display = "none";
-			$("#startDate").attr("onchange","reloadListFn(2)");
 			
 		}else if(obj==3){
 			menu1.style.display = "none";
 			menu2.style.display = "none";
 			menu3.style.display = "block";
-			overtimeReqDiv.style.display = "none";
-			searchDiv.style.display = "block";
-			$("#startDate").attr("onchange","reloadListFn(3)");
 			
 		}
 	}
 	
 	function reloadListFn(obj){
-		let startDate = $("#startDate").val();
-		let endDate = $("#endDate").val();
+		let startDate;
+		let endDate;
+		if(obj==1){
+			startDate = $("#startDate1").val();
+			endDate = $("#endDate1").val();
+		}else if(obj==2){
+			startDate = $("#startDate2").val();
+			endDate = $("#endDate2").val();
+		}else if(obj==3){
+			startDate = $("#startDate3").val();
+			endDate = $("#endDate3").val();
+		}
 	
 		$.ajax({
 			url:"reloadList.do",
 			data: {startDate : startDate, endDate : endDate, obj : obj},
 			success:function(data){
 				if(obj==1){
-					let outputBody = $(".outputBody1");
 					let html = "";
+					let outputBody = $(".outputBody1");
 					for(let i=0; i<data.length; i++){
 						html += "<tr>";
 						html += "<td>"+data[i].date+"</td>";
@@ -336,6 +355,35 @@
 						html += "<td>"+data[i].end+"</td>";
 						html += "<td>"+data[i].overtime+"</td>";
 						html += "<td>"+data[i].total+"</td>";
+						html += "</tr>";
+					}
+					outputBody.html(html);
+				}else if(obj==2){
+					let html = "";
+					let outputBody = $(".outputBody2");
+					for(let i=0; i<data.length; i++){
+						html += "<tr>";
+						html += "<td>"+data[i].date+"</td>";
+						html += "<td>"+data[i].start+"</td>";
+						html += "<td>"+data[i].end+"</td>";
+						html += "<td>"+data[i].total+"</td>";
+						html += "<td>"+data[i].content+"</td>";
+						html += "<td>"
+						if(data[i].state==0){
+							html += '<span class="btn btn-light btn-gradient2 mini">대기</span>';
+						}else if(data[i].state==1){
+							html += '<span class="btn-gradient red mini">진행중</span>';
+						}else if(data[i].state==2){
+							html += '<span class="btn-gradient green mini">승인</span>';
+						}else if(data[i].state==3){
+							html += '<span class="btn-gradient mini btn-secondary">반려</span>';
+						}else if(data[i].state==9){
+							html += '<span class="btn-gradient mini btn-secondary">철회</span>';
+						}
+						html += "</td>"
+						html += '<td><a href="overtime_view.do?no='+data[i].overtimeNo+'">';
+						html += '<img class="icon-box" src="../resources/img/document_icon.png">';
+						html += "</a></td>"
 						html += "</tr>";
 					}
 					outputBody.html(html);
@@ -422,8 +470,17 @@
 	   
 	}
 	
+	function overtime_aplicationFn(){
+		let isOvertimeApplicationToday = ${isOvertimeApplicationToday};
+		if(isOvertimeApplicationToday>0){
+			alert("오늘 이미 처리 진행중인 초과근무 건이 있습니다.");
+		}else{
+			location.href="overtime_application.do";
+		}
+	}
+	
 	
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/calendar2.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/calendar3.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
 <%@ include file="../include/footer.jsp"%>

@@ -3,6 +3,9 @@
 <%@ include file="header.jsp"%>
 <!-- Page Wrapper -->
 <div id="wrapper">
+<script>
+	console.log('${navSelected}');
+</script>
   
 	<!-- Sidebar -->
 	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -19,43 +22,43 @@
 		<hr class="sidebar-divider my-0">
 	
 		<!-- Nav Item - Dashboard -->
-		<li class="nav-item active">
-			<a class="nav-link" href="index.jsp">
+		<li class="nav-item ${ navSelected.equals('home') ? 'active' : '' }">
+			<a class="nav-link" href="${pageContext.request.contextPath}">
 				<i class="fas fa-fw fa-home"></i> 
 				<span>홈</span>
 			</a>
 		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="/work/main.do"> 
+		<li class="nav-item ${ navSelected.equals('work') ? 'active' : '' }">
+			<a class="nav-link" href="${pageContext.request.contextPath}/work/main.do"> 
 				<i class="fas fa-fw fa-briefcase"></i> 
 				<span>근무</span>
 			</a>
 		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="vacation_main.jsp">
+		<li class="nav-item ${ navSelected.equals('vaca') ? 'active' : '' }">
+			<a class="nav-link" href="${pageContext.request.contextPath}/vaca/main.do">
 				<i class="fas fa-fw fa-plane"></i> 
 				<span>연차</span>
 			</a>
 		</li>
-		<li class="nav-item">
+		<li class="nav-item ${ navSelected.equals('docu') ? 'active' : '' }">
 			<a class="nav-link" href="document_main.jsp">
 				<i class="fas fa-fw fa-folder-open"></i> 
 				<span>기안</span>
 			</a>
 		</li>
-		<li class="nav-item">
+		<li class="nav-item" ${ navSelected.equals('sign') ? 'active' : '' }>
 			<a class="nav-link" href="${pageContext.request.contextPath}/sign/main.do"> 
 				<i class="fas fa-fw fa-file-signature"></i> 
 				<span>결재</span>
 			</a>
 		</li>
-		<li class="nav-item">
+		<li class="nav-item ${ navSelected.equals('user') ? 'active' : '' }">
 			<a class="nav-link" href="employee_main.jsp"> 
 				<i class="fas fa-fw fa-users"></i> 
 				<span>사원</span>
 			</a>
 		</li>
-		<li class="nav-item">
+		<li class="nav-item ${ navSelected.equals('notice') ? 'active' : '' }">
 			<a class="nav-link" href="notice_main.jsp"> 
 				<i class="fas fa-fw fa-bullhorn"></i> 
 				<span>공지</span>

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.hrms.service.WorkService;
@@ -40,6 +41,8 @@ public class WorkController {
 		String userid = "10001";
 		LocalDate nowData = LocalDate.now();
 		String now = nowData.toString();
+		
+		model.addAttribute("today", now);
 		
 		map.put("userid", userid);
 		map.put("now", now);
@@ -71,8 +74,11 @@ public class WorkController {
 		
 		List<WorkVO> workList = workService.selectAllWork(listMap);
 		model.addAttribute("workList", workList);
-		List<OvertimeVO> overtimeList = workService.selectAllOvertime(userid);
+		List<OvertimeVO> overtimeList = workService.selectAllOvertime(listMap);
 		model.addAttribute("overtimeList", overtimeList);
+		
+		int count = workService.isOvertimeApplicationToday(map);
+		model.addAttribute("isOvertimeApplicationToday", count);
 		
 		return "/work/main";
 	}
@@ -97,12 +103,13 @@ public class WorkController {
 		return "ajax success";
 	}
 	
-	@RequestMapping(value = "/overtimeApplication.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/overtime_application.do", method = RequestMethod.GET)
 	public String overtimeApplication() {
+		
 		return "/work/overtime_application";
 	}
 	
-	@RequestMapping(value = "/overtimeApplication.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/overtime_application.do", method = RequestMethod.POST)
 	public void overtimeApplication(HttpServletResponse response, String date, String start, String end, String content) throws IOException {
 		
 		Map<String, String> map = new HashMap<>();
@@ -144,17 +151,58 @@ public class WorkController {
 		
 		workService.insertOvertimeSign(overtimeSignList);
 		
-		response.setContentType("text/html; charset=utf-8");
-		response.setCharacterEncoding("UTF-8");
-		
 		response.getWriter().append("<script>alert('초과근무 신청이 완료되었습니다.');location.href='main.do';</script>");
 		response.getWriter().flush();
 	}
 	
+	@RequestMapping(value = "/overtime_view.do")
+	public String overtimeView(Model model, @RequestParam("no")int overtimeNo) {
+		
+		OvertimeVO ovo = workService.selectOvertime(overtimeNo);
+		List<OvertimeSignVO> osList = workService.getOvertimeSignList(overtimeNo);
+		model.addAttribute("ovo", ovo);
+		model.addAttribute("osList", osList);
+		
+		int count = 0;
+		String nowState = "대기";
+		for(OvertimeSignVO data : osList) {
+			if(data.getState()==2) {
+				count++;
+				nowState = "진행";
+			}else if(data.getState()==3) {
+				nowState = "반려";
+				break;
+			}
+		}
+		if(ovo.getState().equals("9")) {
+			nowState = "철회";
+		}
+		model.addAttribute("count", count);
+		model.addAttribute("nowState", nowState);
+		
+		return "/work/overtime_view";
+	}
+	
+	@RequestMapping(value = "/withdrawal.do", method = RequestMethod.POST)
+	public void withdrawal(HttpServletResponse response, int overtimeNo) throws IOException {
+		
+		OvertimeVO vo = workService.selectOvertime(overtimeNo);
+		
+		if(vo.getState().equals("0")) {
+			workService.withdrawal(overtimeNo);
+			workService.overtimeDelete(overtimeNo);
+			response.getWriter().append("<script>alert('초과근무 신청이 철회되었습니다.');location.href='main.do';</script>");
+		}else {
+			response.getWriter().append("<script>alert('결재 진행중인 초과근무 신청은 철회할 수 없습니다.');location.href='main.do';</script>");
+		}
+		response.getWriter().flush();
+	}
+	
+	
 	
 	@RequestMapping(value = "/reloadList.do")
 	@ResponseBody
-	public List<WorkVO> reloadList(String startDate, String endDate, String obj) {
+	public List<?> reloadList(String startDate, String endDate, String obj) {
 		
 		String userid="10001";
 		Map<String, String> listMap = new HashMap<>();
@@ -165,7 +213,12 @@ public class WorkController {
 		}
 		listMap.put("endDate", endDate);
 		
-		List<WorkVO> list = workService.selectAllWork(listMap);
+		List<?> list = new ArrayList<>();
+		if(obj.equals("1")) {
+			list = workService.selectAllWork(listMap);
+		}else if(obj.equals("2")) {
+			list = workService.selectAllOvertime(listMap);
+		}
 		
 		return list;
 	}

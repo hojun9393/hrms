@@ -21,7 +21,7 @@ public class WorkDAO {
 	private final String namespace = "edu.hrms.mappers.workMapper";
 	
 	public WorkVO select(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".select", map);
+		return sqlSession.selectOne(namespace+".selectWork", map);
 	}
 	
 	public String selectThisWeek(Map<String, String> map) {
@@ -52,13 +52,28 @@ public class WorkDAO {
 		return sqlSession.insert(namespace+".insertOvertimeSign", list);
 	}
 	
+	public OvertimeVO selectOvertime(int overtimeNo) {
+		return sqlSession.selectOne(namespace+".selectOvertime", overtimeNo);
+	}
+	public List<OvertimeSignVO> getOvertimeSignList(int overtimeNo){
+		return sqlSession.selectList(namespace+".getOvertimeSignList", overtimeNo);
+	}
+	public int withdrawal(int overtimeNo) {
+		return sqlSession.update(namespace+".withdrawal", overtimeNo);
+	}
+	public int overtimeDelete(int overtimeNo) {
+		return sqlSession.delete(namespace+".overtimeDelete", overtimeNo);
+	}
+	public int isOvertimeApplicationToday(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".isOvertimeApplicationToday", map);
+	}
 	
 	public List<WorkVO> selectAllWork(Map<String, String> map){
 		return sqlSession.selectList(namespace+".selectAllWork", map);
 	}
 	
-	public List<OvertimeVO> selectAllOvertime(String userid){
-		return sqlSession.selectList(namespace+".selectAllOvertime", userid);
+	public List<OvertimeVO> selectAllOvertime(Map<String, String> map){
+		return sqlSession.selectList(namespace+".selectAllOvertime", map);
 	}
 	
 }

@@ -64,7 +64,32 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public List<OvertimeVO> selectAllOvertime(String userid) {
-		return workDAO.selectAllOvertime(userid);
+	public List<OvertimeVO> selectAllOvertime(Map<String, String> map) {
+		return workDAO.selectAllOvertime(map);
+	}
+	
+	@Override
+	public OvertimeVO selectOvertime(int overtimeNo) {
+		return workDAO.selectOvertime(overtimeNo);
+	}
+	
+	@Override
+	public List<OvertimeSignVO> getOvertimeSignList(int overtimeNo) {
+		return workDAO.getOvertimeSignList(overtimeNo);
+	}
+	
+	@Override
+	public int withdrawal(int overtimeNo) {
+		return workDAO.withdrawal(overtimeNo);
+	}
+	
+	@Override
+	public int overtimeDelete(int overtimeNo) {
+		return workDAO.overtimeDelete(overtimeNo);
+	}
+	
+	@Override
+	public int isOvertimeApplicationToday(Map<String, String> map) {
+		return workDAO.isOvertimeApplicationToday(map);
 	}
 }
