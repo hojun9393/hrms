@@ -3,10 +3,6 @@
 <%@ include file="header.jsp"%>
 <!-- Page Wrapper -->
 <div id="wrapper">
-<script>
-	console.log('${navSelected}');
-</script>
-  
 	<!-- Sidebar -->
 	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 	
