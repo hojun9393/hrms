@@ -63,7 +63,7 @@ public class SignController {
 		return "/sign/main";
 	}
 	
-	@RequestMapping(value = "/view.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/docView.do", method = RequestMethod.GET)
 	public String view(int docNo, Model model) {
 		DocVO docVO = signService.selectDocFromDocNo(docNo);
 		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.getDocNo());
@@ -76,7 +76,7 @@ public class SignController {
 		
 		model.addAttribute("vo", docVO);
 		
-		return "/sign/view";
+		return "/sign/docview";
 	}
 	 
 	
