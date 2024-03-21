@@ -10,8 +10,15 @@ public class OvertimeSignVO {
 	private String dept;
 	private String position;
 	private int signOrder;
+	private int prev_state;
 	
 	
+	public int getPrev_state() {
+		return prev_state;
+	}
+	public void setPrev_state(int prev_state) {
+		this.prev_state = prev_state;
+	}
 	public String getName() {
 		return name;
 	}
@@ -66,7 +73,7 @@ public class OvertimeSignVO {
 	public String toString() {
 		return "OvertimeSignVO [overtimeSignNo=" + overtimeSignNo + ", overtimeNo=" + overtimeNo + ", signLineNo="
 				+ signLineNo + ", state=" + state + ", name=" + name + ", dept=" + dept + ", position=" + position
-				+ ", signOrder=" + signOrder + "]";
+				+ ", signOrder=" + signOrder + ", prev_state=" + prev_state + "]";
 	}
 	
 }

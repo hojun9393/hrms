@@ -104,7 +104,15 @@ public class WorkController {
 	}
 	
 	@RequestMapping(value = "/overtime_application.do", method = RequestMethod.GET)
-	public String overtimeApplication() {
+	public String overtimeApplication(Model model) {
+		
+		String userid = "10001";
+		String position = "E";
+		
+		Map<String, Object> signLineMap = workService.getSignLineMap(userid, position);
+		List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
+		
+		model.addAttribute("signLineList", signLineList);
 		
 		return "/work/overtime_application";
 	}
@@ -159,8 +167,21 @@ public class WorkController {
 	public String overtimeView(Model model, @RequestParam("no")int overtimeNo) {
 		
 		OvertimeVO ovo = workService.selectOvertime(overtimeNo);
-		List<OvertimeSignVO> osList = workService.getOvertimeSignList(overtimeNo);
 		model.addAttribute("ovo", ovo);
+		List<OvertimeSignVO> osList = workService.getOvertimeSignList(overtimeNo);
+		boolean returningFlag = false;
+		for(OvertimeSignVO data : osList) {
+			if(data.getPrev_state()==2 && data.getState()==0) {
+				data.setState(1);
+			}
+			if(returningFlag) {
+				data.setState(9);
+			}
+			if(data.getPrev_state()==3) {
+				data.setState(9);
+				returningFlag = true;
+			}
+		}
 		model.addAttribute("osList", osList);
 		
 		int count = 0;

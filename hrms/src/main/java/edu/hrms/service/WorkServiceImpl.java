@@ -1,5 +1,6 @@
 package edu.hrms.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,4 +93,25 @@ public class WorkServiceImpl implements WorkService {
 	public int isOvertimeApplicationToday(Map<String, String> map) {
 		return workDAO.isOvertimeApplicationToday(map);
 	}
+	
+	@Override
+	public Map<String, Object> getSignLineMap(String userid, String position) {
+		
+		if(position.equals("E")) {
+			position = "C,D,L";
+		}else if(position.equals("L")) {
+			position = "C,D";
+		}else if(position.equals("D")) {
+			position = "C";
+		}
+		String[] positionArr = position.split(",");
+		Map<String, Object> signLineMap = new HashMap<>();
+		signLineMap.put("userid", userid);
+		signLineMap.put("positionArr", positionArr);
+		return signLineMap;
+	}
+	
+	
+	
+	
 }

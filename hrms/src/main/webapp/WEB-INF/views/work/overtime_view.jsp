@@ -101,6 +101,14 @@
 										</div>
 									</div>
 								</c:when>
+								<c:when test="${item.state eq 9}">
+									<div class="card bg-white px-3 py-2 my-2 font-weight-bold text-gray">
+										<div class="row">
+											<span class="d-inline col">${item.name }</span> 
+											<span class="d-inline col-auto">-</span>
+										</div>
+									</div>
+								</c:when>
 							</c:choose>
 						</c:forEach>
 						<hr>

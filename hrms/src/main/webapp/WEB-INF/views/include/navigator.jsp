@@ -42,7 +42,7 @@
 				<span>기안</span>
 			</a>
 		</li>
-		<li class="nav-item" ${ navSelected.equals('sign') ? 'active' : '' }>
+		<li class="nav-item ${ navSelected.equals('sign') ? 'active' : '' }">
 			<a class="nav-link" href="${pageContext.request.contextPath}/sign/main.do"> 
 				<i class="fas fa-fw fa-file-signature"></i> 
 				<span>결재</span>

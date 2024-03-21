@@ -40,6 +40,8 @@ public interface WorkService {
 	
 	List<OvertimeSignVO> getOvertimeSignList(int overtimeNo);
 	
+	Map<String, Object> getSignLineMap(String userid, String position);
+	
 	
 	
 }

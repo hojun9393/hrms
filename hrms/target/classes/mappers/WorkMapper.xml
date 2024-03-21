@@ -36,7 +36,21 @@
 	</insert>
 	
 	<select id="getSignLineList" parameterType="java.util.Map" resultType="edu.hrms.vo.SignLineVO">
-		SELECT s.signLineNo, s.userid, u.position, s.type, s.signOrder 
+		SELECT s.signLineNo, s.userid, u.name, 
+				(CASE 
+					WHEN u.dept = 'M' THEN '대표'
+	            WHEN u.dept = 'D' THEN '개발부'
+	            WHEN u.dept = 'S' THEN '영업부'
+	            WHEN u.dept = 'P' THEN '기획부'
+	            WHEN u.dept = 'H' THEN '인사부' END
+				) AS dept, 
+				(CASE 
+					WHEN u.position = 'C' THEN '대표'
+	            WHEN u.position = 'D' THEN '부장'
+	            WHEN u.position = 'L' THEN '팀장'
+	            WHEN u.position = 'E' THEN '사원' END
+				) AS position
+				, s.type, s.signOrder 
 			FROM signline s 
 			INNER JOIN user u ON s.userid = u.userid
 			WHERE (type='O' OR type='A') AND
@@ -108,7 +122,8 @@
 	            WHEN u.position = 'L' THEN '팀장'
 	            WHEN u.position = 'E' THEN '사원' END
 				) AS position
-	        	, s.signorder
+	        	, s.signorder,
+	        	LAG(os.state) OVER() AS prev_state
 			FROM overtimesign os
 			INNER JOIN signline s ON os.signlineno = s.signlineno
 		   INNER JOIN user u ON s.userid = u.userid

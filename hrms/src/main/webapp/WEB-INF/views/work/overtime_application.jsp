@@ -38,15 +38,15 @@
 										<div class="form-group">
 											결재
 											<div class="row">
-												<div class="col-sm-2 mb-3 mb-sm-0">
-													<input type="text" class="form-control form-control-user" id="exampleFirstName" placeholder="이팀장" disabled>
-												</div>
-												<div class="col-sm-2 mb-3 mb-sm-0">
-													<input type="text" class="form-control form-control-user" id="exampleFirstName" placeholder="김부장" disabled>
-												</div>
-												<div class="col-sm-2 mb-3 mb-sm-0">
-													<input type="text" class="form-control form-control-user" id="exampleFirstName" placeholder="박대표" disabled>
-												</div>
+												<c:forEach var="item" items="${signLineList }">
+													<div class="col-sm-4 mb-4 mb-sm-0">
+														<div class="form-control form-control-user sign-line-box">
+															<span class="d-inline card bg-info text-white text-center px-2">${item.dept } </span>&nbsp;
+															${item.name } &nbsp;
+															<span class="small-grade">${item.position }</span>
+														</div>
+													</div>
+												</c:forEach>
 											</div>
 										</div>
 										<div class="form-group">
