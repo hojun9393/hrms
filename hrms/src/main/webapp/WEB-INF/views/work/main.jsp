@@ -321,12 +321,10 @@
 	function reloadListFn(obj){
 		let startDate = $("#startDate").val();
 		let endDate = $("#endDate").val();
-		
-		console.log(obj);
 	
 		$.ajax({
 			url:"reloadList.do",
-			data: {startDate : startDate, endDate : endDate},
+			data: {startDate : startDate, endDate : endDate, obj : obj},
 			success:function(data){
 				if(obj==1){
 					let outputBody = $(".outputBody1");
