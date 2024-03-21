@@ -21,7 +21,7 @@
 						<div class="my-4">
 							<span class="d-inline bg-primary card text-white py-1 px-3">초과근무</span>
 							<h1 class="d-inline h4 text-gray-900 font-weight-bold">
-							[${vo.dept}]${vo.name} ${vo.position} ${vo.title}
+							[${vo.dept}] ${vo.name} ${vo.position} 초과근무 신청서
 							</h1>
 						</div>
 						<hr>
@@ -29,8 +29,11 @@
 							<span class="d-inline font-weight-bold text-gray-800">작성자</span>
 							|&nbsp; ${vo.name}
 							<span class="d-inline font-weight-bold text-gray-800 ml-5">등록일</span>
-							|&nbsp; ${vo.date}
+							|&nbsp; ${vo.rdate}
 						</div>
+						<div class="py-2">
+                        	<span class="d-inline font-weight-bold text-gray-800">초과근무 날짜</span> |&nbsp; ${vo.date} ${vo.start} ~ ${vo.end}
+                        </div>
 						<hr>
 						<div class="py-2">
 							<span class="d-block font-weight-bold text-gray-800 mb-3">기안내용</span>
@@ -121,8 +124,8 @@
 					<div class="mb-4 text-center">
 						<hr>
 						<a href="main.do" class="btn btn-secondary btn-user"> 목록으로 </a>
-						<button type="submit" form="approvedDoc" class="btn btn-primary btn-user"> 승인하기 </button>
-						<button type="submit" form="rejectedDoc" class="btn btn-dark btn-user"> 반려하기 </button>
+						<button type="submit" form="approvedOver" class="btn btn-primary btn-user"> 승인하기 </button>
+						<button type="submit" form="rejectedOver" class="btn btn-dark btn-user"> 반려하기 </button>
 					</div>
 				</div>
 			</div>
@@ -130,12 +133,12 @@
 	</div>
 </div>
 
-<form action="approvedDoc.do" method="post" id="approvedDoc">
-	<input type="hidden" name="docNo" value="${vo.docNo}" >
+<form action="approvedOver.do" method="post" id="approvedOver">
+	<input type="hidden" name="overTimeNo" value="${vo.overTimeNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
-<form action="rejectedDoc.do" method="post" id="rejectedDoc">
-	<input type="hidden" name="docNo" value="${vo.docNo}" >
+<form action="rejectedOver.do" method="post" id="rejectedOver">
+	<input type="hidden" name="overTimeNo" value="${vo.overTimeNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
 

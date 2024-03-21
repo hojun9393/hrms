@@ -2,7 +2,9 @@ package edu.hrms.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,29 +13,36 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.hrms.service.SignService;
 import edu.hrms.vo.DocVO;
+import edu.hrms.vo.OverVO;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.SignVO;
+import edu.hrms.vo.VacaVO;
 
 @Controller
 @RequestMapping(value = "/sign")
 public class SignController {
-
+	
+	private int userId = 10002;
+	
 	@Autowired
 	SignService signService;
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
 	public String main(Model model, HttpSession session, HttpServletResponse response, HttpServletRequest request) throws IOException {
-		List<DocVO> docVO = signService.selectAllDoc();
+		List<DocVO> docVO = signService.selectAllDoc(userId);
+		List<VacaVO> vacaVO = signService.selectAllVaca(userId);
+		List<OverVO> overVO = signService.selectAllOver(userId);
+		
+		//doc
 		for(int i=0; i<docVO.size(); i++) {
 			List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.get(i).getDocNo());
 			for(int j=0; j<signLineVO.size(); j++) {
-				if(signLineVO.get(j).getUserId() == 10001) {
+				if(signLineVO.get(j).getUserId() == userId) {
 					docVO.get(i).setMySignOrder(signLineVO.get(j).getSignOrder());
 				}
 			}
@@ -43,20 +52,104 @@ public class SignController {
 		List<DocVO> docVOList = new ArrayList<DocVO>();
 		for(int i=0; i<docVO.size(); i++) {
 			List<SignLineVO> signLineVO = docVO.get(i).getSignLineVO();
-			if(docVO.get(i).getMySignOrder()==1) {
-				docVOList.add(docVO.get(i));
-			}else if(docVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
-				docVOList.add(docVO.get(i));
-			}else if(docVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
-					&& signLineVO.get(1).getState().equals("2")) {
-				docVOList.add(docVO.get(i));
+			if(signLineVO.size()==3) {
+				if(docVO.get(i).getMySignOrder() == 1) {
+					docVOList.add(docVO.get(i));
+				}else if(docVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
+					docVOList.add(docVO.get(i));
+				}else if(docVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
+						&& signLineVO.get(1).getState().equals("2")) {
+					docVOList.add(docVO.get(i));
+				}
+			}else if(signLineVO.size()==2){
+				if(docVO.get(i).getMySignOrder()==2) {
+					docVOList.add(docVO.get(i));
+				}else if(docVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
+					docVOList.add(docVO.get(i));
+				}
+			}else if(signLineVO.size()==1) {
+				if(docVO.get(i).getMySignOrder()==3) {
+					docVOList.add(docVO.get(i));
+				}
 			}
 		}
-
+		
+		//vacation
+		for(int i=0; i<vacaVO.size(); i++) {
+			List<SignLineVO> signLineVO = signService.selectSignLineFromVacaNo(vacaVO.get(i).getVacaNo());
+			for(int j=0; j<signLineVO.size(); j++) {
+				if(signLineVO.get(j).getUserId() == userId) {
+					vacaVO.get(i).setMySignOrder(signLineVO.get(j).getSignOrder());
+				}
+			}
+		vacaVO.get(i).setSignLineVO(signLineVO);
+		}
+		
+		List<VacaVO> vacaVOList = new ArrayList<VacaVO>();
+		for(int i=0; i<vacaVO.size(); i++) {
+			List<SignLineVO> signLineVO = vacaVO.get(i).getSignLineVO();
+			if(signLineVO.size()==3) {
+				if(vacaVO.get(i).getMySignOrder() == 1) {
+					vacaVOList.add(vacaVO.get(i));
+				}else if(vacaVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
+					vacaVOList.add(vacaVO.get(i));
+				}else if(vacaVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
+						&& signLineVO.get(1).getState().equals("2")) {
+					vacaVOList.add(vacaVO.get(i));
+				}
+			}else if(signLineVO.size()==2){
+				if(vacaVO.get(i).getMySignOrder()==2) {
+					vacaVOList.add(vacaVO.get(i));
+				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
+					vacaVOList.add(vacaVO.get(i));
+				}
+			}else if(signLineVO.size()==1) {
+				if(vacaVO.get(i).getMySignOrder()==3) {
+					vacaVOList.add(vacaVO.get(i));
+				}
+			}
+		}
+		
+		//overtime
+		for(int i=0; i<overVO.size(); i++) {
+			List<SignLineVO> signLineVO = signService.selectSignLineFromOverTimeNo(overVO.get(i).getOverTimeNo());
+			for(int j=0; j<signLineVO.size(); j++) {
+				if(signLineVO.get(j).getUserId() == userId) {
+					overVO.get(i).setMySignOrder(signLineVO.get(j).getSignOrder());
+				}
+			}
+			overVO.get(i).setSignLineVO(signLineVO);
+		}
+		
+		List<OverVO> overVOList = new ArrayList<OverVO>();
+		for(int i=0; i<overVO.size(); i++) {
+			List<SignLineVO> signLineVO = overVO.get(i).getSignLineVO();
+			if(signLineVO.size()==3) {
+				if(overVO.get(i).getMySignOrder() == 1) {
+					overVOList.add(overVO.get(i));
+				}else if(overVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
+					overVOList.add(overVO.get(i));
+				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
+						&& signLineVO.get(1).getState().equals("2")) {
+					overVOList.add(overVO.get(i));
+				}
+			}else if(signLineVO.size()==2){
+				if(overVO.get(i).getMySignOrder()==2) {
+					overVOList.add(overVO.get(i));
+				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
+					overVOList.add(overVO.get(i));
+				}
+			}else if(signLineVO.size()==1) {
+				if(overVO.get(i).getMySignOrder()==3) {
+					overVOList.add(overVO.get(i));
+				}
+			}
+				
+		}
 		SignVO vo = new SignVO(
 				docVOList,
-				signService.selectAllVaca(),
-				signService.selectAllOver()
+				vacaVOList,
+				overVOList
 		);
 		model.addAttribute("list", vo);
 		
@@ -64,21 +157,160 @@ public class SignController {
 	}
 	
 	@RequestMapping(value = "/docView.do", method = RequestMethod.GET)
-	public String view(int docNo, Model model) {
-		DocVO docVO = signService.selectDocFromDocNo(docNo);
+	public String docView(int docNo, Model model) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("docNo", docNo);
+		map.put("userId", userId);
+		DocVO docVO = signService.selectDocFromDocNo(map);
 		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.getDocNo());
+		
+		int count = signLineVO.size();
 		for(int j=0; j<signLineVO.size(); j++) {
-			if(signLineVO.get(j).getUserId() == 10001) {
+			if(signLineVO.get(j).getUserId() == userId) {
 				docVO.setMySignOrder(signLineVO.get(j).getSignOrder());
 			}
+			if(signLineVO.get(j).getState().equals("0")) {
+				count--;
+			}
 		}
+		docVO.setStateCount(count);
 		docVO.setSignLineVO(signLineVO);
 		
 		model.addAttribute("vo", docVO);
 		
-		return "/sign/docview";
+		return "/sign/docView";
 	}
-	 
+	
+	@RequestMapping(value = "/vacaView.do", method = RequestMethod.GET)
+	public String vacaView(int vacaNo, Model model) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("vacaNo", vacaNo);
+		map.put("userId", userId);
+		VacaVO vacaVO = signService.selectVacaFromVacaNo(map);
+		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(vacaVO.getVacaNo());
+		
+		int count = signLineVO.size();
+		for(int j=0; j<signLineVO.size(); j++) {
+			if(signLineVO.get(j).getUserId() == userId) {
+				vacaVO.setMySignOrder(signLineVO.get(j).getSignOrder());
+			}
+			if(signLineVO.get(j).getState().equals("0")) {
+				count--;
+			}
+		}
+		vacaVO.setStateCount(count);
+		vacaVO.setSignLineVO(signLineVO);
+		
+		model.addAttribute("vo", vacaVO);
+		
+		return "/sign/vacaView";
+	}
+	
+	@RequestMapping(value = "/overView.do", method = RequestMethod.GET)
+	public String OverView(int overTimeNo, Model model) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("overTimeNo", overTimeNo);
+		map.put("userId", userId);
+		OverVO overVO = signService.selectOverFromOverTimeNo(map);
+		List<SignLineVO> signLineVO = signService.selectSignLineFromOverTimeNo(overVO.getOverTimeNo());
+		
+		int count = signLineVO.size();
+		for(int j=0; j<signLineVO.size(); j++) {
+			if(signLineVO.get(j).getUserId() == userId) {
+				overVO.setMySignOrder(signLineVO.get(j).getSignOrder());
+			}
+			if(signLineVO.get(j).getState().equals("0")) {
+				count--;
+			}
+		}
+		overVO.setStateCount(count);
+		overVO.setSignLineVO(signLineVO);
+		
+		model.addAttribute("vo", overVO);
+		
+		return "/sign/overView";
+	}
+	
+	@RequestMapping(value = "/approvedDoc.do", method = RequestMethod.POST)
+	public void approvedDoc(DocVO docVO, HttpServletResponse res) throws IOException {
+		
+		int result = signService.updateApprovedDoc(docVO);
+		res.setContentType("text/html; charset=utf-8");
+		res.setCharacterEncoding("UTF-8");
+		if(result>0) {
+			res.getWriter().append("<script>alert('승인완료 되었습니다.');location.href='main.do'</script>");
+		}else {
+			res.getWriter().append("<script>alert('승인되지 않았습니다.');location.href='main.do'</script>");
+		}
+		res.getWriter().flush();
+	}
+	
+	@RequestMapping(value = "/rejectedDoc.do", method = RequestMethod.POST)
+	public void rejectedDoc(DocVO docVO, HttpServletResponse res) throws IOException {
+		int result = signService.updateRejectedDoc(docVO);
+		res.setContentType("text/html; charset=utf-8");
+		res.setCharacterEncoding("UTF-8");
+		if(result>0) {
+			res.getWriter().append("<script>alert('반려 되었습니다.');location.href='main.do'</script>");
+		}else {
+			res.getWriter().append("<script>alert('반려 되지 않았습니다.');location.href='main.do'</script>");
+		}
+		res.getWriter().flush();
+	}
+	
+	@RequestMapping(value = "/approvedVaca.do", method = RequestMethod.POST)
+	public void approvedVaca(VacaVO vacaVO, HttpServletResponse res) throws IOException {
+		
+		int result = signService.updateApprovedVaca(vacaVO);
+		res.setContentType("text/html; charset=utf-8");
+		res.setCharacterEncoding("UTF-8");
+		if(result>0) {
+			res.getWriter().append("<script>alert('승인완료 되었습니다.');location.href='main.do'</script>");
+		}else {
+			res.getWriter().append("<script>alert('승인되지 않았습니다.');location.href='main.do'</script>");
+		}
+		res.getWriter().flush();
+	}
+	
+	@RequestMapping(value = "/rejectedVaca.do", method = RequestMethod.POST)
+	public void rejectedVaca(VacaVO vacaVO, HttpServletResponse res) throws IOException {
+		int result = signService.updateRejectedVaca(vacaVO);
+		res.setContentType("text/html; charset=utf-8");
+		res.setCharacterEncoding("UTF-8");
+		if(result>0) {
+			res.getWriter().append("<script>alert('반려 되었습니다.');location.href='main.do'</script>");
+		}else {
+			res.getWriter().append("<script>alert('반려 되지 않았습니다.');location.href='main.do'</script>");
+		}
+		res.getWriter().flush();
+	}
+	
+	@RequestMapping(value = "/approvedOver.do", method = RequestMethod.POST)
+	public void approvedOver(OverVO overVO, HttpServletResponse res) throws IOException {
+		
+		int result = signService.updateApprovedOver(overVO);
+		res.setContentType("text/html; charset=utf-8");
+		res.setCharacterEncoding("UTF-8");
+		if(result>0) {
+			res.getWriter().append("<script>alert('승인완료 되었습니다.');location.href='main.do'</script>");
+		}else {
+			res.getWriter().append("<script>alert('승인되지 않았습니다.');location.href='main.do'</script>");
+		}
+		res.getWriter().flush();
+	}
+	
+	@RequestMapping(value = "/rejectedOver.do", method = RequestMethod.POST)
+	public void rejectedOver(OverVO overVO, HttpServletResponse res) throws IOException {
+		int result = signService.updateRejectedOver(overVO);
+		res.setContentType("text/html; charset=utf-8");
+		res.setCharacterEncoding("UTF-8");
+		if(result>0) {
+			res.getWriter().append("<script>alert('반려 되었습니다.');location.href='main.do'</script>");
+		}else {
+			res.getWriter().append("<script>alert('반려 되지 않았습니다.');location.href='main.do'</script>");
+		}
+		res.getWriter().flush();
+	}
 	
 }
 

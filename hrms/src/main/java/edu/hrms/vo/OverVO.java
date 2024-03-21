@@ -1,5 +1,7 @@
 package edu.hrms.vo;
 
+import java.util.List;
+
 public class OverVO {
 	private int overTimeNo;
 	private int userId;
@@ -7,25 +9,19 @@ public class OverVO {
 	private String start;
 	private String end;
 	private String state;
+	private String content;
+	private String rdate;
 	
 	private String name;
 	private String dept;
 	private String position;
 	
-	public OverVO() {}
-
-	public OverVO(int overTimeNo, int userId, String date, String start, String end, String state, String name,
-			String dept, String position) {
-		this.overTimeNo = overTimeNo;
-		this.userId = userId;
-		this.date = date;
-		this.start = start;
-		this.end = end;
-		this.state = state;
-		this.name = name;
-		this.dept = dept;
-		this.position = position;
-	}
+	private String mySignState;
+	private int mySignOrder;
+	private int stateCount;
+	private String mySignLineNo;
+	
+	private List<SignLineVO> signLineVO;
 
 	public int getOverTimeNo() {
 		return overTimeNo;
@@ -74,7 +70,23 @@ public class OverVO {
 	public void setState(String state) {
 		this.state = state;
 	}
-	
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getRdate() {
+		return rdate;
+	}
+
+	public void setRdate(String rdate) {
+		this.rdate = rdate;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -98,4 +110,45 @@ public class OverVO {
 	public void setPosition(String position) {
 		this.position = position;
 	}
+
+	public String getMySignState() {
+		return mySignState;
+	}
+
+	public void setMySignState(String mySignState) {
+		this.mySignState = mySignState;
+	}
+
+	public int getMySignOrder() {
+		return mySignOrder;
+	}
+
+	public void setMySignOrder(int mySignOrder) {
+		this.mySignOrder = mySignOrder;
+	}
+
+	public int getStateCount() {
+		return stateCount;
+	}
+
+	public void setStateCount(int stateCount) {
+		this.stateCount = stateCount;
+	}
+
+	public String getMySignLineNo() {
+		return mySignLineNo;
+	}
+
+	public void setMySignLineNo(String mySignLineNo) {
+		this.mySignLineNo = mySignLineNo;
+	}
+
+	public List<SignLineVO> getSignLineVO() {
+		return signLineVO;
+	}
+
+	public void setSignLineVO(List<SignLineVO> signLineVO) {
+		this.signLineVO = signLineVO;
+	}
+	
 }

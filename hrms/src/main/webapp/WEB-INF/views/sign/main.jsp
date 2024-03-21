@@ -74,47 +74,9 @@
 							<c:forEach items="${list.docVO}" var="vo">
 					 			<tr>
 									<td>
-										<c:choose>
-											<c:when test="${vo.dept eq 'M'}">
-												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">관리부</div>
-											</c:when>
-											<c:when test="${vo.dept eq 'D'}">
-												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">개발부</div>
-											</c:when>
-											<c:when test="${vo.dept eq 'S'}">
-												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">영업부</div>
-											</c:when>
-											<c:when test="${vo.dept eq 'P'}">
-												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
-											</c:when>
-											<c:when test="${vo.dept eq 'H'}">
-												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">인사부</div>
-											</c:when>
-											<c:otherwise>
-												<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">부서미정</div>
-											</c:otherwise>
-										</c:choose>
+										<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">${vo.dept}</div>
 										<span class="text-dark font-weight-bold">${vo.name}</span> 
-										<c:choose>
-											<c:when test="${vo.position eq 'A'}">
-												<span class="text-xs font-weight-bold">관리자</span>
-											</c:when>
-											<c:when test="${vo.position eq 'C'}">
-												<span class="text-xs font-weight-bold">대표</span>
-											</c:when>
-											<c:when test="${vo.position eq 'D'}">
-												<span class="text-xs font-weight-bold">부장</span>
-											</c:when>
-											<c:when test="${vo.position eq 'L'}">
-												<span class="text-xs font-weight-bold">팀장</span>
-											</c:when>
-											<c:when test="${vo.position eq 'E'}">
-												<span class="text-xs font-weight-bold">사원</span>
-											</c:when>
-											<c:otherwise>
-												<span class="text-xs font-weight-bold">직급미정</span>
-											</c:otherwise>
-										</c:choose>
+										<span class="text-xs font-weight-bold">${vo.position}</span>
 									</td>
 									<td>
 										<c:choose>
@@ -125,13 +87,13 @@
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
 											</c:when>
 											<c:when test="${vo.mySignState eq '3'}">
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">반려</div>
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
 											</c:when>
 											<c:otherwise>
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-secondary">오류</div>
 											</c:otherwise>
 										</c:choose>
-										<a href="view.do?docNo=${vo.docNo}">${vo.content}</a>
+										<a href="docView.do?docNo=${vo.docNo}">${vo.content}</a>
 									</td>
 									<td>
 										<div class="text-dark">${vo.date}</div>
@@ -247,36 +209,53 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>
-									<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
-									<span class="text-dark font-weight-bold">홍길동</span> 
-									<span class="text-xs font-weight-bold">팀장</span>
-								</td>
-								<td>System Architect</td>
-								<td>Edinburgh</td>
-								<td>
-									<div class="d-inline card bg-info text-white text-center px-3 py-1">승인 완료</div>
-								</td>
-							</tr>
-							<tr>
-								<td>Garrett Winters</td>
-								<td>Accountant</td>
-								<td>Tokyo</td>
-								<td>
-									<div class="d-inline card bg-danger text-white text-center px-3 py-1">
-										<i class="fas fa-fw fa-file-signature"> </i>결재 대기
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>Ashton Cox</td>
-								<td>Junior Technical Author</td>
-								<td>San Francisco</td>
-								<td>
-									<div class="d-inline card bg-secondary text-white text-center px-4 py-1">반려</div>
-								</td>
-							</tr>
+							<c:forEach items="${list.vacaVO}" var="vo">
+					 			<tr>
+									<td>
+										<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">${vo.dept}</div>
+										<span class="text-dark font-weight-bold">${vo.name}</span> 
+										<span class="text-xs font-weight-bold">${vo.position}</span>
+									</td>
+									<td>
+										<c:choose>
+											<c:when test="${vo.mySignState eq '0'}">
+												<div class="d-inline card text-danger text-center px-2 mr-1 border-danger font-weight-bold">진행</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '2'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '3'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
+											</c:when>
+											<c:otherwise>
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-secondary">오류</div>
+											</c:otherwise>
+										</c:choose>
+										<a href="vacaView.do?vacaNo=${vo.vacaNo}">${vo.content}</a>
+									</td>
+									<td>
+										<div class="text-dark">${vo.date}</div>
+									</td>
+									<td>
+										<c:choose>
+											<c:when test="${vo.mySignState eq '0'}">
+												<div class="d-inline card bg-danger text-white text-center px-3 py-1">
+													<i class="fas fa-fw fa-file-signature"></i>결재 대기
+												</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '2'}">
+												<div class="d-inline card bg-info text-white text-center px-3 py-1">승인 완료</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '3'}">
+												<div class="d-inline card bg-dark text-white text-center px-4 py-1">반려</div>
+											</c:when>
+											<c:otherwise>
+												<div class="d-inline card bg-secondary text-white text-center px-4 py-1">오류</div>
+											</c:otherwise>
+										</c:choose>
+									</td>
+								</tr>
+					 		</c:forEach>
 						</tbody>
 					</table>
 					<table class="table table-bordered text-center overTable d-none" id="dataTable" width="100%" cellspacing="0">
@@ -289,36 +268,53 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>
-									<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
-									<span class="text-dark font-weight-bold">홍길동</span> 
-									<span class="text-xs font-weight-bold">팀장</span>
-								</td>
-								<td>System Architect</td>
-								<td>Edinburgh</td>
-								<td>
-									<div class="d-inline card bg-info text-white text-center px-3 py-1">승인 완료</div>
-								</td>
-							</tr>
-							<tr>
-								<td>Garrett Winters</td>
-								<td>Accountant</td>
-								<td>Tokyo</td>
-								<td>
-									<div class="d-inline card bg-danger text-white text-center px-3 py-1">
-										<i class="fas fa-fw fa-file-signature"> </i>결재 대기
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>Ashton Cox</td>
-								<td>Junior Technical Author</td>
-								<td>San Francisco</td>
-								<td>
-									<div class="d-inline card bg-secondary text-white text-center px-4 py-1">반려</div>
-								</td>
-							</tr>
+							<c:forEach items="${list.overVO}" var="vo">
+					 			<tr>
+									<td>
+										<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">${vo.dept}</div>
+										<span class="text-dark font-weight-bold">${vo.name}</span> 
+										<span class="text-xs font-weight-bold">${vo.position}</span>
+									</td>
+									<td>
+										<c:choose>
+											<c:when test="${vo.mySignState eq '0'}">
+												<div class="d-inline card text-danger text-center px-2 mr-1 border-danger font-weight-bold">진행</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '2'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '3'}">
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
+											</c:when>
+											<c:otherwise>
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-secondary">오류</div>
+											</c:otherwise>
+										</c:choose>
+										<a href="overView.do?overTimeNo=${vo.overTimeNo}">${vo.content}</a>
+									</td>
+									<td>
+										<div class="text-dark">${vo.date}</div>
+									</td>
+									<td>
+										<c:choose>
+											<c:when test="${vo.mySignState eq '0'}">
+												<div class="d-inline card bg-danger text-white text-center px-3 py-1">
+													<i class="fas fa-fw fa-file-signature"></i>결재 대기
+												</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '2'}">
+												<div class="d-inline card bg-info text-white text-center px-3 py-1">승인 완료</div>
+											</c:when>
+											<c:when test="${vo.mySignState eq '3'}">
+												<div class="d-inline card bg-dark text-white text-center px-4 py-1">반려</div>
+											</c:when>
+											<c:otherwise>
+												<div class="d-inline card bg-secondary text-white text-center px-4 py-1">오류</div>
+											</c:otherwise>
+										</c:choose>
+									</td>
+								</tr>
+					 		</c:forEach>
 						</tbody>
 					</table>
 				</div>

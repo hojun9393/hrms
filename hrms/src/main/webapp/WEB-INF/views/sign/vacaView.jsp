@@ -21,7 +21,7 @@
 						<div class="my-4">
 							<span class="d-inline bg-primary card text-white py-1 px-3">초과근무</span>
 							<h1 class="d-inline h4 text-gray-900 font-weight-bold">
-							[${vo.dept}]${vo.name} ${vo.position} ${vo.title}
+							[${vo.dept}] ${vo.name} ${vo.position}
 							</h1>
 						</div>
 						<hr>
@@ -29,12 +29,15 @@
 							<span class="d-inline font-weight-bold text-gray-800">작성자</span>
 							|&nbsp; ${vo.name}
 							<span class="d-inline font-weight-bold text-gray-800 ml-5">등록일</span>
-							|&nbsp; ${vo.date}
+							|&nbsp; ${vo.rdate}
 						</div>
+						<div class="py-2">
+                        	<span class="d-inline font-weight-bold text-gray-800">연차 신청일</span> |&nbsp; ${vo.date} ${vo.startDate} ~ ${vo.endDate} ${vo.startTime} ~ ${vo.endTime}
+                        </div>
 						<hr>
 						<div class="py-2">
-							<span class="d-block font-weight-bold text-gray-800 mb-3">기안내용</span>
-							${vo.content}
+							<span class="d-block font-weight-bold text-gray-800 mb-3">연차사유</span>
+							${vo.reason}
 						</div>
 					</div>
 				</div>
@@ -121,8 +124,8 @@
 					<div class="mb-4 text-center">
 						<hr>
 						<a href="main.do" class="btn btn-secondary btn-user"> 목록으로 </a>
-						<button type="submit" form="approvedDoc" class="btn btn-primary btn-user"> 승인하기 </button>
-						<button type="submit" form="rejectedDoc" class="btn btn-dark btn-user"> 반려하기 </button>
+						<button type="submit" form="approvedVaca" class="btn btn-primary btn-user"> 승인하기 </button>
+						<button type="submit" form="rejectedVaca" class="btn btn-dark btn-user"> 반려하기 </button>
 					</div>
 				</div>
 			</div>
@@ -130,12 +133,12 @@
 	</div>
 </div>
 
-<form action="approvedDoc.do" method="post" id="approvedDoc">
-	<input type="hidden" name="docNo" value="${vo.docNo}" >
+<form action="approvedVaca.do" method="post" id="approvedVaca">
+	<input type="hidden" name="vacaNo" value="${vo.vacaNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
-<form action="rejectedDoc.do" method="post" id="rejectedDoc">
-	<input type="hidden" name="docNo" value="${vo.docNo}" >
+<form action="rejectedVaca.do" method="post" id="rejectedVaca">
+	<input type="hidden" name="vacaNo" value="${vo.vacaNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
 

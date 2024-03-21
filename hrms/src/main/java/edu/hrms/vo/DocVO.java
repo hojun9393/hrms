@@ -16,26 +16,10 @@ public class DocVO {
 	
 	private String mySignState;
 	private int mySignOrder;
+	private int stateCount;
+	private String mySignLineNo;
 	
 	private List<SignLineVO> signLineVO;
-	
-	public DocVO() {}
-
-	public DocVO(int docNo, int userId, String title, String content, String state, String date, String name,
-			String dept, String position, String mySignState, int mySignOrder, List<SignLineVO> signLineVO) {
-		this.docNo = docNo;
-		this.userId = userId;
-		this.title = title;
-		this.content = content;
-		this.state = state;
-		this.date = date;
-		this.name = name;
-		this.dept = dept;
-		this.position = position;
-		this.mySignState = mySignState;
-		this.mySignOrder = mySignOrder;
-		this.signLineVO = signLineVO;
-	}
 
 	public int getDocNo() {
 		return docNo;
@@ -108,5 +92,17 @@ public class DocVO {
 	}
 	public void setSignLineVO(List<SignLineVO> signLineVO) {
 		this.signLineVO = signLineVO;
+	}
+	public int getStateCount() {
+		return stateCount;
+	}
+	public void setStateCount(int stateCount) {
+		this.stateCount = stateCount;
+	}
+	public String getMySignLineNo() {
+		return mySignLineNo;
+	}
+	public void setMySignLineNo(String mySignLineNo) {
+		this.mySignLineNo = mySignLineNo;
 	}
 }

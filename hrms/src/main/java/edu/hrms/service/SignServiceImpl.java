@@ -1,6 +1,7 @@
 package edu.hrms.service;
 
-import java.util.List; 
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,18 +19,18 @@ public class SignServiceImpl implements SignService{
 	SignDAO signDAO;
 	
 	@Override
-	public List<DocVO> selectAllDoc() {
-		return signDAO.selectAllDoc();
+	public List<DocVO> selectAllDoc(int userId) {
+		return signDAO.selectAllDoc(userId);
 	}
 	
 	@Override
-	public List<VacaVO> selectAllVaca() {
-		return signDAO.selectAllVaca();
+	public List<VacaVO> selectAllVaca(int userId) {
+		return signDAO.selectAllVaca(userId);
 	}
 	
 	@Override
-	public List<OverVO> selectAllOver() {
-		return signDAO.selectAllOver();
+	public List<OverVO> selectAllOver(int userId) {
+		return signDAO.selectAllOver(userId);
 	}
 	
 	@Override
@@ -38,7 +39,57 @@ public class SignServiceImpl implements SignService{
 	}
 	
 	@Override
-	public DocVO selectDocFromDocNo(int docNo) {
-		return signDAO.selectDocFromDocNo(docNo);
+	public List<SignLineVO> selectSignLineFromVacaNo(int vacaNo) {
+		return signDAO.selectSignLineFromVacaNo(vacaNo);
+	}
+	
+	@Override
+	public List<SignLineVO> selectSignLineFromOverTimeNo(int overTimeNo) {
+		return signDAO.selectSignLineFromOverTimeNo(overTimeNo);
+	}
+	
+	@Override
+	public DocVO selectDocFromDocNo(Map<String,Integer> map) {
+		return signDAO.selectDocFromDocNo(map);
+	}
+	
+	@Override
+	public VacaVO selectVacaFromVacaNo(Map<String,Integer> map) {
+		return signDAO.selectVacaFromVacaNo(map);
+	}
+	
+	@Override
+	public OverVO selectOverFromOverTimeNo(Map<String,Integer> map) {
+		return signDAO.selectOverFromOverTimeNo(map);
+	}
+
+	@Override
+	public int updateApprovedDoc(DocVO docVO) {
+		return signDAO.updateApprovedDoc(docVO);
+	}
+
+	@Override
+	public int updateRejectedDoc(DocVO docVO) {
+		return signDAO.updateRejectedDoc(docVO);
+	}
+
+	@Override
+	public int updateApprovedVaca(VacaVO vacaVO) {
+		return signDAO.updateApprovedVaca(vacaVO);
+	}
+
+	@Override
+	public int updateRejectedVaca(VacaVO vacaVO) {
+		return signDAO.updateRejectedVaca(vacaVO);
+	}
+
+	@Override
+	public int updateApprovedOver(OverVO overVO) {
+		return signDAO.updateApprovedOver(overVO);
+	}
+
+	@Override
+	public int updateRejectedOver(OverVO overVO) {
+		return signDAO.updateRejectedOver(overVO);
 	}
 }
