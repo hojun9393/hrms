@@ -180,7 +180,7 @@
 										<th>총 근무</th>
 									</tr>
 								</thead>
-								<tbody class="ouputBody">
+								<tbody class="outputBody1">
 									<c:forEach var="item" items="${workList}">
 										<tr>
 											<td>${item.date }</td>
@@ -208,7 +208,7 @@
 										<th>조회</th>
 									</tr>
 								</thead>
-								<tbody class="ouputBody">
+								<tbody class="outputBody2">
 									<c:forEach var="item" items="${overtimeList}">
 										<tr>
 											<td>${item.date }</td>
@@ -324,9 +324,23 @@
 	
 		$.ajax({
 			url:"reloadList.do",
-			data: {startDate : startDate, endDate : endDate},
+			data: {startDate : startDate, endDate : endDate, obj : obj},
 			success:function(data){
-				console.log(data);
+				if(obj==1){
+					let outputBody = $(".outputBody1");
+					let html = "";
+					for(let i=0; i<data.length; i++){
+						html += "<tr>";
+						html += "<td>"+data[i].date+"</td>";
+						html += "<td>"+data[i].start+"</td>";
+						html += "<td>"+data[i].end+"</td>";
+						html += "<td>"+data[i].overtime+"</td>";
+						html += "<td>"+data[i].total+"</td>";
+						html += "</tr>";
+					}
+					outputBody.html(html);
+				}
+					
 			}
 		});
 	}

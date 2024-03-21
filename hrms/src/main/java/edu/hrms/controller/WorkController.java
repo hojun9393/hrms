@@ -154,7 +154,7 @@ public class WorkController {
 	
 	@RequestMapping(value = "/reloadList.do")
 	@ResponseBody
-	public List<WorkVO> reloadList(String startDate, String endDate) {
+	public List<WorkVO> reloadList(String startDate, String endDate, String obj) {
 		
 		String userid="10001";
 		Map<String, String> listMap = new HashMap<>();
