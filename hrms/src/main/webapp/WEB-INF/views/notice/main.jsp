@@ -24,11 +24,12 @@
 					</a>
 					<!-- 공지사항 -->
 					<div>
-						<table>
+						<table class="table text-secondary text-center px-3 py-1 border-secondary" >
 							<thead>
 								<tr>
-									<th>제목</th>
-									<th>작성일</th>
+									<th class="shadow mb-4">제목</th>
+									<th class="shadow mb-4">내용</th>
+									<th class="shadow mb-4">작성일</th>
 								</tr>
 							</thead>
 							<tbody>
