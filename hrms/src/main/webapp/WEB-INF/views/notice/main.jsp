@@ -32,22 +32,21 @@
 								</tr>
 							</thead>
 							<tbody>
+								<c:forEach items="${list}" var="vo">
 								<tr>
-									<td>공지입니다</td>
-									<td>2024-03-02</td>
+									<%-- <c:choose>
+										<c:when test="${vo.userId eq '99000'}">
+										<td>대표</td>
+										</c:when>
+										<c:otherwise>
+										<td>관리자</td>
+										</c:otherwise>
+									</c:choose> --%>
+									<td>${vo.title}</td>
+									<td>${vo.content}</td>
+									<td>${vo.rdate}</td>
 								</tr>
-								<tr>
-									<td>공지입니다</td>
-									<td>2024-03-02</td>
-								</tr>
-								<tr>
-									<td>공지입니다</td>
-									<td>2024-03-02</td>
-								</tr>
-								<tr>
-									<td>공지입니다</td>
-									<td>2024-03-02</td>
-								</tr>
+								</c:forEach>
 							</tbody>
 						</table>
 						

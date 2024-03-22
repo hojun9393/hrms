@@ -32,7 +32,7 @@
 										</div>
 									</div>
 									<div class="form-group">
-										내용 : <textarea class="form-control form-control-user"></textarea>
+										내용 : <textarea class="form-control"></textarea>
 									</div>
 									<div>
 										첨부파일 : 

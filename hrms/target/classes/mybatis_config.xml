@@ -7,5 +7,6 @@
 		<typeAlias type="edu.hrms.vo.VacaVO" alias="vacaVO"/>
 		<typeAlias type="edu.hrms.vo.OverVO" alias="overVO"/>
 		<typeAlias type="edu.hrms.vo.SignLineVO" alias="signLineVO"/>
+		<typeAlias type="edu.hrms.vo.NoticeVO" alias="noticeVO"/>
 	</typeAliases>
 </configuration>
