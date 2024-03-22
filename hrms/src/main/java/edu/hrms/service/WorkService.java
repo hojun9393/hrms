@@ -10,9 +10,13 @@ import edu.hrms.vo.WorkVO;
 
 public interface WorkService {
 
-	WorkVO select(Map<String, String> map);
+	WorkVO selectMyWork(Map<String, String> map);
 	
-	String selectThisWeek(Map<String, String> map);
+	String selectMyThisWeekTotalWorkTime(Map<String, String> map);
+	
+	String selectMyThisWeekTotalOvertimeTime(Map<String, String> map);
+	
+	String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(Map<String, String> map);
 	
 	int insert(Map<String, String> map);
 
@@ -32,9 +36,9 @@ public interface WorkService {
 	
 	int isOvertimeApplicationToday(Map<String, String> map);
 	
-	List<WorkVO> selectAllWork(Map<String, String> map);
+	List<WorkVO> selectAllMyWork(Map<String, String> map);
 	
-	List<OvertimeVO> selectAllOvertime(Map<String, String> map);
+	List<OvertimeVO> selectAllMyOvertime(Map<String, String> map);
 	
 	OvertimeVO selectOvertime(int overtimeNo);
 	
