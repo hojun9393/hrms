@@ -19,15 +19,15 @@
 				<div class="col-9">
 					<div class="py-5 pl-5">
 						<div class="my-4">
-							<span class="d-inline bg-primary card text-white py-1 px-3">초과근무</span>
+							<span class="d-inline bg-primary card text-white py-1 px-3">기안</span>
 							<h1 class="d-inline h4 text-gray-900 font-weight-bold">
-							[${vo.dept}]${vo.name} ${vo.position} ${vo.title}
+							${vo.title}
 							</h1>
 						</div>
 						<hr>
 						<div class="py-2">
 							<span class="d-inline font-weight-bold text-gray-800">작성자</span>
-							|&nbsp; ${vo.name}
+							|&nbsp; [${vo.dept}] ${vo.name} ${vo.position}
 							<span class="d-inline font-weight-bold text-gray-800 ml-5">등록일</span>
 							|&nbsp; ${vo.date}
 						</div>
@@ -48,13 +48,16 @@
 							</div>
 							<div class="col-auto">
 								<c:choose>
-									<c:when test="${vo.mySignState eq '0'}">
+									<c:when test="${vo.state eq '0'}">
+										<div class="d-inline card text-secondary text-center px-3 py-1 border-secondary font-weight-bold">대기</div>
+									</c:when>
+									<c:when test="${vo.state eq '1'}">
 										<div class="d-inline card text-danger text-center px-3 py-1 border-danger font-weight-bold">진행</div>
 									</c:when>
-									<c:when test="${vo.mySignState eq '2'}">
+									<c:when test="${vo.state eq '2'}">
 										<div class="d-inline card text-white text-center px-3 py-1 bg-info font-weight-bold">승인</div>
 									</c:when>
-									<c:when test="${vo.mySignState eq '3'}">
+									<c:when test="${vo.state eq '3'}">
 										<div class="d-inline card text-white text-center px-3 py-1 bg-dark font-weight-bold">반려</div>
 									</c:when>
 									<c:otherwise>
@@ -68,7 +71,7 @@
 						<c:choose>
 							<c:when test="${signLineVO.state eq '0'}">
 								<c:choose>
-									<c:when test="${vo.mySignOrder eq signLineVO.signOrder}">
+									<c:when test="${vo.mySignOrder eq signLineVO.signOrder || (vo.mySignState eq '2' && vo.mySignOrder+1 eq signLineVO.signOrder)}">
 										<div class="card text-danger px-3 py-2 my-2 border-danger font-weight-bold">
 											<div class="row">
 												<span class="d-inline col">${signLineVO.name} ${signLineVO.position}</span>

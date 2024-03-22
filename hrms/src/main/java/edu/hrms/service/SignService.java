@@ -30,4 +30,8 @@ public interface SignService {
 	
 	int updateApprovedOver(OverVO overVO);	
 	int updateRejectedOver(OverVO overVO);
+	
+	int updateDocState(int docNo);
+	int updateVacaState(int vacaNo);
+	int updateOverState(int overTimeNo);
 }

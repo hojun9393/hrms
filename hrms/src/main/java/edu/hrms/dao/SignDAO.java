@@ -79,4 +79,16 @@ public class SignDAO {
 	public int updateRejectedOver(OverVO overVO) {
 		return sqlSession.update(namespace+".updateRejectedOver", overVO);
 	}
+	
+	public int updateDocState(int docNo) {
+		return sqlSession.update(namespace+".updateDocState", docNo);
+	}
+	
+	public int updateVacaState(int vacaNo) {
+		return sqlSession.update(namespace+".updateVacaState", vacaNo);
+	}
+	
+	public int updateOverState(int overTimeNo) {
+		return sqlSession.update(namespace+".updateOverState", overTimeNo);
+	}
 }
