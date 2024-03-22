@@ -20,6 +20,11 @@ public class NoticeServiceImpl implements NoticeService{
 	public List<NoticeVO> selectNotice() {
 		return noticeDAO.selectNotice();
 	}
+	@Override
+	public NoticeVO selectNoticeOne(int noticeNo) {
+		return noticeDAO.selectNoticeOne(noticeNo);
+	}
+	
 	
 	/*
 	 * @Override public int insert() { return noticeDAO.insert(); }

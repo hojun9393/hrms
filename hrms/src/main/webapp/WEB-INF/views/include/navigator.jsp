@@ -49,13 +49,13 @@
 			</a>
 		</li>
 		<li class="nav-item ${ navSelected.equals('user') ? 'active' : '' }">
-			<a class="nav-link" href="employee_main.jsp"> 
+			<a class="nav-link" href="${pageContext.request.contextPath}/employee/main.do"> 
 				<i class="fas fa-fw fa-users"></i> 
 				<span>사원</span>
 			</a>
 		</li>
 		<li class="nav-item ${ navSelected.equals('notice') ? 'active' : '' }">
-			<a class="nav-link" href="notice_main.jsp"> 
+			<a class="nav-link" href="${pageContext.request.contextPath}/notice/main.do"> 
 				<i class="fas fa-fw fa-bullhorn"></i> 
 				<span>공지</span>
 			</a>

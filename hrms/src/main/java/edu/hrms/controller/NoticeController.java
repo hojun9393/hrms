@@ -26,8 +26,9 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value = "/view.do", method = RequestMethod.GET)
-	public String view() {
-		
+	public String view(int noticeNo, Model model) {
+		NoticeVO noticeVO = noticeService.selectNoticeOne(noticeNo);
+		model.addAttribute("vo", noticeVO);
 		return "/notice/view";
 	}
 	
