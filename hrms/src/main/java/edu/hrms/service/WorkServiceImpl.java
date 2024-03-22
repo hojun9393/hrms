@@ -25,8 +25,18 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public String selectThisWeek(Map<String, String> map) {
-		return workDAO.selectThisWeek(map);
+	public String selectMyThisWeekTotalWorkTime(Map<String, String> map) {
+		return workDAO.selectMyThisWeekTotalWorkTime(map);
+	}
+	
+	@Override
+	public String selectMyThisWeekTotalOvertimeTime(Map<String, String> map) {
+		return workDAO.selectMyThisWeekTotalOvertimeTime(map);
+	}
+	
+	@Override
+	public String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(Map<String, String> map) {
+		return workDAO.myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(map);
 	}
 	
 	@Override
@@ -65,8 +75,8 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public List<OvertimeVO> selectAllOvertime(Map<String, String> map) {
-		return workDAO.selectAllOvertime(map);
+	public List<OvertimeVO> selectAllMyOvertime(Map<String, String> map) {
+		return workDAO.selectAllMyOvertime(map);
 	}
 	
 	@Override

@@ -24,8 +24,16 @@ public class WorkDAO {
 		return sqlSession.selectOne(namespace+".selectMyWork", map);
 	}
 	
-	public String selectThisWeek(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".selectThisWeek", map);
+	public String selectMyThisWeekTotalWorkTime(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".selectMyThisWeekTotalWorkTime", map);
+	}
+	
+	public String selectMyThisWeekTotalOvertimeTime(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".selectMyThisWeekTotalOvertimeTime", map);
+	}
+	
+	public String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".myThisWeekTotalWorkTimePlusMyTotalOvertimeTime", map);
 	}
 	
 	public int insert(Map<String, String> map) {
@@ -72,8 +80,8 @@ public class WorkDAO {
 		return sqlSession.selectList(namespace+".selectAllMyWork", map);
 	}
 	
-	public List<OvertimeVO> selectAllOvertime(Map<String, String> map){
-		return sqlSession.selectList(namespace+".selectAllOvertime", map);
+	public List<OvertimeVO> selectAllMyOvertime(Map<String, String> map){
+		return sqlSession.selectList(namespace+".selectAllMyOvertime", map);
 	}
 	
 }

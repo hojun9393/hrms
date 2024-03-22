@@ -55,34 +55,35 @@ public class WorkController {
 		}
 		
 		Map<String, String> workTimeMap = calcCalendar.getFirstLastDays(now);
-		workTimeMap.put("table","work");
-		String workTime = workService.selectThisWeek(workTimeMap);
-		workTimeMap.put("table","overtime");
-		String overtimeTime = workService.selectThisWeek(workTimeMap);
-		model.addAttribute("workTime", workTime);
-		model.addAttribute("overtimeTime", overtimeTime);
+		workTimeMap.put("userid",userid);
+		String myThisWeekTotalWorkTime = workService.selectMyThisWeekTotalWorkTime(workTimeMap);
+		String myThisWeekTotalOvertimeTime = workService.selectMyThisWeekTotalOvertimeTime(workTimeMap);
+		
+		Map<String, String> myTotalWorkTimeMap = new HashMap<>();
+		myTotalWorkTimeMap.put("workTime",myThisWeekTotalWorkTime);
+		myTotalWorkTimeMap.put("overtimeTime",myThisWeekTotalOvertimeTime);
+		
+		String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime = workService.myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(myTotalWorkTimeMap);
+		
+		model.addAttribute("myThisWeekTotalWorkTimePlusMyTotalOvertimeTime", myThisWeekTotalWorkTimePlusMyTotalOvertimeTime);
+		model.addAttribute("myThisWeekTotalOvertimeTime", myThisWeekTotalOvertimeTime);
 		
 		Map<String, String> listMap = new HashMap<>();
 		String startDate = null;
-		String endDate = null;
+		String endDate = calcCalendar.getTodayDate();
 		listMap.put("userid", userid);
 		listMap.put("startDate", startDate);
-		if(endDate==null) {
-			endDate = calcCalendar.getTodayDate();
-		}
 		listMap.put("endDate", endDate);
 		
 		List<WorkVO> workList = workService.selectAllMyWork(listMap);
 		model.addAttribute("workList", workList);
-		List<OvertimeVO> overtimeList = workService.selectAllOvertime(listMap);
+		List<OvertimeVO> overtimeList = workService.selectAllMyOvertime(listMap);
 		model.addAttribute("overtimeList", overtimeList);
 		
 		int count = workService.isOvertimeApplicationToday(map);
 		model.addAttribute("isOvertimeApplicationToday", count);
 		
 		model.addAttribute("selMenu", selMenu);
-		
-		
 		
 		return "/work/main";
 	}
@@ -242,7 +243,7 @@ public class WorkController {
 		if(obj.equals("1")) {
 			list = workService.selectAllMyWork(listMap);
 		}else if(obj.equals("2")) {
-			list = workService.selectAllOvertime(listMap);
+			list = workService.selectAllMyOvertime(listMap);
 		}
 		
 		return list;

@@ -16,16 +16,6 @@ public class CalcCalendar {
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
 	Calendar calendar = Calendar.getInstance();   
 	
-	public int getWeekOfYear(String date) {    
-		String[] dates = date.split("-");    
-		int year = Integer.parseInt(dates[0]);    
-		int month = Integer.parseInt(dates[1]);    
-		int day = Integer.parseInt(dates[2]);    
-		calendar.set(year, month - 1, day);
-		
-		return calendar.get(Calendar.WEEK_OF_YEAR);
-	}
-	
 	public Map<String, String> getFirstLastDays(String date) {
 		String[] dates = date.split("-");    
 		int year = Integer.parseInt(dates[0]);    
@@ -34,10 +24,9 @@ public class CalcCalendar {
 		calendar.set(year, month - 1, day);
 		
 		Map<String, String> map = new HashMap<>();
-		
+		map.put("weekOfYear", Integer.toString(calendar.get(Calendar.WEEK_OF_YEAR)));
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 		map.put("startDay", sdf.format(calendar.getTime()));
-			
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
 		map.put("endDay", sdf.format(calendar.getTime()));
 		

@@ -12,7 +12,11 @@ public interface WorkService {
 
 	WorkVO selectMyWork(Map<String, String> map);
 	
-	String selectThisWeek(Map<String, String> map);
+	String selectMyThisWeekTotalWorkTime(Map<String, String> map);
+	
+	String selectMyThisWeekTotalOvertimeTime(Map<String, String> map);
+	
+	String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(Map<String, String> map);
 	
 	int insert(Map<String, String> map);
 
@@ -34,7 +38,7 @@ public interface WorkService {
 	
 	List<WorkVO> selectAllMyWork(Map<String, String> map);
 	
-	List<OvertimeVO> selectAllOvertime(Map<String, String> map);
+	List<OvertimeVO> selectAllMyOvertime(Map<String, String> map);
 	
 	OvertimeVO selectOvertime(int overtimeNo);
 	
