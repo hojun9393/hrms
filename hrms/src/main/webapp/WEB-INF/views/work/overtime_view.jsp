@@ -119,7 +119,7 @@
 				<div class="col p-5 mt-5">
 					<div class="mb-4 text-center">
 						<hr>
-						<a href="main.do" class="btn btn-light border-dark btn-user"> 목록으로 </a> 
+						<a onclick="goMainFn()" class="btn btn-light border-dark btn-user"> 목록으로 </a> 
 						<c:if test="${ovo.state ne 9}">
 							<a onclick="withdrawalFn()" class="btn btn-dark btn-user"> 철회하기 </a>
 						</c:if>
@@ -136,18 +136,34 @@
 		if(select===true){
 			let f = document.createElement('form');
 	    
-			let obj;
-			obj = document.createElement('input');
-			obj.setAttribute('type', 'hidden');
-			obj.setAttribute('name', 'overtimeNo');
-			obj.setAttribute('value', '${ovo.overtimeNo}');
-	    
-			f.appendChild(obj);
+			let overtimeNoInput;
+			overtimeNoInput = document.createElement('input');
+			overtimeNoInput.setAttribute('type', 'hidden');
+			overtimeNoInput.setAttribute('name', 'overtimeNo');
+			overtimeNoInput.setAttribute('value', '${ovo.overtimeNo}');
+			f.appendChild(overtimeNoInput);
+			
 			f.setAttribute('method', 'post');
 			f.setAttribute('action', 'withdrawal.do');
 			document.body.appendChild(f);
 			f.submit();
 		}
+	}
+	
+	function goMainFn(){
+		let f = document.createElement('form');
+		    
+		let obj;
+		obj = document.createElement('input');
+		obj.setAttribute('type', 'hidden');
+		obj.setAttribute('name', 'selMenu');
+		obj.setAttribute('value', '2');
+		f.appendChild(obj);
+		
+		f.setAttribute('method', 'get');
+		f.setAttribute('action', 'main.do');
+		document.body.appendChild(f);
+		f.submit();
 	}
 </script>
 <!-- /.container-fluid -->

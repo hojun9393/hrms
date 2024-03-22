@@ -35,7 +35,7 @@ public class WorkController {
 	CalcCalendar calcCalendar;
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
-	public String main(Model model) {
+	public String main(Model model, String selMenu) {
 		
 		Map<String, String> map = new HashMap<>();
 		String userid = "10001";
@@ -47,7 +47,7 @@ public class WorkController {
 		map.put("userid", userid);
 		map.put("now", now);
 		
-		WorkVO vo = workService.select(map);
+		WorkVO vo = workService.selectMyWork(map);
 
 		if(vo!=null) {
 			model.addAttribute("start", vo.getStart());
@@ -72,13 +72,17 @@ public class WorkController {
 		}
 		listMap.put("endDate", endDate);
 		
-		List<WorkVO> workList = workService.selectAllWork(listMap);
+		List<WorkVO> workList = workService.selectAllMyWork(listMap);
 		model.addAttribute("workList", workList);
 		List<OvertimeVO> overtimeList = workService.selectAllOvertime(listMap);
 		model.addAttribute("overtimeList", overtimeList);
 		
 		int count = workService.isOvertimeApplicationToday(map);
 		model.addAttribute("isOvertimeApplicationToday", count);
+		
+		model.addAttribute("selMenu", selMenu);
+		
+		
 		
 		return "/work/main";
 	}
@@ -236,7 +240,7 @@ public class WorkController {
 		
 		List<?> list = new ArrayList<>();
 		if(obj.equals("1")) {
-			list = workService.selectAllWork(listMap);
+			list = workService.selectAllMyWork(listMap);
 		}else if(obj.equals("2")) {
 			list = workService.selectAllOvertime(listMap);
 		}

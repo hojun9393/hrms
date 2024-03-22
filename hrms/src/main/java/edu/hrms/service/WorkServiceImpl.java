@@ -20,8 +20,8 @@ public class WorkServiceImpl implements WorkService {
 	WorkDAO workDAO;
 	
 	@Override
-	public WorkVO select(Map<String, String> map) {
-		return workDAO.select(map);
+	public WorkVO selectMyWork(Map<String, String> map) {
+		return workDAO.selectMyWork(map);
 	}
 	
 	@Override
@@ -60,8 +60,8 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public List<WorkVO> selectAllWork(Map<String, String> map) {
-		return workDAO.selectAllWork(map);
+	public List<WorkVO> selectAllMyWork(Map<String, String> map) {
+		return workDAO.selectAllMyWork(map);
 	}
 	
 	@Override

@@ -20,8 +20,8 @@ public class WorkDAO {
 	
 	private final String namespace = "edu.hrms.mappers.workMapper";
 	
-	public WorkVO select(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".selectWork", map);
+	public WorkVO selectMyWork(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".selectMyWork", map);
 	}
 	
 	public String selectThisWeek(Map<String, String> map) {
@@ -68,8 +68,8 @@ public class WorkDAO {
 		return sqlSession.selectOne(namespace+".isOvertimeApplicationToday", map);
 	}
 	
-	public List<WorkVO> selectAllWork(Map<String, String> map){
-		return sqlSession.selectList(namespace+".selectAllWork", map);
+	public List<WorkVO> selectAllMyWork(Map<String, String> map){
+		return sqlSession.selectList(namespace+".selectAllMyWork", map);
 	}
 	
 	public List<OvertimeVO> selectAllOvertime(Map<String, String> map){

@@ -3,7 +3,7 @@
 			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.hrms.mappers.workMapper">
 	
-	<select id="selectWork" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
+	<select id="selectMyWork" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
 		SELECT * FROM work
 			WHERE userid = #{userid} 
 				AND DATE = #{now}
@@ -75,7 +75,7 @@
 	</insert>
 	
 	
-	<select id="selectAllWork" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
+	<select id="selectAllMyWork" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
 		SELECT w.*
 				, IFNULL(SEC_TO_TIME((TIME_TO_SEC(SUBTIME(o.end, o.start)))),'-') AS overtime 
          	, SEC_TO_TIME((TIME_TO_SEC(ADDTIME(SUBTIME(w.end, w.start),IFNULL(SEC_TO_TIME((TIME_TO_SEC(SUBTIME(o.end, o.start)))),0))))) AS total
@@ -104,7 +104,7 @@
 				<if test='startDate != null'>
 					AND date BETWEEN #{startDate} AND #{endDate}
 	 			</if>
-   		ORDER BY date DESC
+   		ORDER BY date DESC, overtimeNo DESC
 	</select>
 	
 	<select id="selectOvertime" parameterType="int" resultType="edu.hrms.vo.OvertimeVO">
@@ -148,6 +148,23 @@
 			WHERE userid = #{userid}
 				AND date = #{now} 
 				AND state NOT IN (3,9)
+	</select>
+	
+	<select id="selectAllWork" parameterType="Map" resultType="edu.hrms.vo.WorkVO">
+		SELECT w.*, u.name, 
+				(CASE 
+					WHEN u.position = 'C' THEN '대표'
+	            WHEN u.position = 'D' THEN '부장'
+	            WHEN u.position = 'L' THEN '팀장'
+	            WHEN u.position = 'E' THEN '사원' END
+				) AS position, 
+				
+			FROM work w
+			INNER JOIN user u ON w.userid = u.userid
+			INNER JOIN overtime o ON u.userid = o.userid
+			WHERE u.dept = #{dept}
+			
+			
 	</select>
 	
 </mapper>

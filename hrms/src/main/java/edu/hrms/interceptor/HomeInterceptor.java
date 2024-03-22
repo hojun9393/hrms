@@ -41,25 +41,25 @@ public class HomeInterceptor implements HandlerInterceptor {
 		String command = request.getRequestURI().substring(request.getContextPath().length()+1);
 		String[] uris = command.split("/");
 
-		String navSelected = "";
-		if(uris[0].equals("")) {
-			navSelected = "home";
-		}else if(uris[0].equals("work")) {
-			navSelected = "work";
-		}else if(uris[0].equals("vaca")) {
-			navSelected = "vaca";
-		}else if(uris[0].equals("docu")) {
-			navSelected = "docu";
-		}else if(uris[0].equals("sign")) {
-			navSelected = "sign";
-		}else if(uris[0].equals("work")) {
-			navSelected = "work";
-		}else if(uris[0].equals("user")) {
-			navSelected = "user";
-		}else if(uris[0].equals("notice")) {
-			navSelected = "notice";
-		}
 		if(modelAndView!=null) {
+			String navSelected = "";
+			if(uris[0].equals("")) {
+				navSelected = "home";
+			}else if(uris[0].equals("work")) {
+				navSelected = "work";
+			}else if(uris[0].equals("vaca")) {
+				navSelected = "vaca";
+			}else if(uris[0].equals("docu")) {
+				navSelected = "docu";
+			}else if(uris[0].equals("sign")) {
+				navSelected = "sign";
+			}else if(uris[0].equals("work")) {
+				navSelected = "work";
+			}else if(uris[0].equals("user")) {
+				navSelected = "user";
+			}else if(uris[0].equals("notice")) {
+				navSelected = "notice";
+			}
 			modelAndView.addObject("navSelected", navSelected);
 		}
 	}

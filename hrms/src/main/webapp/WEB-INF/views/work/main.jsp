@@ -82,7 +82,7 @@
 									<div class="col">
 										<div class="progress progress-sm mr-2">
 											<div class="progress-bar bg-info" role="progressbar"
-												style="width:50%;" aria-valuenow="90" aria-valuemin="0"
+												style="width:90%;" aria-valuenow="50" aria-valuemin="0"
 												aria-valuemax="100"></div>
 										</div>
 									</div>
@@ -130,22 +130,6 @@
 							<span class="menubar" onclick="displayFn(2)">내 초과근무</span> 
 							<span class="menubar" onclick="displayFn(3)">근무 조회</span> 
 						</h6>
-						<div class="dropdown no-arrow">
-							<a class="dropdown-toggle" href="#" role="button"
-								id="dropdownMenuLink" data-toggle="dropdown"
-								aria-haspopup="true" aria-expanded="false">
-								<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-							</a>
-							<div
-								class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-								aria-labelledby="dropdownMenuLink">
-								<div class="dropdown-header">Dropdown Header:</div>
-								<a class="dropdown-item" href="#">Action</a> 
-								<a class="dropdown-item" href="#">Another action</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Something else here</a>
-							</div>
-						</div>
 					</div>
 					<!-- Card Body -->
 					<div class="card-body">
@@ -194,7 +178,7 @@
 								<input type="text" name="" value="${today }" id="endDate2" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(2)"> 
 								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate2)" style="cursor: pointer;"></i>
 								<div class="float-right">
-									<a href="overtime_application.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
+									<a onclick="overtime_aplicationFn()" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
 										<i class="fas fa-fw fa-briefcase"></i> 초과근무 신청
 									</a>
 								</div>
@@ -290,7 +274,6 @@
 								</tbody>
 							</table>
 						</div>
-						
 	
 					</div>
 				</div>
@@ -307,6 +290,15 @@
 	const menu3 = document.querySelector("#menu3");
 	
 	const today = '${today}';
+	
+	window.onload = function(){
+		  let selMenu = '${selMenu}';
+		  if(selMenu=='2'){
+				menu1.style.display = "none";
+				menu2.style.display = "block";
+				menu3.style.display = "none";
+		  }
+	}
 	
 	function displayFn(obj){
 		if(obj==1){
