@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.hrms.mapper.noticeMapper">
+	
+	<select id="selectNotice" resultType="noticeVO">
+		SELECT * FROM notice
+			WHERE delyn = 'N'
+	</select>
+	
+	<insert id="insert" parameterType="noticeVO">	
+		INSERT INTO notice(userid
+		     		   , title
+		     		   , content
+		     		   , rdate) 
+		          VALUES (#{userid}
+		               , #{title}
+		               , #{content}
+		               , #{time})
+	</insert>
+	
+	<update id="update" parameterType="noticeVO">
+		UPDATE notice 
+		SET title = #{title},
+			content = #{content},
+			delyn = #{delyn}
+		WHERE noticeNo = #{noticeNo}
+	</update>	
+</mapper>
+
+
+
