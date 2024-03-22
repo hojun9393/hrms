@@ -247,7 +247,7 @@ public class SignController {
 		map.put("vacaNo", vacaNo);
 		map.put("userId", userId);
 		VacaVO vacaVO = signService.selectVacaFromVacaNo(map);
-		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(vacaVO.getVacaNo());
+		List<SignLineVO> signLineVO = signService.selectSignLineFromVacaNo(vacaVO.getVacaNo());
 		
 		int count = signLineVO.size();
 		for(int j=0; j<signLineVO.size(); j++) {
@@ -293,12 +293,24 @@ public class SignController {
 	
 	@RequestMapping(value = "/approvedDoc.do", method = RequestMethod.POST)
 	public void approvedDoc(DocVO docVO, HttpServletResponse res) throws IOException {
-		int result = signService.updateApprovedDoc(docVO);
-		signService.updateDocState(docVO.getDocNo());
+		int result = 0;
+		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.getDocNo());
+		for(int i=0; i<signLineVO.size(); i++) {
+			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(docVO.getMySignLineNo())) {
+				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+					result = signService.updateApprovedDoc(docVO);
+					signService.updateDocState(docVO.getDocNo());
+				}else {
+					result = -1;
+				}
+			}
+		}
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
 			res.getWriter().append("<script>alert('승인완료 되었습니다.');location.href='main.do'</script>");
+		}else if(result == -1) {
+			res.getWriter().append("<script>alert('이미 상위 직급 사원이 결재처리 하여 수정이 불가합니다.');location.href='main.do'</script>");
 		}else {
 			res.getWriter().append("<script>alert('승인되지 않았습니다.');location.href='main.do'</script>");
 		}
@@ -307,12 +319,25 @@ public class SignController {
 	
 	@RequestMapping(value = "/rejectedDoc.do", method = RequestMethod.POST)
 	public void rejectedDoc(DocVO docVO, HttpServletResponse res) throws IOException {
-		int result = signService.updateRejectedDoc(docVO);
-		signService.updateDocState(docVO.getDocNo());
+		int result = 0;
+		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.getDocNo());
+		for(int i=0; i<signLineVO.size(); i++) {
+			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(docVO.getMySignLineNo())) {
+				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+					result = signService.updateRejectedDoc(docVO);
+					signService.updateDocState(docVO.getDocNo());
+				}else {
+					result = -1;
+				}
+			}
+		}
+		
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
 			res.getWriter().append("<script>alert('반려 되었습니다.');location.href='main.do'</script>");
+		}else if(result == -1){
+			res.getWriter().append("<script>alert('이미 상위 직급 사원이 결재처리 하여 수정이 불가합니다.');location.href='main.do'</script>");
 		}else {
 			res.getWriter().append("<script>alert('반려 되지 않았습니다.');location.href='main.do'</script>");
 		}
@@ -321,12 +346,24 @@ public class SignController {
 	
 	@RequestMapping(value = "/approvedVaca.do", method = RequestMethod.POST)
 	public void approvedVaca(VacaVO vacaVO, HttpServletResponse res) throws IOException {
-		int result = signService.updateApprovedVaca(vacaVO);
-		signService.updateVacaState(vacaVO.getVacaNo());
+		int result = 0;
+		List<SignLineVO> signLineVO = signService.selectSignLineFromVacaNo(vacaVO.getVacaNo());
+		for(int i=0; i<signLineVO.size(); i++) {
+			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(vacaVO.getMySignLineNo())) {
+				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+					result = signService.updateApprovedVaca(vacaVO);
+					signService.updateVacaState(vacaVO.getVacaNo());
+				}else {
+					result = -1;
+				}
+			}
+		}
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
 			res.getWriter().append("<script>alert('승인완료 되었습니다.');location.href='main.do'</script>");
+		}else if(result == -1) {
+			res.getWriter().append("<script>alert('이미 상위 직급 사원이 결재처리 하여 수정이 불가합니다.');location.href='main.do'</script>");
 		}else {
 			res.getWriter().append("<script>alert('승인되지 않았습니다.');location.href='main.do'</script>");
 		}
@@ -335,12 +372,24 @@ public class SignController {
 	
 	@RequestMapping(value = "/rejectedVaca.do", method = RequestMethod.POST)
 	public void rejectedVaca(VacaVO vacaVO, HttpServletResponse res) throws IOException {
-		int result = signService.updateRejectedVaca(vacaVO);
-		signService.updateVacaState(vacaVO.getVacaNo());
+		int result = 0;
+		List<SignLineVO> signLineVO = signService.selectSignLineFromVacaNo(vacaVO.getVacaNo());
+		for(int i=0; i<signLineVO.size(); i++) {
+			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(vacaVO.getMySignLineNo())) {
+				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+					result = signService.updateRejectedVaca(vacaVO);
+					signService.updateVacaState(vacaVO.getVacaNo());
+				}else {
+					result = -1;
+				}
+			}
+		}
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
 			res.getWriter().append("<script>alert('반려 되었습니다.');location.href='main.do'</script>");
+		}else if(result == -1){
+			res.getWriter().append("<script>alert('이미 상위 직급 사원이 결재처리 하여 수정이 불가합니다.');location.href='main.do'</script>");
 		}else {
 			res.getWriter().append("<script>alert('반려 되지 않았습니다.');location.href='main.do'</script>");
 		}
@@ -349,12 +398,24 @@ public class SignController {
 	
 	@RequestMapping(value = "/approvedOver.do", method = RequestMethod.POST)
 	public void approvedOver(OverVO overVO, HttpServletResponse res) throws IOException {
-		int result = signService.updateApprovedOver(overVO);
-		signService.updateOverState(overVO.getOverTimeNo());
+		int result = 0;
+		List<SignLineVO> signLineVO = signService.selectSignLineFromOverTimeNo(overVO.getOverTimeNo());
+		for(int i=0; i<signLineVO.size(); i++) {
+			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(overVO.getMySignLineNo())) {
+				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+					result = signService.updateApprovedOver(overVO);
+					signService.updateOverState(overVO.getOverTimeNo());
+				}else {
+					result = -1;
+				}
+			}
+		}
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
 			res.getWriter().append("<script>alert('승인완료 되었습니다.');location.href='main.do'</script>");
+		}else if(result == -1) {
+			res.getWriter().append("<script>alert('이미 상위 직급 사원이 결재처리 하여 수정이 불가합니다.');location.href='main.do'</script>");
 		}else {
 			res.getWriter().append("<script>alert('승인되지 않았습니다.');location.href='main.do'</script>");
 		}
@@ -363,14 +424,26 @@ public class SignController {
 	
 	@RequestMapping(value = "/rejectedOver.do", method = RequestMethod.POST)
 	public void rejectedOver(OverVO overVO, HttpServletResponse res) throws IOException {
-		int result = signService.updateRejectedOver(overVO);
-		signService.updateOverState(overVO.getOverTimeNo());
+		int result = 0;
+		List<SignLineVO> signLineVO = signService.selectSignLineFromOverTimeNo(overVO.getOverTimeNo());
+		for(int i=0; i<signLineVO.size(); i++) {
+			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(overVO.getMySignLineNo())) {
+				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+					result = signService.updateRejectedOver(overVO);
+					signService.updateOverState(overVO.getOverTimeNo());
+				}else {
+					result = -1;
+				}
+			}
+		}
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
 			res.getWriter().append("<script>alert('반려 되었습니다.');location.href='main.do'</script>");
+		}else if(result == -1) {
+			res.getWriter().append("<script>alert('이미 상위 직급 사원이 결재처리 하여 수정이 불가합니다.');location.href='main.do'</script>");
 		}else {
-			res.getWriter().append("<script>alert('반려 되지 않았습니다.');location.href='main.do'</script>");
+			res.getWriter().append("<script>alert('반려되지 않았습니다.');location.href='main.do'</script>");
 		}
 		res.getWriter().flush();
 	}

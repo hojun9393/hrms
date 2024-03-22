@@ -121,85 +121,6 @@
 									</td>
 								</tr>
 					 		</c:forEach>
-							<tr>
-								<td>
-									<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
-									<span class="text-dark font-weight-bold">김길동</span> 
-									<span class="text-xs font-weight-bold">부장</span>
-								</td>
-								<td>
-									<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
-									<a href="view.do">AccountantAccountantAccountant</a>
-								</td>
-								<td>
-									<div class="text-dark">2024-03-18</div>
-								</td>
-								<td>
-									<div class="d-inline card bg-info text-white text-center px-3 py-1">승인 완료</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">인사부</div>
-									<span class="text-dark font-weight-bold">홍길동</span> 
-									<span class="text-xs font-weight-bold">팀장</span>
-								</td>
-								<td>
-									<div class="d-inline card text-danger text-center px-2 mr-1 border-danger font-weight-bold">진행</div>
-									AccountantAccountantAccountant
-								</td>
-								<td>
-									<div class="text-dark">2024-03-18</div>
-								</td>
-								<td>
-									<div class="d-inline card bg-danger text-white text-center px-3 py-1">
-										<i class="fas fa-fw fa-file-signature"></i>결재 대기
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">영업부</div>
-									<span class="text-dark font-weight-bold">홍길옹</span> 
-									<span class="text-xs font-weight-bold">팀원</span>
-								</td>
-								<td>
-									<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
-									AccountantAccountantAccountant
-								</td>
-								<td>
-									<div class="text-dark">2024-03-18</div>
-								</td>
-								<td>
-									<div class="d-inline card bg-dark text-white text-center px-4 py-1">반려</div>
-								</td>
-							</tr>
-							<tr>
-								<td>Cedric Kelly</td>
-								<td>Senior Javascript Developer</td>
-								<td>Edinburgh</td>
-								<td>
-									<div class="d-inline card bg-secondary text-white text-center px-4 py-1">오류</div>
-								</td>
-							</tr>
-							<tr>
-								<td>Paul Byrd</td>
-								<td>Chief Financial Officer (CFO)</td>
-								<td>New York</td>
-								<td>64</td>
-							</tr>
-							<tr>
-								<td>Gloria Little</td>
-								<td>Systems Administrator</td>
-								<td>New York</td>
-								<td>59</td>
-							</tr>
-							<tr>
-								<td>Donna Snider</td>
-								<td>Customer Support</td>
-								<td>New York</td>
-								<td>27</td>
-							</tr>
 						</tbody>
 					</table>
 					<table class="table table-bordered text-center vacaTable d-none" id="dataTable" width="100%" cellspacing="0">
@@ -329,7 +250,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 <!-- 캘린더 옵션 { -->
 <script src="${pageContext.request.contextPath}/resources/js/calendar2.js"></script>
