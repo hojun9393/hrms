@@ -18,41 +18,53 @@ public class NoticeVO {
 		this.rdate = rdate;
 		this.delyn = delyn;
 	}
-	
-	int getNoticeNo() {
+
+	public int getNoticeNo() {
 		return noticeNo;
 	}
-	void setNoticeNo(int noticeNo) {
+
+	public void setNoticeNo(int noticeNo) {
 		this.noticeNo = noticeNo;
 	}
-	int getUserId() {
+
+	public int getUserId() {
 		return userId;
 	}
-	void setUserId(int userId) {
+
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	String getTitle() {
+
+	public String getTitle() {
 		return title;
 	}
-	void setTitle(String title) {
+
+	public void setTitle(String title) {
 		this.title = title;
 	}
-	String getContent() {
+
+	public String getContent() {
 		return content;
 	}
-	void setContent(String content) {
+
+	public void setContent(String content) {
 		this.content = content;
 	}
-	String getRdate() {
+
+	public String getRdate() {
 		return rdate;
 	}
-	void setRdate(String rdate) {
+
+	public void setRdate(String rdate) {
 		this.rdate = rdate;
 	}
-	String getDelyn() {
+
+	public String getDelyn() {
 		return delyn;
 	}
-	void setDelyn(String delyn) {
+
+	public void setDelyn(String delyn) {
 		this.delyn = delyn;
-	}	
+	}
+
 }

@@ -1,5 +1,7 @@
 package edu.hrms.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,15 +17,15 @@ public class NoticeDAO {
 	
 	private final String namespace = "edu.hrms.mapper.noticeMapper";
 	
-	public NoticeVO select(){
-		return sqlSession.selectOne(namespace+".select");
+	public List<NoticeVO> selectNotice(){
+		return sqlSession.selectList(namespace+".selectNotice");
 	}
 	
-	public int insert() {
-		return sqlSession.insert(namespace+".insert");
+	public int insert(NoticeVO noticeVO) {
+		return sqlSession.insert(namespace+".insert", noticeVO);
 	}
 	
-	public int update() {
-		return sqlSession.update(namespace+".update");
+	public int update(NoticeVO noticeVO) {
+		return sqlSession.update(namespace+".update", noticeVO);
 	}
 }
