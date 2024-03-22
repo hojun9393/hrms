@@ -24,13 +24,13 @@
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
 				<div class="font-weight-bold text-primary py-1 mr-4 border-bottom-primary d-inline" id="docu" onclick="selectFn(this)">
-					기안 0건
+					기안 ${docSignCount}건
 				</div>
 				<div class="font-weight-bold text-secondary py-1 mr-4 d-inline" id="vaca" onclick="selectFn(this)">
-					연차 3건
+					연차 ${vacaSignCount}건
 				</div>
 				<div class="font-weight-bold text-secondary py-1 d-inline" id="over" onclick="selectFn(this)">
-					초과근무 2건
+					초과근무 ${overSignCount}건
 				</div>
 			</div>
 			<div class="card-body">
@@ -80,13 +80,16 @@
 									</td>
 									<td>
 										<c:choose>
-											<c:when test="${vo.mySignState eq '0'}">
+											<c:when test="${vo.state eq '0'}">
+												<div class="d-inline card text-secondary text-center px-2 mr-1 border-secondary font-weight-bold">대기</div>
+											</c:when>
+											<c:when test="${vo.state eq '1'}">
 												<div class="d-inline card text-danger text-center px-2 mr-1 border-danger font-weight-bold">진행</div>
 											</c:when>
-											<c:when test="${vo.mySignState eq '2'}">
+											<c:when test="${vo.state eq '2'}">
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
 											</c:when>
-											<c:when test="${vo.mySignState eq '3'}">
+											<c:when test="${vo.state eq '3'}">
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
 											</c:when>
 											<c:otherwise>
@@ -218,13 +221,16 @@
 									</td>
 									<td>
 										<c:choose>
-											<c:when test="${vo.mySignState eq '0'}">
+											<c:when test="${vo.state eq '0'}">
+												<div class="d-inline card text-secondary text-center px-2 mr-1 border-secondary font-weight-bold">대기</div>
+											</c:when>
+											<c:when test="${vo.state eq '1'}">
 												<div class="d-inline card text-danger text-center px-2 mr-1 border-danger font-weight-bold">진행</div>
 											</c:when>
-											<c:when test="${vo.mySignState eq '2'}">
+											<c:when test="${vo.state eq '2'}">
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
 											</c:when>
-											<c:when test="${vo.mySignState eq '3'}">
+											<c:when test="${vo.state eq '3'}">
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
 											</c:when>
 											<c:otherwise>
@@ -277,13 +283,16 @@
 									</td>
 									<td>
 										<c:choose>
-											<c:when test="${vo.mySignState eq '0'}">
+											<c:when test="${vo.state eq '0'}">
+												<div class="d-inline card text-secondary text-center px-2 mr-1 border-secondary font-weight-bold">대기</div>
+											</c:when>
+											<c:when test="${vo.state eq '1'}">
 												<div class="d-inline card text-danger text-center px-2 mr-1 border-danger font-weight-bold">진행</div>
 											</c:when>
-											<c:when test="${vo.mySignState eq '2'}">
+											<c:when test="${vo.state eq '2'}">
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
 											</c:when>
-											<c:when test="${vo.mySignState eq '3'}">
+											<c:when test="${vo.state eq '3'}">
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
 											</c:when>
 											<c:otherwise>

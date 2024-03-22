@@ -73,7 +73,9 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.signOrder, ds.state 
+        ELSE '직급미정' END AS position, s.signOrder, ds.state, 
+        LAG(ds.state) OVER(order by s.signOrder) as prevState, 
+        LEAD(ds.state) OVER(order by s.signOrder) as nextState 
 		FROM user u inner join signLine s on u.userid = s.userid inner join docsign ds on s.signLineNo = ds.signLineNo 
 		WHERE ds.docNo = #{docNo};
 	</select>
@@ -109,7 +111,9 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.signOrder, vs.state 
+        ELSE '직급미정' END AS position, s.signOrder, vs.state, 
+        LAG(vs.state) OVER(order by s.signOrder) as prevState, 
+        LEAD(vs.state) OVER(order by s.signOrder) as nextState 
 		FROM user u inner join signLine s on u.userid = s.userid inner join vacasign vs on s.signLineNo = vs.signLineNo 
 		WHERE vs.vacaNo = #{vacaNo};
 	</select>
@@ -146,7 +150,9 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.signOrder, os.state 
+        ELSE '직급미정' END AS position, s.signOrder, os.state, 
+        LAG(os.state) OVER(order by s.signOrder) as prevState, 
+        LEAD(os.state) OVER(order by s.signOrder) as nextState 
 		FROM user u inner join signLine s on u.userid = s.userid inner join overtimesign os on s.signLineNo = os.signLineNo 
 		WHERE os.overtimeNo = #{overTimeNo};
 	</select>
@@ -192,5 +198,26 @@
 	
 	<update id="updateRejectedOver" parameterType="overVO">
 		UPDATE overtimeSign set state = 3 where signLineNo = #{mySignLineNo} and overTimeNo = #{overTimeNo};
+	</update>
+	
+	<update id="updateDocState" parameterType="int">
+		UPDATE doc SET state = CASE WHEN (SELECT count(state) FROM docsign WHERE docNo = #{docNo} AND (state IN (2))) > 0 THEN 1 ELSE state END, 
+			   state = CASE WHEN (SELECT count(state) FROM docsign WHERE docNo = #{docNo} AND (state IN (0,3))) = 0 THEN 2 ELSE state END, 
+			   state = CASE WHEN (SELECT count(state) FROM docsign WHERE docNo = #{docNo} AND (state IN (3))) > 0 THEN 3 ELSE state END
+		WHERE docNo = #{docNo};
+	</update>
+	
+	<update id="updateVacaState" parameterType="int">
+		UPDATE vaca SET state = CASE WHEN (SELECT count(state) FROM vacasign WHERE vacaNo = #{vacaNo} AND (state IN (2))) > 0 THEN 1 ELSE state END, 
+			   state = CASE WHEN (SELECT count(state) FROM vacasign WHERE vacaNo = #{vacaNo} AND (state IN (0,3))) = 0 THEN 2 ELSE state END, 
+			   state = CASE WHEN (SELECT count(state) FROM vacasign WHERE vacaNo = #{vacaNo} AND (state IN (3))) > 0 THEN 3 ELSE state END
+		WHERE vacaNo = #{vacaNo};
+	</update>
+	
+	<update id="updateOverState" parameterType="int">
+		UPDATE overtime SET state = CASE WHEN (SELECT count(state) FROM overtimesign WHERE overtimeNo = #{overtimeNo} AND (state IN (2))) > 0 THEN 1 ELSE state END, 
+			   state = CASE WHEN (SELECT count(state) FROM overtimesign WHERE overtimeNo = #{overtimeNo} AND (state IN (0,3))) = 0 THEN 2 ELSE state END, 
+			   state = CASE WHEN (SELECT count(state) FROM overtimesign WHERE overtimeNo = #{overtimeNo} AND (state IN (3))) > 0 THEN 3 ELSE state END
+		WHERE overtimeNo = #{overtimeNo};
 	</update>
 </mapper>

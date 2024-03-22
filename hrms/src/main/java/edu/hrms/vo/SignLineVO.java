@@ -8,18 +8,21 @@ public class SignLineVO {
 	private int signOrder;
 	private String state;
 	private int signLineNo;
+	private String prevState;
+	private String nextState;
 	
 	public SignLineVO() {}
 	
-	public SignLineVO(String name, String dept, String position, int signOrder, String state, int userId) {
+	public SignLineVO(String name, String dept, String position, int signOrder, String state, int userId, String prevState, String nextState) {
 		this.userId = userId;
 		this.name = name;
 		this.dept = dept;
 		this.position = position;
 		this.signOrder = signOrder;
 		this.state = state;
+		this.prevState = prevState;
+		this.nextState = nextState;
 	}
-	
 	
 	public int getSignLineNo() {
 		return signLineNo;
@@ -63,4 +66,21 @@ public class SignLineVO {
 	public void setState(String state) {
 		this.state = state;
 	}
+
+	public String getPrevState() {
+		return prevState;
+	}
+
+	public void setPrevState(String prevState) {
+		this.prevState = prevState;
+	}
+
+	public String getNextState() {
+		return nextState;
+	}
+
+	public void setNextState(String nextState) {
+		this.nextState = nextState;
+	}
+	
 }

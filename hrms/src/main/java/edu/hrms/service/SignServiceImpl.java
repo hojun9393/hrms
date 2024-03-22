@@ -92,4 +92,19 @@ public class SignServiceImpl implements SignService{
 	public int updateRejectedOver(OverVO overVO) {
 		return signDAO.updateRejectedOver(overVO);
 	}
+
+	@Override
+	public int updateDocState(int docNo) {
+		return signDAO.updateDocState(docNo);
+	}
+
+	@Override
+	public int updateVacaState(int vacaNo) {
+		return signDAO.updateVacaState(vacaNo);
+	}
+
+	@Override
+	public int updateOverState(int overTimeNo) {
+		return signDAO.updateOverState(overTimeNo);
+	}
 }

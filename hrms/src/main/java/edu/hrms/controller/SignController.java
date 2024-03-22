@@ -27,7 +27,7 @@ import edu.hrms.vo.VacaVO;
 @RequestMapping(value = "/sign")
 public class SignController {
 	
-	private int userId = 10002;
+	private int userId = 10001;
 	
 	@Autowired
 	SignService signService;
@@ -50,26 +50,47 @@ public class SignController {
 		}
 		
 		List<DocVO> docVOList = new ArrayList<DocVO>();
+		int docSignCount = 0;
+		int vacaSignCount = 0;
+		int overSignCount = 0;
 		for(int i=0; i<docVO.size(); i++) {
 			List<SignLineVO> signLineVO = docVO.get(i).getSignLineVO();
 			if(signLineVO.size()==3) {
 				if(docVO.get(i).getMySignOrder() == 1) {
 					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
 				}else if(docVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
 					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
 				}else if(docVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
 						&& signLineVO.get(1).getState().equals("2")) {
 					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
 				}
 			}else if(signLineVO.size()==2){
 				if(docVO.get(i).getMySignOrder()==2) {
 					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
 				}else if(docVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
 					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
 				}
 			}else if(signLineVO.size()==1) {
 				if(docVO.get(i).getMySignOrder()==3) {
 					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
 				}
 			}
 		}
@@ -91,21 +112,39 @@ public class SignController {
 			if(signLineVO.size()==3) {
 				if(vacaVO.get(i).getMySignOrder() == 1) {
 					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
 				}else if(vacaVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
 					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
 				}else if(vacaVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
 						&& signLineVO.get(1).getState().equals("2")) {
 					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
 				}
 			}else if(signLineVO.size()==2){
 				if(vacaVO.get(i).getMySignOrder()==2) {
 					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
 				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
 					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
 				}
 			}else if(signLineVO.size()==1) {
 				if(vacaVO.get(i).getMySignOrder()==3) {
 					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
 				}
 			}
 		}
@@ -127,21 +166,39 @@ public class SignController {
 			if(signLineVO.size()==3) {
 				if(overVO.get(i).getMySignOrder() == 1) {
 					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
 				}else if(overVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
 					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
 				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
 						&& signLineVO.get(1).getState().equals("2")) {
 					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
 				}
 			}else if(signLineVO.size()==2){
 				if(overVO.get(i).getMySignOrder()==2) {
 					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
 				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
 					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
 				}
 			}else if(signLineVO.size()==1) {
 				if(overVO.get(i).getMySignOrder()==3) {
 					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
 				}
 			}
 				
@@ -152,6 +209,9 @@ public class SignController {
 				overVOList
 		);
 		model.addAttribute("list", vo);
+		model.addAttribute("docSignCount", docSignCount);
+		model.addAttribute("vacaSignCount", vacaSignCount);
+		model.addAttribute("overSignCount", overSignCount);
 		
 		return "/sign/main";
 	}
@@ -233,8 +293,8 @@ public class SignController {
 	
 	@RequestMapping(value = "/approvedDoc.do", method = RequestMethod.POST)
 	public void approvedDoc(DocVO docVO, HttpServletResponse res) throws IOException {
-		
 		int result = signService.updateApprovedDoc(docVO);
+		signService.updateDocState(docVO.getDocNo());
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
@@ -248,6 +308,7 @@ public class SignController {
 	@RequestMapping(value = "/rejectedDoc.do", method = RequestMethod.POST)
 	public void rejectedDoc(DocVO docVO, HttpServletResponse res) throws IOException {
 		int result = signService.updateRejectedDoc(docVO);
+		signService.updateDocState(docVO.getDocNo());
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
@@ -260,8 +321,8 @@ public class SignController {
 	
 	@RequestMapping(value = "/approvedVaca.do", method = RequestMethod.POST)
 	public void approvedVaca(VacaVO vacaVO, HttpServletResponse res) throws IOException {
-		
 		int result = signService.updateApprovedVaca(vacaVO);
+		signService.updateVacaState(vacaVO.getVacaNo());
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
@@ -275,6 +336,7 @@ public class SignController {
 	@RequestMapping(value = "/rejectedVaca.do", method = RequestMethod.POST)
 	public void rejectedVaca(VacaVO vacaVO, HttpServletResponse res) throws IOException {
 		int result = signService.updateRejectedVaca(vacaVO);
+		signService.updateVacaState(vacaVO.getVacaNo());
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
@@ -287,8 +349,8 @@ public class SignController {
 	
 	@RequestMapping(value = "/approvedOver.do", method = RequestMethod.POST)
 	public void approvedOver(OverVO overVO, HttpServletResponse res) throws IOException {
-		
 		int result = signService.updateApprovedOver(overVO);
+		signService.updateOverState(overVO.getOverTimeNo());
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {
@@ -302,6 +364,7 @@ public class SignController {
 	@RequestMapping(value = "/rejectedOver.do", method = RequestMethod.POST)
 	public void rejectedOver(OverVO overVO, HttpServletResponse res) throws IOException {
 		int result = signService.updateRejectedOver(overVO);
+		signService.updateOverState(overVO.getOverTimeNo());
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {

@@ -19,7 +19,7 @@
 				<div class="col-9">
 					<div class="py-5 pl-5">
 						<div class="my-4">
-							<span class="d-inline bg-primary card text-white py-1 px-3">초과근무</span>
+							<span class="d-inline bg-primary card text-white py-1 px-3">연차</span>
 							<h1 class="d-inline h4 text-gray-900 font-weight-bold">
 							[${vo.dept}] ${vo.name} ${vo.position}
 							</h1>
@@ -52,6 +52,9 @@
 							<div class="col-auto">
 								<c:choose>
 									<c:when test="${vo.mySignState eq '0'}">
+										<div class="d-inline card text-secondary text-center px-3 py-1 border-secondary font-weight-bold">대기</div>
+									</c:when>
+									<c:when test="${vo.mySignState eq '1'}">
 										<div class="d-inline card text-danger text-center px-3 py-1 border-danger font-weight-bold">진행</div>
 									</c:when>
 									<c:when test="${vo.mySignState eq '2'}">
@@ -71,7 +74,7 @@
 						<c:choose>
 							<c:when test="${signLineVO.state eq '0'}">
 								<c:choose>
-									<c:when test="${vo.mySignOrder eq signLineVO.signOrder}">
+									<c:when test="${vo.mySignOrder eq signLineVO.signOrder || (vo.mySignState eq '2' && vo.mySignOrder < signLineVO.signOrder+1)}">
 										<div class="card text-danger px-3 py-2 my-2 border-danger font-weight-bold">
 											<div class="row">
 												<span class="d-inline col">${signLineVO.name} ${signLineVO.position}</span>
