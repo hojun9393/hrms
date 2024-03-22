@@ -10,6 +10,7 @@ tmp/
 *.swp
 *~.nib
 local.properties
+.settings
 .settings/
 .loadpath
 .recommenders
@@ -94,6 +95,8 @@ hs_err_pid*
 replay_pid*
 
 ### Maven ###
+*/target/*
+*/target/**
 target/
 pom.xml.tag
 pom.xml.releaseBackup
