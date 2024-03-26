@@ -7,6 +7,9 @@
 		SELECT * FROM notice
 			WHERE delyn = 'N'
 	</select>
+	<select id="selectNoticeOne" resultType="noticeVO" parameterType="int">
+		SELECT * FROM notice WHERE noticeNo = #{noticeNo}
+	</select>
 	
 	<insert id="insert" parameterType="noticeVO">	
 		INSERT INTO notice(userid

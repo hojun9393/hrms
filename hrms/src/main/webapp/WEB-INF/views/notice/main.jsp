@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../include/navigator.jsp"%>
+
 <!DOCTYPE html>
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -19,14 +20,15 @@
 				</div>
 				<!-- Card Body -->
 				<div class="card-body">
-					<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
+					<a href="write.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
 						<i class="fas fa-fw fa-bullhorn"></i> 공지 작성
 					</a>
 					<!-- 공지사항 -->
-					<div>
-						<table>
+					<div class="table-responsive">
+						<table class="dataTables_wraper table text-secondary text-center px-3 py-1 border-secondary" >
 							<thead>
-								<tr>
+								<tr class="shadow mb-1">
+									<th>작성자</th>
 									<th>제목</th>
 									<th>작성일</th>
 								</tr>
@@ -34,28 +36,31 @@
 							<tbody>
 								<c:forEach items="${list}" var="vo">
 								<tr>
-									<%-- <c:choose>
+									<c:choose>
 										<c:when test="${vo.userId eq '99000'}">
-										<td>대표</td>
+											<td>대표</td>
+										</c:when>
+										<c:when test="${vo.userId eq '99001'}">
+											<td>관리자</td>
 										</c:when>
 										<c:otherwise>
-										<td>관리자</td>
+											<td>오류</td>
 										</c:otherwise>
-									</c:choose> --%>
-									<td>${vo.title}</td>
-									<td>${vo.content}</td>
-									<td>${vo.rdate}</td>
+									</c:choose>
+									<td><a href="view.do?noticeNo=${vo.noticeNo}">${vo.title}</a></td>
+									<td class="small">${vo.rdate}</td>
 								</tr>
 								</c:forEach>
 							</tbody>
 						</table>
-						
+												
 						<ul class="pagination">
 							<li class="paginate_button page-item previous disabled"
 							id="dataTable_previous">
 							<a href="#" aria-controls="dataTable" data-dt-idx="0"
 							tabindex="0" class="page-link">Previous</a>
 							</li> 
+							
 							<li class="paginate_button page-item active">
 							<a href="#" aria-controls="dataTable" data-dt-idx="1"
 							tabindex="0" class="page-link">1</a>

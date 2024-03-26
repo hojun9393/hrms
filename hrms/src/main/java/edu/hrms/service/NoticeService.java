@@ -6,4 +6,5 @@ import edu.hrms.vo.NoticeVO;
 
 public interface NoticeService {
 	List<NoticeVO> selectNotice();	 
+	NoticeVO selectNoticeOne(int noticeNo);
 }

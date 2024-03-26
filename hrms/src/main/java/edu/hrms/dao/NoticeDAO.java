@@ -28,4 +28,8 @@ public class NoticeDAO {
 	public int update(NoticeVO noticeVO) {
 		return sqlSession.update(namespace+".update", noticeVO);
 	}
+	
+	public NoticeVO selectNoticeOne(int noticeNo) {
+		return sqlSession.selectOne(namespace+".selectNoticeOne", noticeNo);
+	}
 }
