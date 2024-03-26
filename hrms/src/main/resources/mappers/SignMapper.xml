@@ -10,14 +10,14 @@
         WHEN u.dept = 'S' THEN '영업부'
         WHEN u.dept = 'P' THEN '기획부'
         WHEN u.dept = 'H' THEN '인사부'
-        ELSE '부서미정' END AS dept, 
+        ELSE '부서미정' END AS dept,  
 		CASE WHEN u.position = 'A' THEN '관리자'
    	 	WHEN u.position = 'C' THEN '대표'
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position, 
-        s.state as mySignState 
+        s.state as mySignState, s.signLineNo as mySignLineNo 
 		FROM doc d inner join user u on d.userid = u.userid inner join docsign s on d.docNo = s.docNo 
 		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A'));
 	</select>
@@ -73,7 +73,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.signOrder, ds.state, 
+        ELSE '직급미정' END AS position, s.signOrder, s.signLineNo, ds.state, 
         LAG(ds.state) OVER(order by s.signOrder) as prevState, 
         LEAD(ds.state) OVER(order by s.signOrder) as nextState 
 		FROM user u inner join signLine s on u.userid = s.userid inner join docsign ds on s.signLineNo = ds.signLineNo 
@@ -111,7 +111,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.signOrder, vs.state, 
+        ELSE '직급미정' END AS position, s.signOrder, s.signLineNo, vs.state, 
         LAG(vs.state) OVER(order by s.signOrder) as prevState, 
         LEAD(vs.state) OVER(order by s.signOrder) as nextState 
 		FROM user u inner join signLine s on u.userid = s.userid inner join vacasign vs on s.signLineNo = vs.signLineNo 
@@ -131,7 +131,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE NULL END AS position, 
+        ELSE NULL END AS position, s.state as mySignState, s.signLineNo as mySignLineNo 
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM vacation v inner join user u on v.userid = u.userid inner join vacasign s on v.vacaNo = s.vacaNo 
         WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid where u.userid = #{userId} and (type = 'V' or type = 'A')) and v.vacaNo = #{vacaNo};
@@ -150,7 +150,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.signOrder, os.state, 
+        ELSE '직급미정' END AS position, s.signOrder, s.signLineNo, os.state, 
         LAG(os.state) OVER(order by s.signOrder) as prevState, 
         LEAD(os.state) OVER(order by s.signOrder) as nextState 
 		FROM user u inner join signLine s on u.userid = s.userid inner join overtimesign os on s.signLineNo = os.signLineNo 
@@ -170,7 +170,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE NULL END AS position,
+        ELSE NULL END AS position, s.state as mySignState, s.signLineNo as mySignLineNo
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM overtime o inner join user u on o.userid = u.userid inner join overtimesign s on o.overtimeNo = s.overtimeNo 
         WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userId} and (type = 'O' or type = 'A')) and o.overtimeNo = #{overTimeNo};

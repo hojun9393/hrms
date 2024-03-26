@@ -13,7 +13,7 @@ public class VacaVO {
 	private String startDate;
 	private String endDate;
 	private int duration;
-	private String useTime;
+	private String useTime; 
 	
 	private String name;
 	private String dept;

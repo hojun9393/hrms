@@ -13,8 +13,15 @@ public class WorkVO {
 	private String state;
 	private String position;
 	private String dept;
+	private String dayOfWeek;
 	
 	
+	public String getDayOfWeek() {
+		return dayOfWeek;
+	}
+	public void setDayOfWeek(String dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+	}
 	public String getDept() {
 		return dept;
 	}
@@ -87,7 +94,7 @@ public class WorkVO {
 	public String toString() {
 		return "WorkVO [wNo=" + wNo + ", userid=" + userid + ", date=" + date + ", start=" + start + ", end=" + end
 				+ ", overtime=" + overtime + ", total=" + total + ", name=" + name + ", state=" + state + ", position="
-				+ position + ", dept=" + dept + "]";
+				+ position + ", dept=" + dept + ", dayOfWeek=" + dayOfWeek + "]";
 	}
 	
 	
