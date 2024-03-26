@@ -57,4 +57,8 @@ public class VacaServiceImpl implements VacaService {
 	public int vacaSignDelete(int vacaNo) {
 		return vacaDAO.vacaSignDelete(vacaNo);
 	}
+	@Override
+	public int updateVacaStateToUse(String today) {
+		return vacaDAO.updateVacaStateToUse(today);
+	}
 }

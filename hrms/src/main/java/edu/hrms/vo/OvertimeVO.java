@@ -12,8 +12,15 @@ public class OvertimeVO {
 	private String total;
 	private String rdate;
 	private String name;
+	private String dayOfWeek;
 	
 	
+	public String getDayOfWeek() {
+		return dayOfWeek;
+	}
+	public void setDayOfWeek(String dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+	}
 	public String getName() {
 		return name;
 	}
@@ -80,8 +87,9 @@ public class OvertimeVO {
 	public String toString() {
 		return "OvertimeVO [overtimeNo=" + overtimeNo + ", userid=" + userid + ", date=" + date + ", start=" + start
 				+ ", end=" + end + ", state=" + state + ", content=" + content + ", total=" + total + ", rdate=" + rdate
-				+ "]";
+				+ ", name=" + name + ", dayOfWeek=" + dayOfWeek + "]";
 	}
+	
 	
 	
 }

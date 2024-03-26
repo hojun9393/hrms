@@ -4,8 +4,10 @@
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
 		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -29,6 +31,7 @@
 	<context:component-scan base-package="edu.hrms.vo" />
 	<context:component-scan base-package="edu.hrms.util" />
 	<context:component-scan base-package="edu.hrms.interceptor" />
+	<context:component-scan base-package="edu.hrms.scheduler" />
 	
 	<interceptors>
 		<interceptor>
@@ -39,5 +42,8 @@
 	</interceptors>
 	
 	<security:global-method-security secured-annotations="enabled"/>
+	
+	<task:scheduler id="vacaScheduler" pool-size="5" />
+	<task:annotation-driven scheduler="vacaScheduler"/>
 	
 </beans:beans>

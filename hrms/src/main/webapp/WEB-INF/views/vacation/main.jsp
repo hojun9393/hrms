@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="../include/navigator.jsp"%>
 <head>
 	<!-- 데이트피커 { -->
@@ -57,7 +58,10 @@
 									</div>
 									<div class="row no-gutters align-items-center">
 										<div class="col-auto">
-											<div class="h5 mb-0 mr-3 font-weight-bold text-blue-bold">${user.keepVaca }시간</div>
+											<div class="h5 mb-0 mr-3 font-weight-bold text-blue-bold">
+												${user.keepVaca_day }일
+												<span class="text-lg">(${user.keepVaca }시간)</span>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -75,7 +79,10 @@
 									<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
 										사용 연차
 									</div>
-									<div class="h5 mb-0 font-weight-bold text-black-bold">${user.useVaca }시간</div>
+									<div class="h5 mb-0 font-weight-bold text-green-bold">
+										${user.useVaca_day }일
+										<span class="text-lg">(${user.useVaca }시간)</span>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -91,7 +98,10 @@
 									<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
 										총 연차
 									</div>
-									<div class="h5 mb-0 font-weight-bold text-black-bold">${user.keepVaca + user.useVaca }시간</div>
+									<div class="h5 mb-0 font-weight-bold text-black-bold">
+										<fmt:formatNumber type="number" maxFractionDigits="0" value="${(user.keepVaca + user.useVaca) / 8}" />일
+										<span class="text-lg">(${user.keepVaca + user.useVaca }시간)</span>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -122,7 +132,7 @@
 								<div class="mb-3 col">
 									<input type="text" name="" id="startDate1" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()">
 									<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate1)" style="cursor: pointer;"></i> ~ 
-									<input type="text" name="" id="endDate1" class="datepicker inp" placeholder="연차 종료일" readonly="true" onchange="reloadListFn()"> 
+									<input type="text" name="" id="endDate1" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()"> 
 									<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate1)" style="cursor: pointer;"></i>
 									<div class="float-right">
 										<a href="application.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
@@ -147,10 +157,10 @@
 									<tbody class="outputBody1">
 										<c:forEach var="i" items="${myVacaList }">
 											<tr>
-												<td>${i.startDate } ~ ${i.endDate }</td>
+												<td>${i.startDate } ${i.startDate_dayOfWeek} ~ ${i.endDate } ${i.endDate_dayOfWeek}</td>
 												<td>${i.duration }일</td>
-												<td>${i.startDate}<br>${i.startTime }</td>
-												<td>${i.endDate}<br>${i.endTime }</td>
+												<td>${i.startDate} ${i.startDate_dayOfWeek}<br>${i.startTime }</td>
+												<td>${i.endDate} ${i.endDate_dayOfWeek}<br>${i.endTime }</td>
 												<td>${i.useTime }</td>
 												<td>${i.reason }</td>
 												<td>${i.rdate}</td>

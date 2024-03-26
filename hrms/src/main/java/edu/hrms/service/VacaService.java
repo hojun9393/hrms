@@ -28,4 +28,6 @@ public interface VacaService {
 	int withdrawal(int vacaNo);
 	
 	int vacaSignDelete(int vacaNo);
+	
+	int updateVacaStateToUse(String today);
 }

@@ -16,7 +16,22 @@ public class UserVO {
 	private String addr;
 	private int keepVaca;
 	private int useVaca;
+	private String keepVaca_day;
+	private String useVaca_day;
 	
+	
+	public String getKeepVaca_day() {
+		return keepVaca_day;
+	}
+	public void setKeepVaca_day(String keepVaca_day) {
+		this.keepVaca_day = keepVaca_day;
+	}
+	public String getUseVaca_day() {
+		return useVaca_day;
+	}
+	public void setUseVaca_day(String useVaca_day) {
+		this.useVaca_day = useVaca_day;
+	}
 	public String getUserid() {
 		return userid;
 	}

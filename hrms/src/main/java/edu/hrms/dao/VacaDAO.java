@@ -59,4 +59,8 @@ public class VacaDAO {
 		return sqlSession.delete(namespace+".vacaSignDelete", vacaNo);
 	}
 	
+	public int updateVacaStateToUse(String today) {
+		return sqlSession.update(namespace+".updateVacaStateToUse", today);
+	}
+	
 }
