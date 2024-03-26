@@ -37,11 +37,9 @@
 				<div class="row">
 					<!--datepicker{ -->
 					<div class="mb-3 col">
-						<input type="text" name="" value="" id="startDate" class="datepicker inp" placeholder="시작일 선택" 
-						onblur="searchDateFn(this)" readonly="true">
+						<input type="text" name="" value="" id="startDate" class="datepicker inp" placeholder="시작일 선택" readonly="true">
 						<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)" style="cursor: pointer;"></i> ~ 
-						<input type="text" name="" value="" id="endDate" class="datepicker inp" placeholder="종료일 선택" 
-						onblur="searchDateFn(this)" readonly="true">
+						<input type="text" name="" value="" id="endDate" class="datepicker inp" placeholder="종료일 선택" readonly="true">
 						<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate)" style="cursor: pointer;"></i>
 					</div>
 					<!-- } -->
@@ -253,9 +251,41 @@
 	</div>
 <!-- 캘린더 옵션 { -->
 <script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax_Const.js"></script>
-<!-- /.container-fluid -->
+
 <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
 
+<script>
+$("#startDate").datepicker({
+	minDate: 0,
+	onSelect: function(){
+		isDateSeleted = false;
+		var startDate = $("#startDate").datepicker('getDate');
+		var endDate = $("#endDate").datepicker('getDate');
+			if (endDate != null) {
+				if (startDate > endDate) {
+					/* alert("기간을 다시 설정해주세요. \n종료일로 설정됩니다.");
+					$("#startDate").val($("#endDate").val()); */
+					alert("여행종료일이 시작일보다 전입니다. \n종료일을 다시 설정해주세요.");
+					var endDateMax = new Date(startDate);
+					endDateMax.setDate(startDate.getDate() +10);
+					$("#endDate").val("");
+				}  
+			}
+		}
+});
+$("#endDate").datepicker({
+	minDate: 0,
+	beforeShow: function() {
+		isDateSeleted = false;
+		var startDate = $("#startDate").datepicker('getDate');
+		if (startDate != null) {
+			$(this).datepicker('option', 'minDate', startDate);
+			var endDateMax = new Date(startDate);
+			endDateMax.setDate(startDate.getDate() +7);
+			$(this).datepicker('option', 'maxDate', endDateMax);
+		}
+	}
+});
+</script>
 
-
-<%@ include file="../include/footer.jsp"%>
+<%-- <%@ include file="../include/footer.jsp"%> --%>
