@@ -17,7 +17,7 @@ public class VacaSignVO {
 	}
 	public void setVacaSignNo(int vacaSignNo) {
 		this.vacaSignNo = vacaSignNo;
-	}
+	} 
 	public int getVacaNo() {
 		return vacaNo;
 	}
