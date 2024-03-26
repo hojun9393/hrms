@@ -96,6 +96,16 @@
 	font-weight:bold;
 	font-size:30px;
 }
+.text-orange-bold{
+	color:orange;
+	font-weight:bold;
+	font-size:30px;
+}
+.text-green-bold{
+	color:green;
+	font-weight:bold;
+	font-size:30px;
+}
 .text-blue-bold{
 	color:blue;
 	font-weight:bold;
@@ -123,4 +133,9 @@ textarea.resize-none{
 	display: flex;
    align-items: center;
    text-align: center;
+}
+.btn-withdrawal {
+	color: #fff;
+	background-color: #c0c0c0;
+	border-color: #858796
 }

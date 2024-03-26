@@ -192,7 +192,6 @@ public class VacaController {
 		myVacaListMap.put("endDate", endDate);
 		
 		List<VacaVO> list = vacaService.selectMyVacaList(myVacaListMap);
-		System.out.println(list.size());
 		return list;
 	}
 	

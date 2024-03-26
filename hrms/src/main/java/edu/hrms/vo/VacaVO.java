@@ -13,7 +13,9 @@ public class VacaVO {
 	private String startDate;
 	private String endDate;
 	private int duration;
-	private String useTime; 
+	private String useTime;
+	private String startDate_dayOfWeek;
+	private String endDate_dayOfWeek;
 	
 	private String name;
 	private String dept;
@@ -27,6 +29,18 @@ public class VacaVO {
 	private List<SignLineVO> signLineVO;
 	
 	
+	public String getStartDate_dayOfWeek() {
+		return startDate_dayOfWeek;
+	}
+	public void setStartDate_dayOfWeek(String startDate_dayOfWeek) {
+		this.startDate_dayOfWeek = startDate_dayOfWeek;
+	}
+	public String getEndDate_dayOfWeek() {
+		return endDate_dayOfWeek;
+	}
+	public void setEndDate_dayOfWeek(String endDate_dayOfWeek) {
+		this.endDate_dayOfWeek = endDate_dayOfWeek;
+	}
 	public String getUseTime() {
 		return useTime;
 	}
@@ -142,5 +156,16 @@ public class VacaVO {
 	public void setSignLineVO(List<SignLineVO> signLineVO) {
 		this.signLineVO = signLineVO;
 	}
-
+	
+	
+	@Override
+	public String toString() {
+		return "VacaVO [vacaNo=" + vacaNo + ", userId=" + userId + ", rdate=" + rdate + ", reason=" + reason
+				+ ", state=" + state + ", startTime=" + startTime + ", endTime=" + endTime + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", duration=" + duration + ", useTime=" + useTime + ", startDate_dayOfWeek="
+				+ startDate_dayOfWeek + ", endDate_dayOfWeek=" + endDate_dayOfWeek + ", name=" + name + ", dept=" + dept
+				+ ", position=" + position + ", mySignState=" + mySignState + ", mySignOrder=" + mySignOrder
+				+ ", stateCount=" + stateCount + ", mySignLineNo=" + mySignLineNo + ", signLineVO=" + signLineVO + "]";
+	}
+	
 }

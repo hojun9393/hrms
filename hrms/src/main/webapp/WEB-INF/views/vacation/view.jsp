@@ -33,9 +33,9 @@
 							<span class="d-inline font-weight-bold text-gray-800">연차 날짜</span> 
 							|&nbsp; 
 							<span class="font-weight-bold text-primary">${vo.startDate }</span>
-							<span class="font-weight-bold text-success">${vo.startTime }</span> ~ 
+							<span class="font-weight-bold text-success">(${vo.startTime})</span> ~ 
 							<span class="font-weight-bold text-primary">${vo.endDate }</span>
-							<span class="font-weight-bold text-success">${vo.endTime }</span>
+							<span class="font-weight-bold text-success">(${vo.endTime})</span>
 						</div>
 						<hr>
 						<div class="py-2">

@@ -146,7 +146,7 @@
 								<tbody class="outputBody1">
 									<c:forEach var="item" items="${workList}">
 										<tr>
-											<td>${item.date }</td>
+											<td>${item.date } ${item.dayOfWeek }</td>
 											<td>${item.start }</td>
 											<td>${item.end }</td>
 											<td>${item.overtime }</td>
@@ -185,7 +185,7 @@
 								<tbody class="outputBody2">
 									<c:forEach var="item" items="${overtimeList}">
 										<tr>
-											<td>${item.date }</td>
+											<td>${item.date } ${item.dayOfWeek }</td>
 											<td>${item.start }</td>
 											<td>${item.end }</td>
 											<td>${item.total }</td>
@@ -205,7 +205,7 @@
 														<span class="btn-gradient mini btn-secondary">반려</span>
 													</c:when>
 													<c:when test="${item.state == 9 }">
-														<span class="btn-gradient mini btn-secondary">철회</span>
+														<span class="btn-gradient mini btn-withdrawal">철회</span>
 													</c:when>
 												</c:choose>
 											</td>
@@ -246,7 +246,7 @@
 								<tbody class="outputBody3">
 									<c:forEach var="item" items="${allWorkList }">
 										<tr>
-											<td>${item.date }</td>
+											<td>${item.date }  ${item.dayOfWeek }</td>
 											<td>
 												<span class="d-inline card bg-info text-white text-center px-2">${item.dept }</span>
 												<span>${item.name }</span>
@@ -360,7 +360,7 @@
 					let outputBody = $(".outputBody1");
 					for(let i=0; i<data.length; i++){
 						html += "<tr>";
-						html += "<td>"+data[i].date+"</td>";
+						html += "<td>"+data[i].date + " " + data[i].dayOfWeek+"</td>";
 						html += "<td>"+data[i].start+"</td>";
 						html += "<td>"+data[i].end+"</td>";
 						html += "<td>"+data[i].overtime+"</td>";
@@ -374,7 +374,7 @@
 					let outputBody = $(".outputBody2");
 					for(let i=0; i<data.length; i++){
 						html += "<tr>";
-						html += "<td>"+data[i].date+"</td>";
+						html += "<td>"+data[i].date + " " + data[i].dayOfWeek+"</td>";
 						html += "<td>"+data[i].start+"</td>";
 						html += "<td>"+data[i].end+"</td>";
 						html += "<td>"+data[i].total+"</td>";
@@ -389,7 +389,7 @@
 						}else if(data[i].state==3){
 							html += '<span class="btn-gradient mini btn-secondary">반려</span>';
 						}else if(data[i].state==9){
-							html += '<span class="btn-gradient mini btn-secondary">철회</span>';
+							html += '<span class="btn-gradient mini btn-withdrawal">철회</span>';
 						}
 						html += "</td>"
 						html += '<td><a href="overtime_view.do?no='+data[i].overtimeNo+'">';
@@ -404,7 +404,7 @@
 					let outputBody = $(".outputBody3");
 					for(let i=0; i<data.list.length; i++){
 						html += "<tr>";
-						html += `<td>\${data.list[i].date}</td>`;
+						html += `<td>\${data.list[i].date} \${data.list[i].dayOfWeek}</td>`;
 						html += "<td>";
 						html += "<span class='d-inline card bg-info text-white text-center px-2'>"+data.list[i].dept+"</span>&nbsp;";
 						html += "<span>"+data.list[i].name+"</span>&nbsp;";
@@ -539,5 +539,6 @@
 	
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/calendar3.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/calendar_max_0.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
 <%@ include file="../include/footer.jsp"%>
