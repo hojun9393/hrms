@@ -142,7 +142,7 @@
 						</a> <!-- Dropdown - Messages -->
 						<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
 							aria-labelledby="messagesDropdown">
-							<h6 class="dropdown-header">Message Center</h6>
+							<h6 class="dropdown-header">MESSAGE CENTER</h6>
 							<a class="dropdown-item d-flex align-items-center" href="#">
 								<div class="dropdown-list-image mr-3">
 									<img class="rounded-circle" src="${pageContext.request.contextPath}/resources/img/undraw_profile_1.svg" alt="...">
@@ -191,7 +191,7 @@
 									<div class="small text-gray-500">Chicken the Dog Â· 2w</div>
 								</div>
 							</a> 
-							<a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+							<a class="dropdown-item text-center small text-gray-500" href="${pageContext.request.contextPath}/message/main.do">메시지 탭으로 이동</a>
 						</div>
 					</li>
 	
