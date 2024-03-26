@@ -82,14 +82,5 @@ public class SignLineVO {
 	public void setNextState(String nextState) {
 		this.nextState = nextState;
 	}
-
-	@Override
-	public String toString() {
-		return "SignLineVO [userId=" + userId + ", name=" + name + ", dept=" + dept + ", position=" + position
-				+ ", signOrder=" + signOrder + ", state=" + state + ", signLineNo=" + signLineNo + ", prevState="
-				+ prevState + ", nextState=" + nextState + "]";
-	}
-	
-	
 	
 }

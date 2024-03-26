@@ -8,7 +8,7 @@
 <div class="container-fluid">
 	<!-- Page Heading -->
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
-		<h1 class="h3 mb-0 text-gray-800">초과근무</h1>
+		<h1 class="h3 mb-0 text-gray-800">연차</h1>
 	</div>
 
 	<div class="card o-hidden border-0 shadow-lg">
@@ -18,24 +18,28 @@
 				<div class="col-9">
 					<div class="py-5 pl-5">
 						<div class="my-4">
-							<span class="d-inline bg-primary card text-white py-1 px-3">초과근무</span>
+							<span class="d-inline bg-primary card text-white py-1 px-3">연차</span>
 							<h1 class="d-inline h4 text-gray-900 font-weight-bold"></h1>
 						</div>
 						<hr>
 						<div class="py-2">
 							<span class="d-inline font-weight-bold text-gray-800">작성자</span>
 							|&nbsp; 
-							${ovo.name}
+							${vo.name}
 							<span class="d-inline font-weight-bold text-gray-800 ml-5">등록일</span>
-							|&nbsp; ${ovo.rdate}
+							|&nbsp; ${vo.rdate}
 						</div>
 						<div class="py-2">
-							<span class="d-inline font-weight-bold text-gray-800">초과근무 날짜</span> 
-							|&nbsp; ${ovo.date } ${ovo.start } ~ ${ovo.end }
+							<span class="d-inline font-weight-bold text-gray-800">연차 날짜</span> 
+							|&nbsp; 
+							<span class="font-weight-bold text-primary">${vo.startDate }</span>
+							<span class="font-weight-bold text-success">${vo.startTime }</span> ~ 
+							<span class="font-weight-bold text-primary">${vo.endDate }</span>
+							<span class="font-weight-bold text-success">${vo.endTime }</span>
 						</div>
 						<hr>
 						<div class="py-2">
-							${ovo.content }
+							${vo.reason }
 						</div>
 					</div>
 				</div>
@@ -46,7 +50,7 @@
 								<h1 class="d-inline h4 text-gray-900 mb-4 font-weight-bold">
 									결재 현황 
 									<c:if test="${nowState ne '철회' }">
-										<span class="d-inline text-primary font-weight-bold">${count}/${osList.size()}</span>
+										<span class="d-inline text-primary font-weight-bold">${count}/${list.size()}</span>
 									</c:if>
 								</h1>
 							</div>
@@ -67,7 +71,7 @@
 								</c:choose>
 							</div>
 						</div>
-						<c:forEach var="item" items="${osList }">
+						<c:forEach var="item" items="${list }">
 							<c:choose>
 								<c:when test="${item.state eq 0}">
 									<div class="card text-secondary px-3 py-2 my-2 border-secondary font-weight-bold">
@@ -120,7 +124,7 @@
 					<div class="mb-4 text-center">
 						<hr>
 						<a onclick="goMainFn()" class="btn btn-light border-dark btn-user"> 목록으로 </a> 
-						<c:if test="${ovo.state ne 9} OR ${ovo.state ne 3}">
+						<c:if test="${vo.state ne 9} OR ${vo.state ne 3}">
 							<a onclick="withdrawalFn()" class="btn btn-dark btn-user"> 철회하기 </a>
 						</c:if>
 					</div>
@@ -132,16 +136,16 @@
 </div>
 <script>
 	function withdrawalFn(){
-		let select = confirm("초과근무 신청을 철회하시겠습니까?");
+		let select = confirm("연차 신청을 철회하시겠습니까?");
 		if(select===true){
 			let f = document.createElement('form');
 	    
-			let overtimeNoInput;
-			overtimeNoInput = document.createElement('input');
-			overtimeNoInput.setAttribute('type', 'hidden');
-			overtimeNoInput.setAttribute('name', 'overtimeNo');
-			overtimeNoInput.setAttribute('value', '${ovo.overtimeNo}');
-			f.appendChild(overtimeNoInput);
+			let vacaNoInput;
+			vacaNoInput = document.createElement('input');
+			vacaNoInput.setAttribute('type', 'hidden');
+			vacaNoInput.setAttribute('name', 'vacaNo');
+			vacaNoInput.setAttribute('value', '${vo.vacaNo}');
+			f.appendChild(vacaNoInput);
 			
 			f.setAttribute('method', 'post');
 			f.setAttribute('action', 'withdrawal.do');

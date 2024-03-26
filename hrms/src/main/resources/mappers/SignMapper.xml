@@ -73,7 +73,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.signOrder, s.signLineNo, ds.state, 
+        ELSE '직급미정' END AS position, s.signOrder, ds.state, 
         LAG(ds.state) OVER(order by s.signOrder) as prevState, 
         LEAD(ds.state) OVER(order by s.signOrder) as nextState 
 		FROM user u inner join signLine s on u.userid = s.userid inner join docsign ds on s.signLineNo = ds.signLineNo 
@@ -111,7 +111,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.signOrder, s.signLineNo, vs.state, 
+        ELSE '직급미정' END AS position, s.signOrder, vs.state, 
         LAG(vs.state) OVER(order by s.signOrder) as prevState, 
         LEAD(vs.state) OVER(order by s.signOrder) as nextState 
 		FROM user u inner join signLine s on u.userid = s.userid inner join vacasign vs on s.signLineNo = vs.signLineNo 
@@ -150,7 +150,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.signOrder, s.signLineNo, os.state, 
+        ELSE '직급미정' END AS position, s.signOrder, os.state, 
         LAG(os.state) OVER(order by s.signOrder) as prevState, 
         LEAD(os.state) OVER(order by s.signOrder) as nextState 
 		FROM user u inner join signLine s on u.userid = s.userid inner join overtimesign os on s.signLineNo = os.signLineNo 

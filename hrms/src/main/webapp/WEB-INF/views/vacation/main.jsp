@@ -1,6 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../include/navigator.jsp"%>
+<head>
+	<!-- 데이트피커 { -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+	<link type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<!-- } -->
+	
+	<!-- 캘린더(데이트피커) 스타일 (jquery-ui.css 파일호출 보다 아래에 있어야 합니다.) { -->
+	<link href="${pageContext.request.contextPath}/resources/css/sign.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/resources/css/table.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/resources/css/button.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/resources/css/pagination.css" rel="stylesheet">
+</head>
 <!DOCTYPE html>
 		<!-- Begin Page Content -->
 		<div class="container-fluid">
@@ -21,8 +34,11 @@
 								<div class="col mr-2">
 									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">최근 연차 신청</div>
 									<div class="h5 mb-0 font-weight-bold text-gray-800">
-										<div class="h5 mb-0 font-weight-bold text-black-bold">대기</div>
-										<span class="content-text-small">2024-03-10</span>
+										<div class="h5 mb-0 font-weight-bold text-black-bold">${myRecentVacaApplication.state }</div>
+										<span class="content-text-small">
+											${myRecentVacaApplication.startDate } ${myRecentVacaApplication.startTime } ~ <br>
+											${myRecentVacaApplication.endDate } ${myRecentVacaApplication.endTime }
+										</span>
 									</div>
 								</div>
 							</div>
@@ -41,8 +57,7 @@
 									</div>
 									<div class="row no-gutters align-items-center">
 										<div class="col-auto">
-											<div class="h5 mb-0 mr-3 font-weight-bold text-red-bold">10일</div>
-											<span class="content-text-small">D-47</span>
+											<div class="h5 mb-0 mr-3 font-weight-bold text-blue-bold">${user.keepVaca }시간</div>
 										</div>
 									</div>
 								</div>
@@ -60,7 +75,7 @@
 									<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
 										사용 연차
 									</div>
-									<div class="h5 mb-0 font-weight-bold text-black-bold">7일</div>
+									<div class="h5 mb-0 font-weight-bold text-black-bold">${user.useVaca }시간</div>
 								</div>
 							</div>
 						</div>
@@ -76,7 +91,7 @@
 									<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
 										총 연차
 									</div>
-									<div class="h5 mb-0 font-weight-bold text-black-bold">14일</div>
+									<div class="h5 mb-0 font-weight-bold text-black-bold">${user.keepVaca + user.useVaca }시간</div>
 								</div>
 							</div>
 						</div>
@@ -98,71 +113,74 @@
 								<span class="menubar" onclick="displayFn(1)">내 연차</span> 
 								<span class="menubar" onclick="displayFn(2)">연차 조회</span> 
 							</h6>
-							<div class="dropdown no-arrow">
-								<a class="dropdown-toggle" href="#" role="button"
-									id="dropdownMenuLink" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="false">
-									<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-								</a>
-								<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-									<div class="dropdown-header">Dropdown Header:</div>
-									<a class="dropdown-item" href="#">Action</a> 
-									<a class="dropdown-item" href="#">Another action</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#">Something else here</a>
-								</div>
-							</div>
 						</div>
 						<!-- Card Body -->
 						<div class="card-body">
+						
 							<!-- 내 연차 -->
 							<div id="menu1">
-								<div>
-									2024-03-02 ~ 2024-03-13
-									<i class="fas fa-calendar fa-2x text-gray-300" onclick="openModal()"></i>
-									<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
-										<i class="fas fa-fw fa-plane"></i> 연차 신청
-									</a>
+								<div class="mb-3 col">
+									<input type="text" name="" id="startDate1" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()">
+									<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate1)" style="cursor: pointer;"></i> ~ 
+									<input type="text" name="" id="endDate1" class="datepicker inp" placeholder="연차 종료일" readonly="true" onchange="reloadListFn()"> 
+									<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate1)" style="cursor: pointer;"></i>
+									<div class="float-right">
+										<a href="application.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
+											<i class="fas fa-fw fa-plane"></i> 연차 신청
+										</a>
+									</div>
 								</div>
 								<table>
 									<thead>
 										<tr>
 											<th>기간</th>
 											<th>일수</th>
+											<th>시작 시간</th>
+											<th>종료 시간</th>
+											<th>총 사용 시간</th>
 											<th>사유</th>
+											<th>신청일</th>
 											<th>상태</th>
 											<th>내역</th>
 										</tr>
 									</thead>
-									<tbody>
-										<tr>
-											<td>2024-03-02 ~ 2024-03-03</td>
-											<td>2</td>
-											<td>휴식</td>
-											<td><span class="btn btn-light btn-gradient2 mini">대기</span></td>
-											<td><img class="icon-box" src="img/document_icon.png"></td>
-										</tr>
-										<tr>
-											<td>2024-03-02 ~ 2024-03-03</td>
-											<td>2</td>
-											<td>휴식</td>
-											<td><span class="btn-gradient red mini">진행중</span></td>
-											<td><img class="icon-box" src="img/document_icon.png"></td>
-										</tr>
-										<tr>
-											<td>2024-03-02 ~ 2024-03-03</td>
-											<td>2</td>
-											<td>휴식</td>
-											<td><span class="btn-gradient green mini">승인</span></td>
-											<td><img class="icon-box" src="img/document_icon.png"></td>
-										</tr>
-										<tr>
-											<td>2024-03-02 ~ 2024-03-03</td>
-											<td>2</td>
-											<td>휴식</td>
-											<td><span class="btn-gradient mini btn-secondary">철회</span></td>
-											<td><img class="icon-box" src="img/document_icon.png"></td>
-										</tr>
+									<tbody class="outputBody1">
+										<c:forEach var="i" items="${myVacaList }">
+											<tr>
+												<td>${i.startDate } ~ ${i.endDate }</td>
+												<td>${i.duration }일</td>
+												<td>${i.startDate}<br>${i.startTime }</td>
+												<td>${i.endDate}<br>${i.endTime }</td>
+												<td>${i.useTime }</td>
+												<td>${i.reason }</td>
+												<td>${i.rdate}</td>
+												<td>
+													<c:if test="${i.state eq '대기'}">
+														<span class="btn btn-light btn-gradient2 mini">대기</span>
+													</c:if>
+													<c:if test="${i.state eq '진행중'}">
+														<span class="btn-gradient red mini">진행중</span>
+													</c:if>
+													<c:if test="${i.state eq '승인'}">
+														<span class="btn-gradient green mini">승인</span>
+													</c:if>
+													<c:if test="${i.state eq '반려'}">
+														<span class="btn-gradient mini btn-secondary">반려</span>
+													</c:if>
+													<c:if test="${i.state eq '사용 완료'}">
+														<span class="btn-gradient green mini">사용 완료</span>
+													</c:if>
+													<c:if test="${i.state eq '철회'}">
+														<span class="btn-gradient mini btn-secondary">철회</span>
+													</c:if>
+												</td>
+												<td>
+													<a href="view.do?no=${i.vacaNo }">
+														<img class="icon-box" src="${pageContext.request.contextPath}/resources/img/document_icon.png">
+													</a>
+												</td>
+											</tr>
+										</c:forEach>
 									</tbody>
 								</table>
 							</div>
@@ -196,7 +214,7 @@
 											<td>14일</td>
 											<td>7일</td>
 											<td>7일</td>
-											<td><img id="modal-open" class="icon-box" src="img/document_icon.png"></td>
+											<td><img id="modal-open" class="icon-box" src="${pageContext.request.contextPath}/resources/img/document_icon.png"></td>
 										</tr>
 									</tbody>
 								</table>
@@ -207,37 +225,7 @@
 				</div>
 			</div>
 		</div>
-
 		
-		<!-- ======================== 달력 ========================-->
-		<div id="modal" class="modal-overlay" style="display:none;">
-			<div class="modal-window calendar col">
-				<div class="row">
-					<div class="header col">
-						<div class="year-month"></div>
-						<div class="nav">
-							<button class="nav-btn go-prev" onclick="prevMonth()">&lt;</button>
-							<button class="nav-btn go-today" onclick="goToday()">Today</button>
-							<button class="nav-btn go-next" onclick="nextMonth()">&gt;</button>
-						</div>
-					</div>
-					<div class="main">
-						<div class="days">
-							<div class="day">일</div>
-							<div class="day">월</div>
-							<div class="day">화</div>
-							<div class="day">수</div>
-							<div class="day">목</div>
-							<div class="day">금</div>
-							<div class="day">토</div>
-						</div>
-						<div class="dates"></div>
-					</div>
-				</div>
-				<div id="close-area" class="close-area">닫기</div>
-			</div>
-		</div>
-		<!-- ======================== 달력 ========================-->
 
 		<!--========================= 모달창 ======================-->
 		<div class="popup-wrap" id="popup">
@@ -274,9 +262,59 @@
 		<!--========================= 모달창 ======================-->
 							
 <!-- End of Main Content -->
-<script src="resources/js/jquery-3.7.1.min.js"></script>
-<script src="resources/js/menu.js"></script>
-<script src="resources/js/modal.js"></script>
-<script src="resources/js/modal2.js"></script>
-<script src="resources/js/calendar.js"></script>
+
+<script>
+	function reloadListFn(obj){
+		let startDate = $("#startDate1").val();
+		let endDate = $("#endDate1").val();
+		$.ajax({
+			url:"reloadList.do",
+			data: {startDate : startDate, endDate : endDate},
+			success:function(data){
+				let html = "";
+				let outputBody = $(".outputBody1");
+				for(let i=0; i<data.length; i++){
+					html += "<tr>";
+					html += `<td>\${data[i].startDate} ~ \${data[i].endDate}</td>`;
+					html += `<td>\${data[i].duration}일</td>`;
+					html += `<td>\${data[i].startDate}<br>\${data[i].startTime }</td>`;
+					html += `<td>\${data[i].endDate}<br>\${data[i].endTime }</td>`;
+					html += `<td>\${data[i].useTime }</td>`;
+					html += `<td>\${data[i].reason }</td>`;
+					html += `<td>\${data[i].rdate}</td>`
+					html += "<td>";
+					switch(data[i].state){
+						case '대기':
+							html += `<span class="btn btn-light btn-gradient2 mini">대기</span>`;
+							break;
+						case '진행중':
+							html += `<span class="btn-gradient red mini">진행중</span>`;
+							break;
+						case '승인':
+							html += `<span class="btn-gradient green mini">승인</span>`;
+							break;
+						case '반려':
+							html += `<span class="btn-gradient mini btn-secondary">반려</span>`;
+							break;
+						case '사용 완료':
+							html += `<span class="btn-gradient green mini">사용 완료</span>`;
+							break;
+						case '철회':
+							html += `<span class="btn-gradient mini btn-secondary">철회</span>`;
+							break;
+					}
+					html += "</td>";
+					html += `<td><img class="icon-box" src="${pageContext.request.contextPath}/resources/img/document_icon.png"></td>`;
+					html += "</tr>";
+				}
+					
+				outputBody.html(html);
+			}
+		})
+	}
+</script>
+<script src="${pageContext.request.contextPath}/resources/js/menu.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/modal.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
 <%@ include file="../include/footer.jsp"%>

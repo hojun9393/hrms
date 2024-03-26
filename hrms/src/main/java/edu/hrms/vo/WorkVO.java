@@ -12,8 +12,15 @@ public class WorkVO {
 	private String name;
 	private String state;
 	private String position;
+	private String dept;
 	
 	
+	public String getDept() {
+		return dept;
+	}
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
 	public String getName() {
 		return name;
 	}
@@ -80,7 +87,7 @@ public class WorkVO {
 	public String toString() {
 		return "WorkVO [wNo=" + wNo + ", userid=" + userid + ", date=" + date + ", start=" + start + ", end=" + end
 				+ ", overtime=" + overtime + ", total=" + total + ", name=" + name + ", state=" + state + ", position="
-				+ position + "]";
+				+ position + ", dept=" + dept + "]";
 	}
 	
 	

@@ -21,6 +21,7 @@ import edu.hrms.service.WorkService;
 import edu.hrms.util.CalcCalendar;
 import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.OvertimeVO;
+import edu.hrms.vo.PagingVO;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.WorkVO;
 
@@ -42,7 +43,7 @@ public class WorkController {
 		LocalDate nowData = LocalDate.now();
 		String now = nowData.toString();
 		
-		model.addAttribute("today", now);
+		model.addAttribute("today", now); // 오늘 날짜
 		
 		map.put("userid", userid);
 		map.put("now", now);
@@ -68,7 +69,7 @@ public class WorkController {
 		model.addAttribute("myThisWeekTotalWorkTimePlusMyTotalOvertimeTime", myThisWeekTotalWorkTimePlusMyTotalOvertimeTime);
 		model.addAttribute("myThisWeekTotalOvertimeTime", myThisWeekTotalOvertimeTime);
 		
-		Map<String, String> listMap = new HashMap<>();
+		Map<String, Object> listMap = new HashMap<>();
 		String startDate = null;
 		String endDate = calcCalendar.getTodayDate();
 		listMap.put("userid", userid);
@@ -76,14 +77,27 @@ public class WorkController {
 		listMap.put("endDate", endDate);
 		
 		List<WorkVO> workList = workService.selectAllMyWork(listMap);
-		model.addAttribute("workList", workList);
+		model.addAttribute("workList", workList); // 로그인한 사원 근무 리스트
 		List<OvertimeVO> overtimeList = workService.selectAllMyOvertime(listMap);
-		model.addAttribute("overtimeList", overtimeList);
+		model.addAttribute("overtimeList", overtimeList); // 로그인한 사원 초과근무 리스트
 		
 		int count = workService.isOvertimeApplicationToday(map);
-		model.addAttribute("isOvertimeApplicationToday", count);
+		model.addAttribute("isOvertimeApplicationToday", count); // 오늘 초과근무 신청 진행 여부
+		model.addAttribute("selMenu", selMenu); // 메뉴2 선택여부
 		
-		model.addAttribute("selMenu", selMenu);
+		Map<String, Object> allWorkListMap = new HashMap<>();
+		String dept = "D";
+		allWorkListMap.put("dept", dept);
+		allWorkListMap.put("startDate", startDate);
+		allWorkListMap.put("endDate", endDate);
+		int cnt = workService.getCountOfAllWorkList(allWorkListMap);
+		PagingVO pagingVO = new PagingVO(1, cnt, 5);
+		allWorkListMap.put("pagingVO",pagingVO);
+		
+		List<WorkVO> allWorkList = workService.selectAllWork(allWorkListMap);
+		model.addAttribute("pagingVO", pagingVO);
+		model.addAttribute("allWorkList", allWorkList);
+		
 		
 		return "/work/main";
 	}
@@ -228,10 +242,10 @@ public class WorkController {
 	
 	@RequestMapping(value = "/reloadList.do")
 	@ResponseBody
-	public List<?> reloadList(String startDate, String endDate, String obj) {
+	public Object reloadList(String startDate, String endDate, String obj, String searchInput, String pNum) {
 		
 		String userid="10001";
-		Map<String, String> listMap = new HashMap<>();
+		Map<String, Object> listMap = new HashMap<>();
 		listMap.put("userid", userid);
 		listMap.put("startDate", startDate);
 		if(endDate==null || endDate.equals("")) {
@@ -244,12 +258,24 @@ public class WorkController {
 			list = workService.selectAllMyWork(listMap);
 		}else if(obj.equals("2")) {
 			list = workService.selectAllMyOvertime(listMap);
+		}else if(obj.equals("3")) {
+			String dept = "D";
+			listMap.put("dept", dept);
+			listMap.put("searchInput", searchInput);
+			int cnt = workService.getCountOfAllWorkList(listMap);
+			PagingVO pagingVO = new PagingVO(Integer.parseInt(pNum), cnt, 5);
+			listMap.put("pagingVO", pagingVO);
+			
+			list = workService.selectAllWork(listMap);
+			Map<String, Object> map = new HashMap<>();
+			map.put("list", list);
+			map.put("pagingVO", pagingVO);
+			return map;
 		}
 		
 		return list;
 	}
-	
-	
+
 	
 	
 	

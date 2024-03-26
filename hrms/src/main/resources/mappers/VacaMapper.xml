@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.hrms.mappers.vacaMapper">
+	
+	<select id="selectMyVacaList" parameterType="Map" resultType="vacaVO">
+		SELECT vacaNo, userid, rdate, reason, 
+				(CASE state
+					WHEN 0 THEN '대기'
+					WHEN 1 THEN '진행중'
+					WHEN 2 THEN '승인'
+					WHEN 3 THEN '반려'
+					WHEN 7 THEN '사용 완료'
+					WHEN 9 THEN '철회' END
+				) AS state
+				, startTime, endTime, startDate, endDate, subtime_nolunchtime
+            , duration
+            , IF(duration>1
+				, ADDTIME(IF(startTime<![CDATA[<]]>'13:00:00' AND endTime<![CDATA[>=]]>'13:00:00'
+								, SUBTIME(subtime_nolunchtime,'01:00:00')
+								, subtime_nolunchtime), SEC_TO_TIME(TIME_TO_SEC('08:00:00')*(duration-1)))
+				, IF(startTime<![CDATA[<=]]>'12:00:00' AND endTime<![CDATA[>=]]>'13:00:00'
+					, SUBTIME(subtime_nolunchtime,'01:00:00')
+					, subtime_nolunchtime)) as useTime	
+			FROM (SELECT *, SUBTIME(
+											IF(endTime BETWEEN '12:00:01' AND '12:59:59','13:00:00',endTime), 
+											IF(startTime BETWEEN '12:00:00' AND '12:59:59','12:00:00',startTime))
+											AS subtime_nolunchtime
+							, DATEDIFF(endDate, startDate)+1 as duration
+						FROM vacation
+						WHERE userid = #{userid}	
+							<if test='startDate != null and endDate == null'>
+								AND startDate <![CDATA[>=]]> #{startDate}
+				 			</if>
+				 			<if test='startDate == null and endDate != null'>
+								AND startDate <![CDATA[<=]]> #{endDate}
+				 			</if>
+							<if test='startDate != null and endDate != null'>
+								AND startDate BETWEEN #{startDate} AND #{endDate}
+				 			</if>
+				 	) vaca_temp
+			ORDER BY startDate DESC;
+	</select>
+	
+	<select id="myRecentVacaApplication" parameterType="String" resultType="vacaVO">
+		SELECT startDate, endDate
+			, LEFT(startTime,5) AS startTime
+			, LEFT(endTime,5) AS endTime, 
+			(CASE state
+				WHEN 0 THEN '대기'
+		        WHEN 1 THEN '진행중'
+		        WHEN 2 THEN '승인'
+		        WHEN 3 THEN '반려'
+		        WHEN 7 THEN '사용 완료'
+		        WHEN 9 THEN '철회' END) AS state
+			FROM vacation 
+			WHERE vacaNo = (SELECT MAX(vacaNo) FROM vacation WHERE userid = #{userid});
+	</select>
+	
+	<select id="myRemainVaca" parameterType="String" resultType="edu.hrms.vo.UserVO">
+		SELECT * 
+			FROM user
+			WHERE userid = #{userid}
+	</select>
+	
+	<insert id="insertVaca" parameterType="String">
+		INSERT INTO vacation (userid, reason, startTime, endTime, startDate, endDate)
+						  VALUES (#{userid}, #{reason}, #{startTime}, #{endTime}, #{startDate}, #{endDate})
+	</insert>
+	
+	<select id="getMaxNoByUserId" parameterType="String" resultType="int">
+		SELECT vacaNo FROM vacation
+			WHERE vacaNo = (SELECT MAX(vacaNo) FROM vacation WHERE userid = #{userid})
+	</select>
+	
+	<insert id="insertVacaSign" parameterType="java.util.List">
+		INSERT INTO vacasign (vacaNo, signLineNo) VALUES
+			<foreach collection="list" index="index" item="item" separator=",">
+				(#{item.vacaNo}, #{item.signLineNo})
+			</foreach>
+	</insert>
+	
+	<select id="selectVacaByVacaNo" parameterType="int" resultType="vacaVO">
+		SELECT v.vacaNo, v.userid, v.startDate, v.endDate
+			, DATE_FORMAT(v.startTime, '%H:%i') AS startTime
+			, DATE_FORMAT(v.endTime, '%H:%i') AS endTime
+			, v.state, reason, rdate, u.name
+			FROM vacation v
+			INNER JOIN user u ON v.userid = u.userid
+			WHERE vacaNo = #{vacaNo}
+	</select>
+	
+	<select id="getVacaSignList" parameterType="int" resultType="vacaSignVO">
+		SELECT vs.*, u.name, u.dept, 
+				(CASE 
+					WHEN u.position = 'C' THEN '대표'
+	            WHEN u.position = 'D' THEN '부장'
+	            WHEN u.position = 'L' THEN '팀장'
+	            WHEN u.position = 'E' THEN '사원' END
+				) AS position
+	        	, s.signorder,
+	        	LAG(vs.state) OVER() AS prev_state
+			FROM vacasign vs
+			INNER JOIN signline s ON vs.signlineno = s.signlineno
+		   INNER JOIN user u ON s.userid = u.userid
+		   WHERE vs.vacaNo = #{vacaNo}
+		   ORDER BY signOrder
+	</select>
+	
+	<update id="withdrawal" parameterType="int">
+		UPDATE vacation
+			SET state = 9
+			WHERE vacaNo = #{vacaNo}
+	</update>
+	
+	<delete id="vacaSignDelete" parameterType="int">
+		DELETE FROM vacasign
+			WHERE vacaNo = #{vacaNO}
+	</delete>
+	
+</mapper>
+
+
+

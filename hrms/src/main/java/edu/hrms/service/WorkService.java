@@ -36,15 +36,19 @@ public interface WorkService {
 	
 	int isOvertimeApplicationToday(Map<String, String> map);
 	
-	List<WorkVO> selectAllMyWork(Map<String, String> map);
+	List<WorkVO> selectAllMyWork(Map<String, Object> map);
 	
-	List<OvertimeVO> selectAllMyOvertime(Map<String, String> map);
+	List<OvertimeVO> selectAllMyOvertime(Map<String, Object> map);
 	
 	OvertimeVO selectOvertime(int overtimeNo);
 	
 	List<OvertimeSignVO> getOvertimeSignList(int overtimeNo);
 	
 	Map<String, Object> getSignLineMap(String userid, String position);
+	
+	List<WorkVO> selectAllWork(Map<String, Object> map);
+	
+	int getCountOfAllWorkList(Map<String, Object> map);
 	
 	
 	

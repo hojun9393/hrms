@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import edu.hrms.vo.UserVO;
+import edu.hrms.vo.UserVO_security;
 
 /*
  * 입력한 로그인 아이디와 일치하는 DB 유저 정보를 UserVo 객체로 반환
@@ -38,7 +38,7 @@ public class UserAuthenticationService implements UserDetailsService {
 		List<GrantedAuthority> authority = new ArrayList<>();
 		authority.add(new SimpleGrantedAuthority(user.get("authority").toString()));
 		
-		UserVO vo = new UserVO(user.get("username").toString()
+		UserVO_security vo = new UserVO_security(user.get("username").toString()
 								, user.get("password").toString()
 								, (Integer)Integer.valueOf(user.get("enabled").toString()) == 1
 								, true

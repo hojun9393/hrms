@@ -13,6 +13,7 @@
 	<link href="${pageContext.request.contextPath}/resources/css/sign.css" rel="stylesheet">
 	<link href="${pageContext.request.contextPath}/resources/css/table.css" rel="stylesheet">
 	<link href="${pageContext.request.contextPath}/resources/css/button.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/resources/css/pagination.css" rel="stylesheet">
 </head>
 <body id="page-top">
 	<!-- Begin Page Content -->
@@ -37,26 +38,12 @@
 									<span id="goToWorkClock"></span> ~
 									<span id="leaveWorkClock"></span>
 								</div>
-								<c:if test="${start == null}">
-									<button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="workFn('GO')">
-										출근하기
-									</button>
-								</c:if>
-								<c:if test="${start != null}">
-									<button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" onclick="workFn('GO')">
-										출근하기
-									</button>
-								</c:if>
-								<c:if test="${end == null }">
-									<button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="workFn('LEAVE')">
-										퇴근하기
-									</button>
-								</c:if>
-								<c:if test="${end != null }">
-									<button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" onclick="workFn('LEAVE')">
-										퇴근하기
-									</button>
-								</c:if>
+								<button id="goToWorkButton" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="workFn('GO')">
+									출근하기
+								</button>
+								<button id="leaveWorkButton" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="workFn('LEAVE')">
+									퇴근하기
+								</button>
 							</div>
 							<div class="col-auto">
 								<i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -236,15 +223,13 @@
 						<!-- 근무 조회 -->
 						<div id="menu3" class="display-none">
 							<div class="mb-3 col">
-								<input type="text" name="" value="" id="startDate3" class="datepicker inp" placeholder="시작일 선택" readonly="true" onchange="reloadListFn(3)">
+								<input type="text" name="" value="" id="startDate3" class="datepicker inp" placeholder="시작일 선택" readonly="true" onchange="reloadListFn(3,1)">
 								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate3)" style="cursor: pointer;"></i> ~ 
-								<input type="text" name="" value="${today }" id="endDate3" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(3)"> 
+								<input type="text" name="" value="${today }" id="endDate3" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(3,1)"> 
 								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate3)" style="cursor: pointer;"></i>
 								<div id="searchDiv" class="float-right">
-									<form>
-										<input type="text">
-										<button>검색</button>
-									</form>
+									<input type="text" id="searchInput">
+									<button type="button" onclick="reloadListFn(3,1)">검색</button>
 								</div>
 							</div>
 							<table>
@@ -258,23 +243,45 @@
 										<th>총 근무</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td>2024-03-02 (월)</td>
-										<td>
-											<span class="d-inline card bg-info text-white text-center px-2">기획부</span>
-											<span>이사원</span>
-											<span class="text-xs font-weight-bold text-primary text-uppercase mb-1">사원</span>
-										</td>
-										<td>09:00</td>
-										<td>20:00</td>
-										<td>02:00</td>
-										<td>10:00</td>
-									</tr>
+								<tbody class="outputBody3">
+									<c:forEach var="item" items="${allWorkList }">
+										<tr>
+											<td>${item.date }</td>
+											<td>
+												<span class="d-inline card bg-info text-white text-center px-2">${item.dept }</span>
+												<span>${item.name }</span>
+												<span class="text-xs font-weight-bold text-primary text-uppercase mb-1">${item.position }</span>
+											</td>
+											<td>${item.start }</td>
+											<td>${item.end }</td>
+											<td>${item.overtime }</td>
+											<td>${item.total }</td>
+										</tr>
+									</c:forEach>
 								</tbody>
-							</table>
+							</table><br>
+							<!------- 페이징 ------->
+							<div class="page_wrap">
+   							<div class="page_nation">
+   								<c:if test="${pagingVO.startPage > pagingVO.cntPage }">
+										<a class="arrow prev" onclick="reloadListFn(3,${pagingVO.startPage-1})"></a>
+									</c:if>
+									<c:forEach var="p" begin="${pagingVO.startPage }" end="${pagingVO.endPage }">
+										<c:choose>
+											<c:when test="${p eq pagingVO.nowPage }">
+												<a class="active" onclick="reloadListFn(3,${p}); pagingFn(this)">${p }</a>
+											</c:when>
+											<c:when test="${p ne pagingVO.nowPage }">
+												<a onclick="reloadListFn(3,${p}); pagingFn(this)">${p }</a>
+											</c:when>
+										</c:choose>
+									</c:forEach>
+									<c:if test="${pagingVO.endPage < pagingVO.lastPage }">
+										<a onclick="reloadListFn(${pagingVO.endPage+1})"></a>
+									</c:if>
+								</div>
+							</div>
 						</div>
-	
 					</div>
 				</div>
 			</div>
@@ -292,12 +299,21 @@
 	const today = '${today}';
 	
 	window.onload = function(){
-		  let selMenu = '${selMenu}';
-		  if(selMenu=='2'){
-				menu1.style.display = "none";
-				menu2.style.display = "block";
-				menu3.style.display = "none";
-		  }
+		let selMenu = '${selMenu}';
+		if(selMenu=='2'){
+			menu1.style.display = "none";
+			menu2.style.display = "block";
+			menu3.style.display = "none";
+		}
+		let goToWorkButton = $("#goToWorkButton");
+		let leaveWorkButton = $("#leaveWorkButton");
+		if('${start}' != null && '${start}' != ''){
+			goToWorkButton.attr("class", "d-none d-sm-inline-block btn btn-sm btn-success shadow-sm");
+		}
+		if('${end}' != null && '${end}' != ''){
+			leaveWorkButton.attr("class", "d-none d-sm-inline-block btn btn-sm btn-success shadow-sm");
+		}
+		
 	}
 	
 	function displayFn(obj){
@@ -319,9 +335,10 @@
 		}
 	}
 	
-	function reloadListFn(obj){
+	function reloadListFn(obj, pNum){
 		let startDate;
 		let endDate;
+		let searchInput;
 		if(obj==1){
 			startDate = $("#startDate1").val();
 			endDate = $("#endDate1").val();
@@ -331,11 +348,12 @@
 		}else if(obj==3){
 			startDate = $("#startDate3").val();
 			endDate = $("#endDate3").val();
+			searchInput = $("#searchInput").val();
 		}
-	
+		
 		$.ajax({
 			url:"reloadList.do",
-			data: {startDate : startDate, endDate : endDate, obj : obj},
+			data: {startDate : startDate, endDate : endDate, obj : obj, searchInput : searchInput, pNum : pNum},
 			success:function(data){
 				if(obj==1){
 					let html = "";
@@ -350,6 +368,7 @@
 						html += "</tr>";
 					}
 					outputBody.html(html);
+					
 				}else if(obj==2){
 					let html = "";
 					let outputBody = $(".outputBody2");
@@ -379,11 +398,57 @@
 						html += "</tr>";
 					}
 					outputBody.html(html);
-				}
 					
+				}else if(obj==3){
+					let html = "";
+					let outputBody = $(".outputBody3");
+					for(let i=0; i<data.list.length; i++){
+						html += "<tr>";
+						html += `<td>\${data.list[i].date}</td>`;
+						html += "<td>";
+						html += "<span class='d-inline card bg-info text-white text-center px-2'>"+data.list[i].dept+"</span>&nbsp;";
+						html += "<span>"+data.list[i].name+"</span>&nbsp;";
+						html += "<span class='text-xs font-weight-bold text-primary text-uppercase mb-1'>"+data.list[i].position+"</span>";
+						html += "</td>";
+						html += `<td>\${data.list[i].start}</td>`;
+						html += "<td>"+data.list[i].end+"</td>";
+						html += "<td>"+data.list[i].overtime+"</td>";
+						html += "<td>"+data.list[i].total+"</td>";
+					}
+					outputBody.html(html);
+					
+					html = "";
+					outputBody = $(".page_nation");
+					
+					if(data.pagingVO.startPage > data.pagingVO.cntPage){
+						html += `<a class="arrow prev" onclick="reloadListFn(3,\${data.pagingVO.startPage-1})"></a>`
+					}
+					for(let i=data.pagingVO.startPage; i<=data.pagingVO.endPage; i++){
+						if(i==data.pagingVO.nowPage){
+							html += `<a class="active" onclick="reloadListFn(3,\${i}); pagingFn(this)">\${i}</a>`;
+						}else{
+							html += `<a onclick="reloadListFn(3,\${i}); pagingFn(this)">\${i}</a>`;
+						}
+					}
+					if(data.pagingVO.endPage < data.pagingVO.lastPage){
+						html += `<a onclick="reloadListFn(\${data.pagingVO.endPage+1})"></a>`;
+					}
+					
+					outputBody.html(html);
+				}
 			}
+			
 		});
 	}
+	
+	function pagingFn(obj){
+		let otherA = $(".page_nation").children(".active");
+		otherA.attr("class","");
+		let thisA = $(obj);
+		thisA.attr("class","active");
+	}
+	
+	
 </script>
 <script>
 	// 시계 표시

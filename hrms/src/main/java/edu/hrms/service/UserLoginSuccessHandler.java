@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import edu.hrms.vo.UserVO;
+import edu.hrms.vo.UserVO_security;
 
 public class UserLoginSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -17,7 +17,7 @@ public class UserLoginSuccessHandler implements AuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		
-		UserVO loginUser = (UserVO) authentication.getPrincipal();
+		UserVO_security loginUser = (UserVO_security) authentication.getPrincipal();
 		
 		System.out.println(loginUser.getUserid());
 		

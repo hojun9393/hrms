@@ -76,12 +76,20 @@ public class WorkDAO {
 		return sqlSession.selectOne(namespace+".isOvertimeApplicationToday", map);
 	}
 	
-	public List<WorkVO> selectAllMyWork(Map<String, String> map){
+	public List<WorkVO> selectAllMyWork(Map<String, Object> map){
 		return sqlSession.selectList(namespace+".selectAllMyWork", map);
 	}
 	
-	public List<OvertimeVO> selectAllMyOvertime(Map<String, String> map){
+	public List<OvertimeVO> selectAllMyOvertime(Map<String, Object> map){
 		return sqlSession.selectList(namespace+".selectAllMyOvertime", map);
+	}
+	
+	public List<WorkVO> selectAllWork(Map<String, Object> map){
+		return sqlSession.selectList(namespace+".selectAllWork", map);
+	}
+	
+	public int getCountOfAllWorkList(Map<String, Object> map) {
+		return sqlSession.selectOne(namespace+".getCountOfAllWorkList", map);
 	}
 	
 }

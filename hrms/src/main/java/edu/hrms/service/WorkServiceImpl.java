@@ -70,12 +70,12 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public List<WorkVO> selectAllMyWork(Map<String, String> map) {
+	public List<WorkVO> selectAllMyWork(Map<String, Object> map) {
 		return workDAO.selectAllMyWork(map);
 	}
 	
 	@Override
-	public List<OvertimeVO> selectAllMyOvertime(Map<String, String> map) {
+	public List<OvertimeVO> selectAllMyOvertime(Map<String, Object> map) {
 		return workDAO.selectAllMyOvertime(map);
 	}
 	
@@ -121,7 +121,15 @@ public class WorkServiceImpl implements WorkService {
 		return signLineMap;
 	}
 	
+	@Override
+	public List<WorkVO> selectAllWork(Map<String, Object> map) {
+		return workDAO.selectAllWork(map);
+	}
 	
+	@Override
+	public int getCountOfAllWorkList(Map<String, Object> map) {
+		return workDAO.getCountOfAllWorkList(map);
+	}
 	
 	
 }

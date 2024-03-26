@@ -18,8 +18,8 @@
             		,'00:00:00')
              	AS total
 			FROM (SELECT *, SUBTIME(
-							IF(end<![CDATA[>]]>'18:00:00','18:00:00',IF(end BETWEEN '12:00:00' AND '12:59:59','12:00:00',end)), 
-							IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:00','13:00:00',start)))
+							IF(end<![CDATA[>]]>'18:00:00','18:00:00',IF(end BETWEEN '12:00:01' AND '12:59:59','13:00:00',end)), 
+							IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:59','12:00:00',start)))
                             AS subtime_nolunchtime
 					FROM work
             	WHERE userid = #{userid} AND	
@@ -100,14 +100,14 @@
 		SELECT w.wno, w.userid, w.date, w.start
 				, IFNULL(w.end,'-') AS end
 				, IFNULL((SUBTIME(o.end, o.start)),'-') AS overtime 
-	         , IFNULL(ADDTIME(IF(w.start<![CDATA[<=]]>'12:00:00' AND w.end<![CDATA[>=]]>'13:00:00'
+	         , IFNULL(ADDTIME(IF(w.start<![CDATA[<]]>'13:00:00' AND w.end<![CDATA[>=]]>'13:00:00'
 							, SUBTIME(subtime_nolunchtime,'01:00:00')
 							, subtime_nolunchtime)
 						, IFNULL((SUBTIME(o.end, o.start)),"00:00:00")),'-') AS total
             , subtime_nolunchtime
 			FROM (SELECT *, SUBTIME(
-								IF(end<![CDATA[>]]>'18:00:00','18:00:00',IF(end BETWEEN '12:00:00' AND '12:59:59','12:00:00',end)), 
-								IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:00','13:00:00',start)))
+								IF(end<![CDATA[>]]>'18:00:00','18:00:00',IF(end BETWEEN '12:00:01' AND '12:59:59','13:00:00',end)), 
+								IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:59','12:00:00',start)))
 								AS subtime_nolunchtime
 					FROM work
 					WHERE userid = #{userid}) AS w
@@ -181,20 +181,64 @@
 	</select>
 	
 	<select id="selectAllWork" parameterType="Map" resultType="edu.hrms.vo.WorkVO">
-		SELECT w.*, u.name, 
+		SELECT w.wno, w.userid, w.date, w.start
+				, IFNULL(w.end,'-') AS end, u.name,
+				(CASE
+					WHEN u.dept = 'M' THEN 'CEO'
+               WHEN u.dept = 'D' THEN '개발부'
+					WHEN u.dept = 'S' THEN '영업부'
+               WHEN u.dept = 'P' THEN '기획부'
+               WHEN u.dept = 'H' THEN '인사부' END
+				) AS dept, 
 				(CASE 
 					WHEN u.position = 'C' THEN '대표'
-	            WHEN u.position = 'D' THEN '부장'
-	            WHEN u.position = 'L' THEN '팀장'
-	            WHEN u.position = 'E' THEN '사원' END
-				) AS position, 
-				
-			FROM work w
-			INNER JOIN user u ON w.userid = u.userid
-			INNER JOIN overtime o ON u.userid = o.userid
+					WHEN u.position = 'D' THEN '부장'
+					WHEN u.position = 'L' THEN '팀장'
+					WHEN u.position = 'E' THEN '사원' END
+				) AS position
+				, IFNULL((SUBTIME(o.end, o.start)),'-') AS overtime 
+            , IFNULL(ADDTIME(IF(w.start<![CDATA[<]]>'13:00:00' AND w.end<![CDATA[>=]]>'13:00:00'
+							, SUBTIME(subtime_nolunchtime,'01:00:00')
+							, subtime_nolunchtime)
+						, IFNULL((SUBTIME(o.end, o.start)),"00:00:00")),'-') AS total 
+		FROM (SELECT *, 
+					SUBTIME(
+							IF(end<![CDATA[>]]>'18:00:00','18:00:00',IF(end BETWEEN '12:00:01' AND '12:59:59','13:00:00',end)), 
+							IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:59','12:00:00',start))) AS subtime_nolunchtime
+				FROM work) AS w
+		INNER JOIN user u 
+			ON w.userid = u.userid
+		LEFT JOIN overtime o 
+			ON u.userid = o.userid AND w.date = o.date AND o.state NOT IN (3,9)
+		WHERE u.dept = #{dept}
+			<if test='startDate == null'>
+				AND w.date <![CDATA[<=]]> #{endDate}
+ 			</if>
+			<if test='startDate != null'>
+				AND w.date BETWEEN #{startDate} AND #{endDate}
+ 			</if>
+ 			<if test='searchInput != null'>
+				AND u.name LIKE CONCAT('%', #{searchInput}, '%')
+ 			</if>
+		ORDER BY w.date DESC limit #{pagingVO.startLimit}, #{pagingVO.perPage};
+			
+	</select>
+	
+	<select id="getCountOfAllWorkList" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+			FROM WORK w
+			INNER JOIN user u
+				ON w.userid = u.userid
 			WHERE u.dept = #{dept}
-			
-			
+			<if test='startDate == null'>
+				AND w.date <![CDATA[<=]]> #{endDate}
+ 			</if>
+			<if test='startDate != null'>
+				AND w.date BETWEEN #{startDate} AND #{endDate}
+ 			</if>
+ 			<if test='searchInput != null'>
+				AND u.name LIKE CONCAT('%', #{searchInput}, '%')
+ 			</if>
 	</select>
 	
 </mapper>

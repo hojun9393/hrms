@@ -57,6 +57,7 @@
 												&nbsp;&nbsp;&nbsp;
 												<select name="start" id="startTime" onchange="itemChange()">
 													<option value="NONE">시작 시간</option>
+													<option value="12:00">12:00</option>
 													<option value="18:00">18:00</option>
 													<option value="19:00">19:00</option>
 													<option value="20:00">20:00</option>
@@ -101,7 +102,6 @@
 		let date = $("#startDate");
 		let startTime = $("#startTime option:selected");
 		let endTime = $("#endTime option:selected");
-		console.log(startTime);
 		if(date.val()===""){
 			alert("날짜를 선택해주세요.");
 			date.focus();
@@ -123,22 +123,24 @@
 	}
 	
 	function itemChange() {
-		let endTimeArr = ["19:00", "20:00", "21:00", "22:00", "23:00", "24:00"];
+		let endTimeArr = ["13:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"];
 		
 		var selectItem = $("#startTime").val();
 		var changeItem;
-		if (selectItem === "18:00" ) {
-			changeItem = endTimeArr;
+		if(selectItem === "12:00"){
+			changeItem = endTimeArr.slice(0,1);
+		}else if(selectItem === "18:00" ) {
+			changeItem = endTimeArr.slice(1,7);
 		}else if (selectItem === "19:00") {
-			changeItem = endTimeArr.slice().splice(1);
+			changeItem = endTimeArr.slice(2,7);
 		}else if (selectItem === "20:00") {
-			changeItem = endTimeArr.slice().splice(2);
+			changeItem = endTimeArr.slice(3,7);
 		}else if (selectItem === "21:00") {
-			changeItem = endTimeArr.slice().splice(3);
+			changeItem = endTimeArr.slice(4,7);
 		}else if (selectItem === "22:00") {
-			changeItem = endTimeArr.slice().splice(4);
+			changeItem = endTimeArr.slice(5,7);
 		}else if (selectItem === "23:00") {
-			changeItem = endTimeArr.slice().splice(5);
+			changeItem = endTimeArr.slice(6);
 		}
 		
 		$('#endTime').empty();
