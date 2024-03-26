@@ -538,7 +538,6 @@
 	
 	
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/calendar3.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/calendar_max_0.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
 <%@ include file="../include/footer.jsp"%>

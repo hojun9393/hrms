@@ -163,7 +163,6 @@
 	}
 	
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/calendar2.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/calendar_min_0.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
 <!-- /.container-fluid -->

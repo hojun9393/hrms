@@ -15,9 +15,12 @@ public class UserLoginFailureHandler implements AuthenticationFailureHandler {
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		
-		// 로그인 실패!!
-		System.out.println("로그인 실패!");
-		response.sendRedirect(request.getContextPath()+"/security/login.do");
+		System.out.println("UserLoginFailureHandler 들어옴");
+		
+		response.setContentType("text/html; charset=utf-8");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().append("<script>alert('사원번호와 아이디를 확인해주세요');location.href='login.do'</script>");
+		response.getWriter().flush();
 		
 	}
 

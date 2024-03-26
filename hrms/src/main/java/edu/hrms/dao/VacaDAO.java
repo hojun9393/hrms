@@ -7,7 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import edu.hrms.vo.UserVO;
+import edu.hrms.vo.UserVO2;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
 
@@ -27,7 +27,7 @@ public class VacaDAO {
 		return sqlSession.selectOne(namespace+".myRecentVacaApplication", userid);
 	}
 	
-	public UserVO myRemainVaca(String userid) {
+	public UserVO2 myRemainVaca(String userid) {
 		return sqlSession.selectOne(namespace+".myRemainVaca", userid);
 	}
 	
