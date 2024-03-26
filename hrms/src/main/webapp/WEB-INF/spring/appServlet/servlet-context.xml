@@ -39,6 +39,7 @@
 			<exclude-mapping path="/resources/**"/>
 			<beans:ref bean="homeInterceptor"/>
 		</interceptor>
+		
 	</interceptors>
 	
 	<security:global-method-security secured-annotations="enabled"/>

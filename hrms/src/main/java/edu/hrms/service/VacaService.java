@@ -3,7 +3,7 @@ package edu.hrms.service;
 import java.util.List;
 import java.util.Map;
 
-import edu.hrms.vo.UserVO;
+import edu.hrms.vo.UserVO2;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
 
@@ -13,7 +13,7 @@ public interface VacaService {
 	
 	VacaVO myRecentVacaApplication(String userid);
 	
-	UserVO myRemainVaca(String userid);
+	UserVO2 myRemainVaca(String userid);
 	
 	int insertVaca(Map<String, String> map);
 	

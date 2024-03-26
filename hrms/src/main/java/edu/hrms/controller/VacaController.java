@@ -22,7 +22,7 @@ import edu.hrms.util.CalcCalendar;
 import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.OvertimeVO;
 import edu.hrms.vo.SignLineVO;
-import edu.hrms.vo.UserVO;
+import edu.hrms.vo.UserVO2;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
 
@@ -51,7 +51,7 @@ public class VacaController {
 		model.addAttribute("myVacaList", myVacaList);
 		model.addAttribute("myRecentVacaApplication", vacaService.myRecentVacaApplication(userid));
 		
-		UserVO user = vacaService.myRemainVaca(userid);
+		UserVO2 user = vacaService.myRemainVaca(userid);
 		model.addAttribute("user", user);
 		return "/vacation/main";
 		

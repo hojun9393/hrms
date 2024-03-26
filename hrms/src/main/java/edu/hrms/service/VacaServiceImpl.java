@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.hrms.dao.VacaDAO;
-import edu.hrms.vo.UserVO;
+import edu.hrms.vo.UserVO2;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
 
@@ -26,7 +26,7 @@ public class VacaServiceImpl implements VacaService {
 		return vacaDAO.myRecentVacaApplication(userid);
 	}
 	@Override
-	public UserVO myRemainVaca(String userid) {
+	public UserVO2 myRemainVaca(String userid) {
 		return vacaDAO.myRemainVaca(userid);
 	}
 	@Override
