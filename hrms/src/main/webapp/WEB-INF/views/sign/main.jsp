@@ -37,12 +37,12 @@
 				<div class="row">
 					<!--datepicker{ -->
 					<div class="mb-3 col">
-						<input type="text" name="" value="" id="startDate" class="datepicker inp" placeholder="시작일 선택" readonly="true">
-						<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)"
-							style="cursor: pointer;"></i> ~ <input type="text" name=""
-							value="" id="endDate" class="datepicker inp" placeholder="종료일 선택"
-							readonly="true"> <i class="fas fa-lg fa-calendar"
-							onclick="iClickFn(endDate)" style="cursor: pointer;"></i>
+						<input type="text" name="" value="" id="startDate" class="datepicker inp" placeholder="시작일 선택" 
+						onblur="searchDateFn(this)" readonly="true">
+						<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)" style="cursor: pointer;"></i> ~ 
+						<input type="text" name="" value="" id="endDate" class="datepicker inp" placeholder="종료일 선택" 
+						onblur="searchDateFn(this)" readonly="true">
+						<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate)" style="cursor: pointer;"></i>
 					</div>
 					<!-- } -->
 
@@ -252,7 +252,10 @@
 		</div>
 	</div>
 <!-- 캘린더 옵션 { -->
-<script src="${pageContext.request.contextPath}/resources/js/calendar2.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax_Const.js"></script>
 <!-- /.container-fluid -->
 <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
+
+
+
 <%@ include file="../include/footer.jsp"%>

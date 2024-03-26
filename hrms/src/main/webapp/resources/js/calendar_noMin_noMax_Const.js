@@ -20,11 +20,6 @@ $.datepicker.setDefaults({
 	yearSuffix: "년"
 })
 
-
-$(".datepicker").datepicker({
-
-})
-
 function iClickFn(clicked) {
 	clicked.focus();
 }

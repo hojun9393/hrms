@@ -35,7 +35,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE NULL END AS position, 
+        ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM vacation v inner join user u on v.userid = u.userid inner join vacasign s on v.vacaNo = s.vacaNo 
         WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid where u.userid = #{userid} and (type = 'V' or type = 'A'));
@@ -49,12 +49,12 @@
         WHEN u.dept = 'P' THEN '기획부'
         WHEN u.dept = 'H' THEN '인사부'
         ELSE '부서미정' END AS dept,
-         CASE WHEN u.position = 'A' THEN '관리자'
+        CASE WHEN u.position = 'A' THEN '관리자'
 		WHEN u.position = 'C' THEN '대표'
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE NULL END AS position,
+        ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM overtime o inner join user u on o.userid = u.userid inner join overtimesign s on o.overtimeNo = s.overtimeNo 
         WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A'));
@@ -131,8 +131,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE NULL END AS position, s.state as mySignState, s.signLineNo as mySignLineNo 
-        s.state as mySignState, s.signLineNo as mySignLineNo 
+        ELSE '직급미정' END AS position, s.state as mySignState, s.signLineNo as mySignLineNo
         FROM vacation v inner join user u on v.userid = u.userid inner join vacasign s on v.vacaNo = s.vacaNo 
         WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid where u.userid = #{userId} and (type = 'V' or type = 'A')) and v.vacaNo = #{vacaNo};
 	</select>
@@ -170,8 +169,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE NULL END AS position, s.state as mySignState, s.signLineNo as mySignLineNo
-        s.state as mySignState, s.signLineNo as mySignLineNo 
+        ELSE '직급미정' END AS position, s.state as mySignState, s.signLineNo as mySignLineNo
         FROM overtime o inner join user u on o.userid = u.userid inner join overtimesign s on o.overtimeNo = s.overtimeNo 
         WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userId} and (type = 'O' or type = 'A')) and o.overtimeNo = #{overTimeNo};
 	</select>
@@ -208,7 +206,7 @@
 	</update>
 	
 	<update id="updateVacaState" parameterType="int">
-		UPDATE vaca SET state = CASE WHEN (SELECT count(state) FROM vacasign WHERE vacaNo = #{vacaNo} AND (state IN (2))) > 0 THEN 1 ELSE state END, 
+		UPDATE vacation SET state = CASE WHEN (SELECT count(state) FROM vacasign WHERE vacaNo = #{vacaNo} AND (state IN (2))) > 0 THEN 1 ELSE state END, 
 			   state = CASE WHEN (SELECT count(state) FROM vacasign WHERE vacaNo = #{vacaNo} AND (state IN (0,3))) = 0 THEN 2 ELSE state END, 
 			   state = CASE WHEN (SELECT count(state) FROM vacasign WHERE vacaNo = #{vacaNo} AND (state IN (3))) > 0 THEN 3 ELSE state END
 		WHERE vacaNo = #{vacaNo};

@@ -32,7 +32,7 @@
 							|&nbsp; ${vo.rdate}
 						</div>
 						<div class="py-2">
-                        	<span class="d-inline font-weight-bold text-gray-800">연차 신청일</span> |&nbsp; ${vo.date} ${vo.startDate} ~ ${vo.endDate} ${vo.startTime} ~ ${vo.endTime}
+                        	<span class="d-inline font-weight-bold text-gray-800">연차 신청일</span> |&nbsp; ${vo.startDate} ~ ${vo.endDate} ${vo.startTime} ~ ${vo.endTime}
                         </div>
 						<hr>
 						<div class="py-2">
@@ -51,16 +51,16 @@
 							</div>
 							<div class="col-auto">
 								<c:choose>
-									<c:when test="${vo.mySignState eq '0'}">
+									<c:when test="${vo.state eq '0'}">
 										<div class="d-inline card text-secondary text-center px-3 py-1 border-secondary font-weight-bold">대기</div>
 									</c:when>
-									<c:when test="${vo.mySignState eq '1'}">
+									<c:when test="${vo.state eq '1'}">
 										<div class="d-inline card text-danger text-center px-3 py-1 border-danger font-weight-bold">진행</div>
 									</c:when>
-									<c:when test="${vo.mySignState eq '2'}">
+									<c:when test="${vo.state eq '2'}">
 										<div class="d-inline card text-white text-center px-3 py-1 bg-info font-weight-bold">승인</div>
 									</c:when>
-									<c:when test="${vo.mySignState eq '3'}">
+									<c:when test="${vo.state eq '3'}">
 										<div class="d-inline card text-white text-center px-3 py-1 bg-dark font-weight-bold">반려</div>
 									</c:when>
 									<c:otherwise>
@@ -70,17 +70,27 @@
 							</div>
 						</div>
 						
+						<c:set var="rejected" value="false"/>
 						<c:forEach items="${vo.signLineVO}" var="signLineVO">
 						<c:choose>
 							<c:when test="${signLineVO.state eq '0'}">
 								<c:choose>
-									<c:when test="${vo.mySignOrder eq signLineVO.signOrder || (vo.mySignState eq '2' && vo.mySignOrder < signLineVO.signOrder+1)}">
+									<c:when test="${signLineVO.prevState eq '2'}">
 										<div class="card text-danger px-3 py-2 my-2 border-danger font-weight-bold">
 											<div class="row">
 												<span class="d-inline col">${signLineVO.name} ${signLineVO.position}</span>
 												<span class="d-inline col-auto">결재 대기</span>
 											</div>
 										</div>
+									</c:when>
+									<c:when test="${signLineVO.prevState eq '3' || rejected eq 'true'}">
+										<div class="card bg-white px-3 py-2 my-2 font-weight-bold text-gray">
+											<div class="row">
+												<span class="d-inline col">${signLineVO.name} ${signLineVO.position}</span>
+												<span class="d-inline col-auto">-</span>
+											</div>
+										</div>
+										<c:set var="rejected" value="true"/>
 									</c:when>
 									<c:otherwise>
 										<div class="card text-secondary px-3 py-2 my-2 border-secondary font-weight-bold">
