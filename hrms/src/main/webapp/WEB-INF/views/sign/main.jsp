@@ -158,10 +158,10 @@
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-secondary">오류</div>
 											</c:otherwise>
 										</c:choose>
-										<a href="vacaView.do?vacaNo=${vo.vacaNo}">${vo.content}</a>
+										<a href="vacaView.do?vacaNo=${vo.vacaNo}">${vo.reason}</a>
 									</td>
 									<td>
-										<div class="text-dark">${vo.date}</div>
+										<div class="text-dark">${vo.rdate}</div>
 									</td>
 									<td>
 										<c:choose>
