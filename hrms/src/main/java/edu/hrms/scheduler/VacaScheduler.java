@@ -16,7 +16,7 @@ public class VacaScheduler {
 	@Autowired
 	CalcCalendar calcCalendar;
 	
-	@Scheduled(cron = "0 0 14 * * ?")
+	@Scheduled(cron = "0 0 12 * * ?")
 //	@Scheduled(cron = "0/10 * * * * ? ")
 	public void updateVacaStateToUse() {
 		

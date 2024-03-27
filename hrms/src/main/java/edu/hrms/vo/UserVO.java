@@ -23,6 +23,17 @@ public class UserVO extends User {
 
 	
 	public UserVO(String username, String password, boolean enabled, boolean accountNonExpired,
+			boolean credentialsNonExpired, boolean accountNonLocked,
+			Collection<? extends GrantedAuthority> authorities,String authority,String name) {
+		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+		
+		// security 외 필요한 유저 정보를 추가한다.
+		this.userid =username;
+		this.authority = authority;
+		this.name=name;
+	}
+	
+	public UserVO(String username, String password, boolean enabled, boolean accountNonExpired,
 					boolean credentialsNonExpired, boolean accountNonLocked,
 					Collection<? extends GrantedAuthority> authorities, String authority, 
 					String name, String email, String dept, String position, String joinDate, String retireDate, int state,

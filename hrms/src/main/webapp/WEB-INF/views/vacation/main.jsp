@@ -326,5 +326,5 @@
 <script src="${pageContext.request.contextPath}/resources/js/menu.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/modal.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
+<%-- <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script> --%>
 <%@ include file="../include/footer.jsp"%>

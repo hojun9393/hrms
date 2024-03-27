@@ -44,6 +44,10 @@ public class WorkDAO {
 		return sqlSession.update(namespace+".update", map);
 	}
 	
+	public int updateOvertime(Map<String, String> map) {
+		return sqlSession.update(namespace+".updateOvertime", map);
+	}
+	
 	public int insertOvertime(Map<String, String> map) {
 		return sqlSession.insert(namespace+".insertOvertime", map);
 	}
@@ -69,12 +73,16 @@ public class WorkDAO {
 	public int withdrawal(int overtimeNo) {
 		return sqlSession.update(namespace+".withdrawal", overtimeNo);
 	}
-	public int overtimeDelete(int overtimeNo) {
-		return sqlSession.delete(namespace+".overtimeDelete", overtimeNo);
+	public int overtimesignDelete(int overtimeNo) {
+		return sqlSession.delete(namespace+".overtimesignDelete", overtimeNo);
 	}
-	public int isOvertimeApplicationToday(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".isOvertimeApplicationToday", map);
+	public OvertimeVO overtimeApplicationTodayAfternoon(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".overtimeApplicationTodayAfternoon", map);
 	}
+	public OvertimeVO overtimeApplicationTodayEvening(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".overtimeApplicationTodayEvening", map);
+	}
+	
 	
 	public List<WorkVO> selectAllMyWork(Map<String, Object> map){
 		return sqlSession.selectList(namespace+".selectAllMyWork", map);

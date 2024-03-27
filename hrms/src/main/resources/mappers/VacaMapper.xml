@@ -75,7 +75,7 @@
 			WHERE vacaNo = (SELECT MAX(vacaNo) FROM vacation WHERE userid = #{userid});
 	</select>
 	
-	<select id="myRemainVaca" parameterType="String" resultType="edu.hrms.vo.UserVO">
+	<select id="myRemainVaca" parameterType="String" resultType="Map">
 		SELECT * 
 			, ROUND(keepVaca/8,0) keepVaca_day
 			, ROUND(useVaca/8,0) useVaca_day

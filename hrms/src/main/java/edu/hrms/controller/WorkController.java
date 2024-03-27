@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.OvertimeVO;
 import edu.hrms.vo.PagingVO;
 import edu.hrms.vo.SignLineVO;
+import edu.hrms.vo.UserVO;
 import edu.hrms.vo.WorkVO;
 
 @Controller
@@ -36,17 +38,18 @@ public class WorkController {
 	CalcCalendar calcCalendar;
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
-	public String main(Model model, String selMenu) {
+	public String main(Model model, Authentication authentication) {
+		
+		UserVO login = (UserVO)authentication.getPrincipal();
 		
 		Map<String, String> map = new HashMap<>();
-		String userid = "10001";
-		LocalDate nowData = LocalDate.now();
-		String now = nowData.toString();
+		String userid = login.getUserid();
+		String today = calcCalendar.getTodayDate();
 		
-		model.addAttribute("today", now); // 오늘 날짜
+		model.addAttribute("today", today);
 		
 		map.put("userid", userid);
-		map.put("now", now);
+		map.put("today", today);
 		
 		WorkVO vo = workService.selectMyWork(map);
 
@@ -55,19 +58,19 @@ public class WorkController {
 			model.addAttribute("end", vo.getEnd());
 		}
 		
-		Map<String, String> workTimeMap = calcCalendar.getFirstLastDays(now);
+		Map<String, String> workTimeMap = calcCalendar.getFirstLastDays(today);
 		workTimeMap.put("userid",userid);
 		String myThisWeekTotalWorkTime = workService.selectMyThisWeekTotalWorkTime(workTimeMap);
 		String myThisWeekTotalOvertimeTime = workService.selectMyThisWeekTotalOvertimeTime(workTimeMap);
 		
 		Map<String, String> myTotalWorkTimeMap = new HashMap<>();
-		myTotalWorkTimeMap.put("workTime",myThisWeekTotalWorkTime);
-		myTotalWorkTimeMap.put("overtimeTime",myThisWeekTotalOvertimeTime);
+		myTotalWorkTimeMap.put("workTime", myThisWeekTotalWorkTime);
+		myTotalWorkTimeMap.put("overtimeTime", myThisWeekTotalOvertimeTime);
 		
 		String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime = workService.myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(myTotalWorkTimeMap);
 		
-		model.addAttribute("myThisWeekTotalWorkTimePlusMyTotalOvertimeTime", myThisWeekTotalWorkTimePlusMyTotalOvertimeTime);
 		model.addAttribute("myThisWeekTotalOvertimeTime", myThisWeekTotalOvertimeTime);
+		model.addAttribute("myThisWeekTotalWorkTimePlusMyTotalOvertimeTime", myThisWeekTotalWorkTimePlusMyTotalOvertimeTime);
 		
 		Map<String, Object> listMap = new HashMap<>();
 		String startDate = null;
@@ -77,20 +80,22 @@ public class WorkController {
 		listMap.put("endDate", endDate);
 		
 		List<WorkVO> workList = workService.selectAllMyWork(listMap);
-		model.addAttribute("workList", workList); // 로그인한 사원 근무 리스트
-		List<OvertimeVO> overtimeList = workService.selectAllMyOvertime(listMap);
-		model.addAttribute("overtimeList", overtimeList); // 로그인한 사원 초과근무 리스트
+		model.addAttribute("workList", workList); // 로그인 한 사원 근무 리스트
 		
-		int count = workService.isOvertimeApplicationToday(map);
-		model.addAttribute("isOvertimeApplicationToday", count); // 오늘 초과근무 신청 진행 여부
-		model.addAttribute("selMenu", selMenu); // 메뉴2 선택여부
+		List<OvertimeVO> overtimeList = workService.selectAllMyOvertime(listMap);
+		model.addAttribute("overtimeList", overtimeList); // 로그인 한 사원 초과근무 리스트
+		
+		OvertimeVO ovoAfternoon = workService.overtimeApplicationTodayAfternoon(map);
+		OvertimeVO ovoEvening = workService.overtimeApplicationTodayEvening(map);
+		model.addAttribute("isOvertimeApplicationTodayAfternoon", ovoAfternoon);
+		model.addAttribute("isOvertimeApplicationTodayEvening", ovoEvening);
 		
 		Map<String, Object> allWorkListMap = new HashMap<>();
-		String dept = "D";
-		allWorkListMap.put("dept", dept);
+		allWorkListMap.put("dept", login.getDept());
 		allWorkListMap.put("startDate", startDate);
 		allWorkListMap.put("endDate", endDate);
 		int cnt = workService.getCountOfAllWorkList(allWorkListMap);
+		
 		PagingVO pagingVO = new PagingVO(1, cnt, 5);
 		allWorkListMap.put("pagingVO",pagingVO);
 		
@@ -98,37 +103,121 @@ public class WorkController {
 		model.addAttribute("pagingVO", pagingVO);
 		model.addAttribute("allWorkList", allWorkList);
 		
-		
 		return "/work/main";
 	}
 	
 	
-	@RequestMapping(value = "/workInsert.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/workInsert.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String workInsert(String dateStr, String timeStr, String goOrLeave) {
+	public Object workInsert(String dateStr, String timeStr, String goOrLeave, Authentication authentication) {
+		
+		UserVO login = (UserVO)authentication.getPrincipal();
 		
 		Map<String, String> map = new HashMap<>();
-		String userid = "10001";
-		map.put("userid", userid);
+		map.put("userid", login.getUserid());
 		map.put("date", dateStr);
-		map.put("time", timeStr);
+		map.put("nowTime", timeStr);
 		
 		if(goOrLeave.equals("GO")) {
 			workService.insert(map);
+			
 		}else if(goOrLeave.equals("LEAVE")) {
-			workService.update(map);
+			String today = calcCalendar.getTodayDate();
+			map.put("today", today);
+			OvertimeVO ovoAfternoon = workService.overtimeApplicationTodayAfternoon(map);
+			OvertimeVO ovoEvening = workService.overtimeApplicationTodayEvening(map);
+			if(ovoAfternoon==null && ovoEvening==null) {
+				workService.update(map);
+				return "SUCCESS";
+			}
+			
+			boolean isLeaveAfterEndtimeAfternoon = false;
+			boolean isLeaveAfterEndtimeEvening = false;
+			String[] afternoon = null;
+			String[] evening = null;
+			if(ovoAfternoon!=null) {
+				afternoon = new String[2];
+				String endTimeAfternoon = ovoAfternoon.getDate()+" "+ovoAfternoon.getEnd();
+				isLeaveAfterEndtimeAfternoon = calcCalendar.compareDatetime(endTimeAfternoon);
+				afternoon[0] = ovoAfternoon.getStart().split(":")[0];
+				afternoon[1] = ovoAfternoon.getEnd().split(":")[0];
+			}
+			if(ovoEvening!=null) {
+				evening = new String[2];
+				String endTimeEvening = ovoEvening.getDate()+" "+ovoEvening.getEnd();
+				isLeaveAfterEndtimeEvening = calcCalendar.compareDatetime(endTimeEvening);
+				evening[0] = ovoEvening.getStart().split(":")[0];
+				evening[1] = ovoEvening.getEnd().split(":")[0];
+			}
+			
+			if(isLeaveAfterEndtimeAfternoon && isLeaveAfterEndtimeEvening) {
+				
+				workService.update(map);
+				// 수정 필요
+				
+			}else {
+				Map<String, String[]> endtimeMessage = new HashMap<>();
+				endtimeMessage.put("afternoon", afternoon);
+				endtimeMessage.put("evening", evening);
+				return endtimeMessage;
+			}
+		}
+		return "SUCCESS";
+	}
+	
+	@RequestMapping(value = "/updateOvertime.do", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean updateOvertime(String dateStr, Authentication authentication) {
+		UserVO login = (UserVO)authentication.getPrincipal();
+		
+		Map<String, String> map = new HashMap<>();
+		map.put("userid", login.getUserid());
+		map.put("date", dateStr);
+		map.put("nowTime", calcCalendar.getNowTime());
+		workService.update(map);
+		map.put("today", calcCalendar.getTodayDate());
+		
+		OvertimeVO ovoAfternoon = workService.overtimeApplicationTodayAfternoon(map);
+		OvertimeVO ovoEvening = workService.overtimeApplicationTodayEvening(map);
+		
+		// 점심 초과근무
+		if(ovoAfternoon!=null) {
+			String startTimeAfternoon = ovoAfternoon.getDate()+" "+ovoAfternoon.getStart();
+			boolean isLeaveBeforeStarttimeAfternoon = calcCalendar.compareDatetimeBefore(startTimeAfternoon);
 		}
 		
-		return "ajax success";
+		// 저녁 초과근무
+		if(ovoEvening!=null) {
+			String startTimeEvening = ovoEvening.getDate()+" "+ovoEvening.getStart();
+			boolean isLeaveBeforeStarttimeEvening = calcCalendar.compareDatetimeBefore(startTimeEvening);
+			if(isLeaveBeforeStarttimeEvening) {
+				// 초과근무 시작시간 전에 퇴근하는 경우
+				
+				// 초과근무 철회 로직
+				workService.withdrawal(ovoEvening.getOvertimeNo());
+				workService.overtimesignDelete(ovoEvening.getOvertimeNo());
+				workService.update(map);
+			}else {
+				// 초과근무 시작시간 후에 퇴근하는 경우
+				
+				// 초과근무 끝나는 시간 현재 시간으로 업데이트 로직
+				
+			}
+		}
+		workService.updateOvertime(map);
+		
+		return false;
+		
+		
+		
 	}
 	
 	@RequestMapping(value = "/overtime_application.do", method = RequestMethod.GET)
-	public String overtimeApplication(Model model) {
+	public String overtimeApplication(Model model, Authentication authentication) {
 		
-		String userid = "10001";
-		String position = "E";
+		UserVO login = (UserVO)authentication.getPrincipal();
 		
-		Map<String, Object> signLineMap = workService.getSignLineMap(userid, position);
+		Map<String, Object> signLineMap = workService.getSignLineMap(login.getUserid(), login.getPosition());
 		List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
 		
 		model.addAttribute("signLineList", signLineList);
@@ -137,10 +226,12 @@ public class WorkController {
 	}
 	
 	@RequestMapping(value = "/overtime_application.do", method = RequestMethod.POST)
-	public void overtimeApplication(HttpServletResponse response, String date, String start, String end, String content) throws IOException {
+	public void overtimeApplication(HttpServletResponse response, String date, String start, String end, String content, Authentication authentication) throws IOException {
+		
+		UserVO login = (UserVO)authentication.getPrincipal();
 		
 		Map<String, String> map = new HashMap<>();
-		String userid = "10001";
+		String userid = login.getUserid();
 		map.put("userid", userid);
 		map.put("date", date);
 		map.put("start", start);
@@ -150,7 +241,7 @@ public class WorkController {
 		workService.insertOvertime(map);
 		int overtimeNo = workService.getMaxNoByUserId(userid);
 		
-		String myPosition = "E";
+		String myPosition = login.getPosition();
 		String position = "";
 		if(myPosition.equals("E")) {
 			position = "C,D,L";
@@ -230,7 +321,7 @@ public class WorkController {
 		
 		if(vo.getState().equals("0")) {
 			workService.withdrawal(overtimeNo);
-			workService.overtimeDelete(overtimeNo);
+			workService.overtimesignDelete(overtimeNo);
 			response.getWriter().append("<script>alert('초과근무 신청이 철회되었습니다.');location.href='main.do';</script>");
 		}else {
 			response.getWriter().append("<script>alert('결재 진행중인 초과근무 신청은 철회할 수 없습니다.');location.href='main.do';</script>");
@@ -242,11 +333,12 @@ public class WorkController {
 	
 	@RequestMapping(value = "/reloadList.do")
 	@ResponseBody
-	public Object reloadList(String startDate, String endDate, String obj, String searchInput, String pNum) {
+	public Object reloadList(String startDate, String endDate, String obj, String searchInput, String pNum, Authentication authentication) {
 		
-		String userid="10001";
+		UserVO login = (UserVO)authentication.getPrincipal();
+		
 		Map<String, Object> listMap = new HashMap<>();
-		listMap.put("userid", userid);
+		listMap.put("userid", login.getUserid());
 		listMap.put("startDate", startDate);
 		if(endDate==null || endDate.equals("")) {
 			endDate = calcCalendar.getTodayDate();
@@ -259,8 +351,7 @@ public class WorkController {
 		}else if(obj.equals("2")) {
 			list = workService.selectAllMyOvertime(listMap);
 		}else if(obj.equals("3")) {
-			String dept = "D";
-			listMap.put("dept", dept);
+			listMap.put("dept", login.getDept());
 			listMap.put("searchInput", searchInput);
 			int cnt = workService.getCountOfAllWorkList(listMap);
 			PagingVO pagingVO = new PagingVO(Integer.parseInt(pNum), cnt, 5);

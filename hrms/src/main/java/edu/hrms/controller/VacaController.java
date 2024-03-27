@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.hrms.service.VacaService;
 import edu.hrms.service.WorkService;
 import edu.hrms.util.CalcCalendar;
-import edu.hrms.vo.OvertimeSignVO;
-import edu.hrms.vo.OvertimeVO;
 import edu.hrms.vo.SignLineVO;
-import edu.hrms.vo.UserVO2;
+import edu.hrms.vo.UserVO;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
 
@@ -32,7 +31,7 @@ public class VacaController {
 	
 	@Autowired
 	VacaService vacaService;
-	
+	 
 	@Autowired
 	WorkService workService;
 	
@@ -40,9 +39,10 @@ public class VacaController {
 	CalcCalendar calcCalendar;
 	
 	@RequestMapping(value = "/main.do")
-	public String main(Model model) {
+	public String main(Model model, Authentication authentication) {
 		
-		String userid = "10003";
+		UserVO login = (UserVO)authentication.getPrincipal();
+		String userid = login.getUserid();
 		
 		Map<String, String> myVacaListMap = new HashMap<>();
 		myVacaListMap.put("userid", userid);
@@ -51,19 +51,18 @@ public class VacaController {
 		model.addAttribute("myVacaList", myVacaList);
 		model.addAttribute("myRecentVacaApplication", vacaService.myRecentVacaApplication(userid));
 		
-		UserVO2 user = vacaService.myRemainVaca(userid);
+		Map<String, Integer> user = vacaService.myRemainVaca(userid);
 		model.addAttribute("user", user);
 		return "/vacation/main";
 		
 	}
 	
 	@RequestMapping(value = "/application.do", method = RequestMethod.GET)
-	public String application(Model model) {
+	public String application(Model model, Authentication authentication) {
 		
-		String userid = "10003";
-		String position = "E";
+		UserVO login = (UserVO)authentication.getPrincipal();
 		
-		Map<String, Object> signLineMap = workService.getSignLineMap(userid, position);
+		Map<String, Object> signLineMap = workService.getSignLineMap(login.getUserid(), login.getPosition());
 		List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
 		
 		model.addAttribute("signLineList", signLineList);
@@ -72,10 +71,12 @@ public class VacaController {
 	}
 	
 	@RequestMapping(value = "/application.do", method = RequestMethod.POST)
-	public void application(HttpServletResponse response, String startDate, String endDate, String startTime, String endTime, String reason) throws IOException {
+	public void application(HttpServletResponse response, String startDate, String endDate, String startTime, String endTime, String reason, Authentication authentication) throws IOException {
+		
+		UserVO login = (UserVO)authentication.getPrincipal();
+		String userid = login.getUserid();
 		
 		Map<String, String> map = new HashMap<>();
-		String userid = "10003";
 		map.put("userid", userid);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
@@ -86,7 +87,7 @@ public class VacaController {
 		vacaService.insertVaca(map);
 		int vacaNo = vacaService.getMaxNoByUserId(userid);
 		
-		String myPosition = "E";
+		String myPosition = login.getPosition();
 		String position = "";
 		if(myPosition.equals("E")) {
 			position = "C,D,L";
@@ -177,9 +178,10 @@ public class VacaController {
 	
 	@RequestMapping(value = "/reloadList.do")
 	@ResponseBody
-	public List<VacaVO> myVacaList(String startDate, String endDate){
+	public List<VacaVO> myVacaList(String startDate, String endDate, Authentication authentication){
 		
-		String userid = "10003";
+		UserVO login = (UserVO)authentication.getPrincipal();
+		
 		if(startDate==null || startDate.equals("")){
 			startDate = null;
 		}
@@ -187,7 +189,7 @@ public class VacaController {
 			endDate = null;
 		}
 		Map<String, String> myVacaListMap = new HashMap<>();
-		myVacaListMap.put("userid", userid);
+		myVacaListMap.put("userid", login.getUserid());
 		myVacaListMap.put("startDate", startDate);
 		myVacaListMap.put("endDate", endDate);
 		

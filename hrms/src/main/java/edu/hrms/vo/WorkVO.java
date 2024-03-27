@@ -14,8 +14,15 @@ public class WorkVO {
 	private String position;
 	private String dept;
 	private String dayOfWeek;
+	private String overtime_state;
 	
 	
+	public String getOvertime_state() {
+		return overtime_state;
+	}
+	public void setOvertime_state(String overtime_state) {
+		this.overtime_state = overtime_state;
+	}
 	public String getDayOfWeek() {
 		return dayOfWeek;
 	}
@@ -94,7 +101,7 @@ public class WorkVO {
 	public String toString() {
 		return "WorkVO [wNo=" + wNo + ", userid=" + userid + ", date=" + date + ", start=" + start + ", end=" + end
 				+ ", overtime=" + overtime + ", total=" + total + ", name=" + name + ", state=" + state + ", position="
-				+ position + ", dept=" + dept + ", dayOfWeek=" + dayOfWeek + "]";
+				+ position + ", dept=" + dept + ", dayOfWeek=" + dayOfWeek + ", overtime_state=" + overtime_state + "]";
 	}
 	
 	

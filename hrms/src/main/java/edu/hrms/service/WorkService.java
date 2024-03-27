@@ -22,6 +22,8 @@ public interface WorkService {
 
 	int update(Map<String, String> map);
 	
+	int updateOvertime(Map<String, String> map);
+	
 	int insertOvertime(Map<String, String> map);
 	
 	List<SignLineVO> getSignLineList(Map<String, Object> map);
@@ -32,9 +34,11 @@ public interface WorkService {
 	
 	int withdrawal(int overtimeNo);
 	
-	int overtimeDelete(int overtimeNo);
+	int overtimesignDelete(int overtimeNo);
 	
-	int isOvertimeApplicationToday(Map<String, String> map);
+	OvertimeVO overtimeApplicationTodayAfternoon(Map<String, String> map);
+
+	OvertimeVO overtimeApplicationTodayEvening(Map<String, String> map);
 	
 	List<WorkVO> selectAllMyWork(Map<String, Object> map);
 	

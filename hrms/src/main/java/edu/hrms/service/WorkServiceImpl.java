@@ -50,6 +50,11 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
+	public int updateOvertime(Map<String, String> map) {
+		return workDAO.updateOvertime(map);
+	}
+	
+	@Override
 	public int insertOvertime(Map<String, String> map) {
 		return workDAO.insertOvertime(map);
 	}
@@ -95,13 +100,18 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public int overtimeDelete(int overtimeNo) {
-		return workDAO.overtimeDelete(overtimeNo);
+	public int overtimesignDelete(int overtimeNo) {
+		return workDAO.overtimesignDelete(overtimeNo);
 	}
 	
 	@Override
-	public int isOvertimeApplicationToday(Map<String, String> map) {
-		return workDAO.isOvertimeApplicationToday(map);
+	public OvertimeVO overtimeApplicationTodayAfternoon(Map<String, String> map) {
+		return workDAO.overtimeApplicationTodayAfternoon(map);
+	}
+	
+	@Override
+	public OvertimeVO overtimeApplicationTodayEvening(Map<String, String> map) {
+		return workDAO.overtimeApplicationTodayEvening(map);
 	}
 	
 	@Override

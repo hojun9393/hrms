@@ -6,7 +6,7 @@
 	<select id="selectMyWork" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
 		SELECT * FROM work
 			WHERE userid = #{userid} 
-				AND DATE = #{now}
+				AND DATE = #{today}
 	</select>
 	
 	<select id="selectMyThisWeekTotalWorkTime" parameterType="java.util.Map" resultType="String">
@@ -41,12 +41,19 @@
 	
 	<insert id="insert" parameterType="java.util.Map">	
 		INSERT INTO work (userid, date, start) 
-		          VALUES (#{userid} , #{date} , #{time})
+		          VALUES (#{userid} , #{date} , #{nowTime})
 	</insert>
 	
 	<update id="update" parameterType="java.util.Map">
 		UPDATE work 
-			SET end = #{time}
+			SET end = #{nowTime}
+		   WHERE userid = #{userid}
+		   	AND date = #{date}
+	</update>
+	
+	<update id="updateOvertime" parameterType="java.util.Map">
+		UPDATE overtime 
+			SET end = #{nowTime}
 		   WHERE userid = #{userid}
 		   	AND date = #{date}
 	</update>
@@ -99,11 +106,19 @@
 	<select id="selectAllMyWork" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
 		SELECT w.wno, w.userid, w.date, w.start
 				, IFNULL(w.end,'-') AS end
+		      , (CASE o.state
+		      		WHEN 0 THEN '(결재 대기)'
+		      		WHEN 1 THEN '(결재 진행중)'
+		      		WHEN 2 THEN '(승인)'
+		      	END) overtime_state
 				, IFNULL((SUBTIME(o.end, o.start)),'-') AS overtime 
-	         , IFNULL(ADDTIME(IF(w.start<![CDATA[<]]>'13:00:00' AND w.end<![CDATA[>=]]>'13:00:00'
-							, SUBTIME(subtime_nolunchtime,'01:00:00')
-							, subtime_nolunchtime)
-						, IFNULL((SUBTIME(o.end, o.start)),"00:00:00")),'-') AS total
+				, IFNULL(ADDTIME(IF(w.start<![CDATA[<]]>'13:00:00' AND w.end<![CDATA[>=]]>'13:00:00'
+										, SUBTIME(subtime_nolunchtime, '01:00:00')
+										, subtime_nolunchtime)
+									, IF(o.state = 2
+										, SUBTIME(o.end, o.start)
+										, "00:00:00"))
+				,'-') AS total
             , subtime_nolunchtime
 				, (CASE DAYOFWEEK(w.date) 
 						WHEN '1' THEN '(일)'
@@ -121,8 +136,8 @@
 					FROM work
 					WHERE userid = #{userid}) AS w
 			LEFT JOIN overtime o ON w.userid = o.userid 
-					AND w.date = o.date
-					AND o.state NOT IN (3,9)
+										AND w.date = o.date
+										AND o.state NOT IN (3,9)
 			WHERE w.userid = #{userid}
 				<if test='startDate == null'>
 					AND w.date <![CDATA[<=]]> #{endDate}
@@ -185,16 +200,26 @@
 			WHERE overtimeNo = #{overtimeNo}
 	</update>
 	
-	<delete id="overtimeDelete" parameterType="int">
+	<delete id="overtimesignDelete" parameterType="int">
 		DELETE FROM overtimesign
 			WHERE overtimeNo = #{overtimeNO}
 	</delete>
 	
-	<select id="isOvertimeApplicationToday" parameterType="Map" resultType="int">
-		SELECT COUNT(*)
+	<select id="overtimeApplicationTodayAfternoon" parameterType="Map" resultType="overtimeVO">
+		SELECT *
 			FROM overtime
 			WHERE userid = #{userid}
-				AND date = #{now} 
+				AND date = #{today} 
+				AND start = '12:00'
+				AND state NOT IN (3,9)
+	</select>
+	
+	<select id="overtimeApplicationTodayEvening" parameterType="Map" resultType="overtimeVO">
+		SELECT *
+			FROM overtime
+			WHERE userid = #{userid}
+				AND date = #{today}
+				AND start != '12:00' 
 				AND state NOT IN (3,9)
 	</select>
 	

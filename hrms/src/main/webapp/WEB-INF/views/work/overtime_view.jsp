@@ -119,7 +119,7 @@
 				<div class="col p-5 mt-5">
 					<div class="mb-4 text-center">
 						<hr>
-						<a onclick="goMainFn()" class="btn btn-light border-dark btn-user"> 목록으로 </a> 
+						<a href="main.do" class="btn btn-light border-dark btn-user"> 목록으로 </a> 
 						<c:if test="${ovo.state ne 9} OR ${ovo.state ne 3}">
 							<a onclick="withdrawalFn()" class="btn btn-dark btn-user"> 철회하기 </a>
 						</c:if>
@@ -150,21 +150,6 @@
 		}
 	}
 	
-	function goMainFn(){
-		let f = document.createElement('form');
-		    
-		let obj;
-		obj = document.createElement('input');
-		obj.setAttribute('type', 'hidden');
-		obj.setAttribute('name', 'selMenu');
-		obj.setAttribute('value', '2');
-		f.appendChild(obj);
-		
-		f.setAttribute('method', 'get');
-		f.setAttribute('action', 'main.do');
-		document.body.appendChild(f);
-		f.submit();
-	}
 </script>
 <!-- /.container-fluid -->
 <%@ include file="../include/footer.jsp"%>

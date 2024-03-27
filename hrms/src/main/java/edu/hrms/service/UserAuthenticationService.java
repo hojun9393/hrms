@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,14 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import edu.hrms.vo.UserVO;
 
-/*
- * 입력한 로그인 아이디와 일치하는 DB 유저 정보를 UserVo 객체로 반환
- */
 public class UserAuthenticationService implements UserDetailsService {
 
 	SqlSession sqlSession;
 	
 	public UserAuthenticationService() {}
+	
 	public UserAuthenticationService(SqlSession sqlSession) {
 		this.sqlSession = sqlSession;
 	}
@@ -29,10 +28,7 @@ public class UserAuthenticationService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	
-		System.out.println("UserAuthenticationService 들어옴");
-		
-		Map<String, Object> user = 
-				sqlSession.selectOne("edu.hrms.mappers.userMapper.selectLogin", username);
+		Map<String, Object> user = sqlSession.selectOne("edu.hrms.mappers.userMapper.selectLogin", username);
 		
 		if(user == null) {
 			throw new UsernameNotFoundException(username);
@@ -71,8 +67,6 @@ public class UserAuthenticationService implements UserDetailsService {
 				   ,authority
 				   ,user.get("authority").toString()
 				   ,user.get("name").toString());*/
-		
-		System.out.println(vo.toString());
 		
 		return vo;
 	}

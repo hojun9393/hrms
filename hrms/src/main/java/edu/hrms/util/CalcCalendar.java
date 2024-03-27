@@ -1,9 +1,12 @@
 package edu.hrms.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -14,7 +17,8 @@ import org.springframework.stereotype.Repository;
 public class CalcCalendar {
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-	Calendar calendar = Calendar.getInstance();   
+	Calendar calendar = Calendar.getInstance();
+	LocalDate todayDate = LocalDate.now();
 	
 	public Map<String, String> getFirstLastDays(String date) {
 		String[] dates = date.split("-");    
@@ -33,26 +37,59 @@ public class CalcCalendar {
 		return map;
 	}
 	
-//	public String getDateFormat(String dateParam) {
-//		String[] arr = dateParam.split("\\.");
-//		String year = arr[0];
-//		String month= arr[1];
-//		String day = arr[2];
-//		
-//		if(month.length()==1) month = "0"+month;
-//		
-//		if(day.length()==1) day = "0"+day;
-//		
-//		String result = year+"-"+month+"-"+day;
-//		return result;
-//	}
 	
 	public String getTodayDate() {
-		LocalDateTime now = LocalDateTime.now();
-		String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		
-		return formatedNow;
+		return todayDate.toString();
 	}
+	
+	public String getNowTime() {
+		LocalDateTime now = LocalDateTime.now();
+		return now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+	}
+	
+	public boolean compareDatetime(String timeParam){
+		
+		SimpleDateFormat sdfDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date time;
+		Date now = new Date();
+		boolean result = false;
+		try {
+			time = sdfDatetime.parse(timeParam);
+			result = now.after(time);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public boolean compareDatetimeBefore(String timeParam){
+		
+		SimpleDateFormat sdfDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date startTime;
+		Date now = new Date();
+		boolean result = false;
+		try {
+			startTime = sdfDatetime.parse(timeParam);
+			result = now.before(startTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

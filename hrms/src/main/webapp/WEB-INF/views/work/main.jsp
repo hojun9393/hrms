@@ -149,7 +149,20 @@
 											<td>${item.date } ${item.dayOfWeek }</td>
 											<td>${item.start }</td>
 											<td>${item.end }</td>
-											<td>${item.overtime }</td>
+											<td>
+												<c:if test="${item.overtime_state eq '(결재 대기)' }">
+													<span class="text-gray">${item.overtime } ${item.overtime_state }</span>
+												</c:if>
+												<c:if test="${item.overtime_state eq '(결재 진행중)' }">
+													<span class="text-red">${item.overtime } ${item.overtime_state }</span>
+												</c:if>
+												<c:if test="${item.overtime_state eq '(승인)' }">
+													<span class="text-green">${item.overtime } ${item.overtime_state }</span>
+												</c:if>
+												<c:if test="${item.overtime_state eq null }">
+													${item.overtime }
+												</c:if>
+											</td>
 											<td>${item.total }</td>
 										</tr>
 									</c:forEach>
@@ -299,12 +312,6 @@
 	const today = '${today}';
 	
 	window.onload = function(){
-		let selMenu = '${selMenu}';
-		if(selMenu=='2'){
-			menu1.style.display = "none";
-			menu2.style.display = "block";
-			menu3.style.display = "none";
-		}
 		let goToWorkButton = $("#goToWorkButton");
 		let leaveWorkButton = $("#leaveWorkButton");
 		if('${start}' != null && '${start}' != ''){
@@ -512,14 +519,45 @@
 			if(start==""){
 				alert("출근 처리가 완료되지 않았습니다.");
 			}else{
-				clearInterval(clockVar);
+//				clearInterval(clockVar);
 				let goOrLeave = "LEAVE";
 			   $.ajax({
 					url:"workInsert.do",
+					type:"POST",
 					data: {dateStr : dateStr, timeStr : timeStr, goOrLeave : goOrLeave},
 					success:function(data){
-						alert("퇴근 처리 되었습니다.");
-						location.href="main.do";
+						if(data=="SUCCESS"){
+							alert("퇴근 처리 되었습니다.");
+							location.href="main.do";
+							
+						}else{
+							let message = "금일 \n";
+							if(data.afternoon != null){
+								message += data.afternoon[0]+"시 ~ "+data.afternoon[1]+"시 \n";
+							}
+							if(data.evening != null){
+								message += data.evening[0]+"시 ~ "+data.evening[1]+"시 \n";
+							}
+							if(data.afternoon != null || data.evening != null){
+								message += "까지 초과근무를 신청하셨습니다. \n지금 퇴근처리 하시겠습니까?";
+							}
+							let choice = confirm(message);
+							if(choice){
+								$.ajax({
+									url:"updateOvertime.do",
+									type:"POST",
+									data: {dateStr : dateStr},
+									success:function(data){
+										if(data===true){
+											alert("퇴근 처리 되었습니다.");
+											location.href="main.do";
+										}else{
+											alert("오류가 발생했습니다.");
+										}
+									}
+								})
+							}
+						}
 					}
 				});
 			}
@@ -528,8 +566,10 @@
 	}
 	
 	function overtime_aplicationFn(){
-		let isOvertimeApplicationToday = ${isOvertimeApplicationToday};
-		if(isOvertimeApplicationToday>0){
+		let isOvertimeApplicationTodayAfternoon = '${isOvertimeApplicationTodayAfternoon}';
+		let isOvertimeApplicationTodayEvening = '${isOvertimeApplicationTodayEvening}';
+		
+		if(isOvertimeApplicationTodayAfternoon!='' && isOvertimeApplicationTodayEvening!=''){
 			alert("오늘 이미 처리 진행중인 초과근무 건이 있습니다.");
 		}else{
 			location.href="overtime_application.do";
@@ -539,5 +579,5 @@
 	
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/calendar_max_0.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
+<%-- <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script> --%>
 <%@ include file="../include/footer.jsp"%>

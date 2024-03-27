@@ -116,6 +116,19 @@
 	font-weight:bold;
 	font-size:30px;
 }
+.text-red{
+	color:red;
+	font-weight:bold;
+}
+.text-green{
+	color:green;
+	font-weight:bold;
+}
+.text-gray{
+	color:#525252;
+	font-weight:bold;
+}
+
 .img-box-custom{
 	display: flex;
 	align-items: center;
