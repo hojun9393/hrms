@@ -35,7 +35,7 @@
 										<div
 											class="d-inline card text-primary text-center px-1 border-primary font-weight-bold">인사부</div>
 										<span class="text-gray-900">홍길동</span> <span
-											class="text-xs font-weight-bold">팀장</span> <a href="#"><i
+											class="text-xs font-weight-bold">팀장</span> <a href="#" onclick="receiverDelFn(this)"><i
 											class="fas fa-times"></i></a>
 									</div>
 	
@@ -43,7 +43,7 @@
 										<div
 											class="d-inline card text-primary text-center px-1 border-primary font-weight-bold">인사부</div>
 										<span class="text-gray-900">홍길동</span> <span
-											class="text-xs font-weight-bold">팀장</span> <a href="#"><i
+											class="text-xs font-weight-bold">팀장</span> <a href="#" onclick="receiverDelFn(this)"><i
 											class="fas fa-times"></i></a>
 									</div>
 	
@@ -51,7 +51,7 @@
 										<div
 											class="d-inline card text-primary text-center px-1 border-primary font-weight-bold">인사부</div>
 										<span class="text-gray-900">홍길동</span> <span
-											class="text-xs font-weight-bold">팀장</span> <a href="#"><i
+											class="text-xs font-weight-bold">팀장</span> <a href="#" onclick="receiverDelFn(this)"><i
 											class="fas fa-times"></i></a>
 									</div>
 	
@@ -59,7 +59,7 @@
 										<div
 											class="d-inline card text-primary text-center px-1 border-primary font-weight-bold">인사부</div>
 										<span class="text-gray-900">홍길동</span> <span
-											class="text-xs font-weight-bold">팀장</span> <a href="#"><i
+											class="text-xs font-weight-bold">팀장</span> <a href="#" onclick="receiverDelFn(this)"><i
 											class="fas fa-times"></i></a>
 									</div>
 	
@@ -67,14 +67,18 @@
 										<div
 											class="d-inline card text-primary text-center px-1 border-primary font-weight-bold">인사부</div>
 										<span class="text-gray-900">홍길동</span> <span
-											class="text-xs font-weight-bold">팀장</span> <a href="#"><i
+											class="text-xs font-weight-bold">팀장</span> <a href="#" onclick="receiverDelFn(this)"><i
 											class="fas fa-times"></i></a>
+									</div>
+									
+									<div class="p-2 mx-1 mb-1 d-inline">
+										<a href="#" onclick="receiverPlusFn()" data-toggle="modal" data-target="#receiverModal"><i
+										class="fas fa-user-plus"></i></a>
 									</div>
 								</div>
 							</div>
 							<div class="col-auto align-self-center">
-								<a href="#" data-toggle="modal" data-target="#receiverModal"><i
-								class="fas fa-user-plus"></i></a>
+								
 							</div>
 						</div>
 						<div class="row text-center pt-5">
@@ -180,5 +184,18 @@
         </div>
     </div>
     
-<script src="${pageContext.request.contextPath}/resources/js/message_main.js"></script>
+<script>
+function receiverDelFn(obj){
+	$(obj).parent().remove();
+}
+
+function receiverPlusFn(){
+	$.ajax({
+		url:"receiverPlus.do",
+		success function(){
+			
+		}
+	});
+}
+</script>
 <%@ include file="../include/footer.jsp"%>

@@ -1,5 +1,6 @@
 package edu.hrms.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,4 +35,8 @@ public interface SignService {
 	int updateDocState(int docNo);
 	int updateVacaState(int vacaNo);
 	int updateOverState(int overTimeNo);
+	
+	List<DocVO> selectDocSearch(HashMap<String, String> map);
+	List<VacaVO> selectVacaSearch(HashMap<String, String> map);
+	List<OverVO> selectOverSearch(HashMap<String, String> map);
 }

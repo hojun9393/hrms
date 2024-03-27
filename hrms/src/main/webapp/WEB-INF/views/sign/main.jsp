@@ -45,14 +45,14 @@
 					<!-- } -->
 
 					<div class="mb-3 col-auto">
-						<select class="inp">
-							<option>전체</option>
-							<option>승인 완료</option>
-							<option>반려</option>
-							<option>결재 대기</option>
+						<select class="inp" id="selectMySignState">
+							<option value="all">전체</option>
+							<option value="2">승인 완료</option>
+							<option value="3">반려</option>
+							<option value="0">결재 대기</option>
 						</select> 
 						<input type="text" name="" value="" id="search" class="inp" placeholder="이름을 입력하세요.">
-						<div class="d-inline px-2 py-2 bg-secondary" onclick="" style="cursor: pointer; border-radius: 5px;">
+						<div onclick="searchFn()" class="d-inline px-2 py-2 bg-secondary" onclick="" style="cursor: pointer; border-radius: 5px;">
 							<i class="fas fa-lg fa-search text-white"></i>
 						</div>
 					</div>
@@ -68,7 +68,7 @@
 								<th width="20%">결재상태</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="docTbody">
 							<c:forEach items="${list.docVO}" var="vo">
 					 			<tr>
 									<td>
@@ -91,7 +91,7 @@
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
 											</c:when>
 											<c:otherwise>
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-secondary">오류</div>
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-danger">오류</div>
 											</c:otherwise>
 										</c:choose>
 										<a href="docView.do?docNo=${vo.docNo}">${vo.content}</a>
@@ -113,7 +113,7 @@
 												<div class="d-inline card bg-dark text-white text-center px-4 py-1">반려</div>
 											</c:when>
 											<c:otherwise>
-												<div class="d-inline card bg-secondary text-white text-center px-4 py-1">오류</div>
+												<div class="d-inline card bg-danger text-white text-center px-4 py-1">오류</div>
 											</c:otherwise>
 										</c:choose>
 									</td>
@@ -130,7 +130,7 @@
 								<th width="20%">결재상태</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="vacaTbody">
 							<c:forEach items="${list.vacaVO}" var="vo">
 					 			<tr>
 									<td>
@@ -146,14 +146,14 @@
 											<c:when test="${vo.state eq '1'}">
 												<div class="d-inline card text-danger text-center px-2 mr-1 border-danger font-weight-bold">진행</div>
 											</c:when>
-											<c:when test="${vo.state eq '2'}">
+											<c:when test="${vo.state eq '2' || vo.state eq '7'}">
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-info">승인</div>
 											</c:when>
 											<c:when test="${vo.state eq '3'}">
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
 											</c:when>
 											<c:otherwise>
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-secondary">오류</div>
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-danger">오류</div>
 											</c:otherwise>
 										</c:choose>
 										<a href="vacaView.do?vacaNo=${vo.vacaNo}">${vo.reason}</a>
@@ -175,7 +175,7 @@
 												<div class="d-inline card bg-dark text-white text-center px-4 py-1">반려</div>
 											</c:when>
 											<c:otherwise>
-												<div class="d-inline card bg-secondary text-white text-center px-4 py-1">오류</div>
+												<div class="d-inline card bg-danger text-white text-center px-4 py-1">오류</div>
 											</c:otherwise>
 										</c:choose>
 									</td>
@@ -192,7 +192,7 @@
 								<th width="20%">결재상태</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="overTbody">
 							<c:forEach items="${list.overVO}" var="vo">
 					 			<tr>
 									<td>
@@ -215,13 +215,13 @@
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-dark">반려</div>
 											</c:when>
 											<c:otherwise>
-												<div class="d-inline card text-white text-center px-2 mr-1 bg-secondary">오류</div>
+												<div class="d-inline card text-white text-center px-2 mr-1 bg-danger">오류</div>
 											</c:otherwise>
 										</c:choose>
 										<a href="overView.do?overTimeNo=${vo.overTimeNo}">${vo.content}</a>
 									</td>
 									<td>
-										<div class="text-dark">${vo.date}</div>
+										<div class="text-dark">${vo.rdate}</div>
 									</td>
 									<td>
 										<c:choose>
@@ -237,7 +237,7 @@
 												<div class="d-inline card bg-dark text-white text-center px-4 py-1">반려</div>
 											</c:when>
 											<c:otherwise>
-												<div class="d-inline card bg-secondary text-white text-center px-4 py-1">오류</div>
+												<div class="d-inline card bg-danger text-white text-center px-4 py-1">오류</div>
 											</c:otherwise>
 										</c:choose>
 									</td>
@@ -249,43 +249,7 @@
 			</div>
 		</div>
 	</div>
-<!-- 캘린더 옵션 { -->
-<script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax_Const.js"></script>
 
-<script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script>
 
-<script>
-$("#startDate").datepicker({
-	minDate: 0,
-	onSelect: function(){
-		isDateSeleted = false;
-		var startDate = $("#startDate").datepicker('getDate');
-		var endDate = $("#endDate").datepicker('getDate');
-			if (endDate != null) {
-				if (startDate > endDate) {
-					/* alert("기간을 다시 설정해주세요. \n종료일로 설정됩니다.");
-					$("#startDate").val($("#endDate").val()); */
-					alert("여행종료일이 시작일보다 전입니다. \n종료일을 다시 설정해주세요.");
-					var endDateMax = new Date(startDate);
-					endDateMax.setDate(startDate.getDate() +10);
-					$("#endDate").val("");
-				}  
-			}
-		}
-});
-$("#endDate").datepicker({
-	minDate: 0,
-	beforeShow: function() {
-		isDateSeleted = false;
-		var startDate = $("#startDate").datepicker('getDate');
-		if (startDate != null) {
-			$(this).datepicker('option', 'minDate', startDate);
-			var endDateMax = new Date(startDate);
-			endDateMax.setDate(startDate.getDate() +7);
-			$(this).datepicker('option', 'maxDate', endDateMax);
-		}
-	}
-});
-</script>
-
-<%-- <%@ include file="../include/footer.jsp"%> --%>
+<%@ include file="../include/footer.jsp"%>

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,19 +23,23 @@ import edu.hrms.vo.DocVO;
 import edu.hrms.vo.OverVO;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.SignVO;
+import edu.hrms.vo.UserVO;
 import edu.hrms.vo.VacaVO;
 
 @Controller
 @RequestMapping(value = "/sign")
 public class SignController {
 	
-	private int userId = 10001;
+	private int userId = 0;
 	
 	@Autowired
 	SignService signService;
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
-	public String main(Model model, HttpSession session, HttpServletResponse response, HttpServletRequest request) throws IOException {
+	public String main(Authentication authentication, Model model, HttpSession session, HttpServletResponse response, HttpServletRequest request) throws IOException {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
+		
 		List<DocVO> docVO = signService.selectAllDoc(userId);
 		List<VacaVO> vacaVO = signService.selectAllVaca(userId);
 		List<OverVO> overVO = signService.selectAllOver(userId);
@@ -449,28 +454,213 @@ public class SignController {
 		res.getWriter().flush();
 	}
 	
-	@RequestMapping(value="/callJSON2.do")
+	@RequestMapping(value="/search.do")
 	@ResponseBody
-	public List<HashMap<String,String>> callJSON2(){
-		List<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
+	public HashMap<String, Object> search(String startDate, String endDate, String name, String mySignState){
+		if(endDate.equals("")) {
+			endDate = null;
+		}
+		if(startDate.equals("")) {
+			startDate = null;
+		}
+		if(mySignState.equals("all")) {
+			mySignState = null;
+		}
+		if(name.equals("")) {
+			name = null;
+		}
 		
-		HashMap<String, String> map1 = new HashMap<String, String>();
-		map1.put("name","홍길동");
-		map1.put("age","20");
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("userid", Integer.toString(userId));
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("name", name);
+		map.put("mySignState", mySignState);
 		
-		HashMap<String, String> map2 = new HashMap<String, String>();
-		map2.put("name","이길동");
-		map2.put("age","25");
+		System.out.println("startDate:"+startDate+"endDate:"+endDate+"name:"+name+"state:"+mySignState);
+		List<DocVO> docVO = signService.selectDocSearch(map);
+		List<VacaVO> vacaVO = signService.selectVacaSearch(map);
+		List<OverVO> overVO = signService.selectOverSearch(map);
 		
-		HashMap<String, String> map3 = new HashMap<String, String>();
-		map3.put("name","고길동");
-		map3.put("age","29");
+		//doc
+		for(int i=0; i<docVO.size(); i++) {
+			List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.get(i).getDocNo());
+			for(int j=0; j<signLineVO.size(); j++) {
+				if(signLineVO.get(j).getUserId() == userId) {
+					docVO.get(i).setMySignOrder(signLineVO.get(j).getSignOrder());
+				}
+			}
+		docVO.get(i).setSignLineVO(signLineVO);
+		}
 		
-		list.add(map1);
-		list.add(map2);
-		list.add(map3);
+		List<DocVO> docVOList = new ArrayList<DocVO>();
+		int docSignCount = 0;
+		int vacaSignCount = 0;
+		int overSignCount = 0;
+		for(int i=0; i<docVO.size(); i++) {
+			List<SignLineVO> signLineVO = docVO.get(i).getSignLineVO();
+			if(signLineVO.size()==3) {
+				if(docVO.get(i).getMySignOrder() == 1) {
+					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
+				}else if(docVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
+					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
+				}else if(docVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
+						&& signLineVO.get(1).getState().equals("2")) {
+					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
+				}
+			}else if(signLineVO.size()==2){
+				if(docVO.get(i).getMySignOrder()==2) {
+					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
+				}else if(docVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
+					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
+				}
+			}else if(signLineVO.size()==1) {
+				if(docVO.get(i).getMySignOrder()==3) {
+					docVOList.add(docVO.get(i));
+					if(docVO.get(i).getMySignState().equals("0")) {
+						docSignCount++;
+					}
+				}
+			}
+		}
 		
-		return list;
+		//vacation
+		for(int i=0; i<vacaVO.size(); i++) {
+			List<SignLineVO> signLineVO = signService.selectSignLineFromVacaNo(vacaVO.get(i).getVacaNo());
+			for(int j=0; j<signLineVO.size(); j++) {
+				if(signLineVO.get(j).getUserId() == userId) {
+					vacaVO.get(i).setMySignOrder(signLineVO.get(j).getSignOrder());
+				}
+			}
+		vacaVO.get(i).setSignLineVO(signLineVO);
+		}
+		
+		List<VacaVO> vacaVOList = new ArrayList<VacaVO>();
+		for(int i=0; i<vacaVO.size(); i++) {
+			List<SignLineVO> signLineVO = vacaVO.get(i).getSignLineVO();
+			if(signLineVO.size()==3) {
+				if(vacaVO.get(i).getMySignOrder() == 1) {
+					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
+				}else if(vacaVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
+					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
+				}else if(vacaVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
+						&& signLineVO.get(1).getState().equals("2")) {
+					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
+				}
+			}else if(signLineVO.size()==2){
+				if(vacaVO.get(i).getMySignOrder()==2) {
+					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
+				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
+					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
+				}
+			}else if(signLineVO.size()==1) {
+				if(vacaVO.get(i).getMySignOrder()==3) {
+					vacaVOList.add(vacaVO.get(i));
+					if(vacaVO.get(i).getMySignState().equals("0")) {
+						vacaSignCount++;
+					}
+				}
+			}
+		}
+		
+		//overtime
+		for(int i=0; i<overVO.size(); i++) {
+			List<SignLineVO> signLineVO = signService.selectSignLineFromOverTimeNo(overVO.get(i).getOverTimeNo());
+			for(int j=0; j<signLineVO.size(); j++) {
+				if(signLineVO.get(j).getUserId() == userId) {
+					overVO.get(i).setMySignOrder(signLineVO.get(j).getSignOrder());
+				}
+			}
+			overVO.get(i).setSignLineVO(signLineVO);
+		}
+		
+		List<OverVO> overVOList = new ArrayList<OverVO>();
+		for(int i=0; i<overVO.size(); i++) {
+			List<SignLineVO> signLineVO = overVO.get(i).getSignLineVO();
+			if(signLineVO.size()==3) {
+				if(overVO.get(i).getMySignOrder() == 1) {
+					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
+				}else if(overVO.get(i).getMySignOrder()==2 && signLineVO.get(0).getState().equals("2")) {
+					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
+				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")
+						&& signLineVO.get(1).getState().equals("2")) {
+					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
+				}
+			}else if(signLineVO.size()==2){
+				if(overVO.get(i).getMySignOrder()==2) {
+					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
+				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
+					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
+				}
+			}else if(signLineVO.size()==1) {
+				if(overVO.get(i).getMySignOrder()==3) {
+					overVOList.add(overVO.get(i));
+					if(overVO.get(i).getMySignState().equals("0")) {
+						overSignCount++;
+					}
+				}
+			}
+				
+		}
+		SignVO vo = new SignVO(
+				docVOList,
+				vacaVOList,
+				overVOList
+		);
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		resultMap.put("list", vo);
+		resultMap.put("docSignCount", docSignCount);
+		resultMap.put("vacaSignCount", vacaSignCount);
+		resultMap.put("overSignCount", overSignCount);
+		
+		return resultMap;
 	}
 	
 }

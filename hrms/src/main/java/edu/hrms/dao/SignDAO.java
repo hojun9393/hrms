@@ -1,5 +1,6 @@
 package edu.hrms.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,5 +91,17 @@ public class SignDAO {
 	
 	public int updateOverState(int overTimeNo) {
 		return sqlSession.update(namespace+".updateOverState", overTimeNo);
+	}
+	
+	public List<DocVO> selectDocSearch(HashMap<String, String> map){
+		return sqlSession.selectList(namespace+".selectDocSearch", map);
+	}
+	
+	public List<VacaVO> selectVacaSearch(HashMap<String, String> map){
+		return sqlSession.selectList(namespace+".selectVacaSearch", map);
+	}
+	
+	public List<OverVO> selectOverSearch(HashMap<String, String> map){
+		return sqlSession.selectList(namespace+".selectOverSearch", map);
 	}
 }

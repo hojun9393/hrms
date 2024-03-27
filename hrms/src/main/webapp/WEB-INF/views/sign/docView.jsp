@@ -109,7 +109,7 @@
 								<div class="card bg-danger px-3 py-2 my-2 font-weight-bold text-white">
 									<div class="row">
 										<span class="d-inline col">${signLineVO.name} ${signLineVO.position}</span>
-										<span class="d-inline col-auto">오류 문의</span>
+										<span class="d-inline col-auto">오류</span>
 									</div>
 								</div>
 							</c:otherwise>

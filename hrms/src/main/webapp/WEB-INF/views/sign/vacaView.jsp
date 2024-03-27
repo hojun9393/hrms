@@ -57,7 +57,7 @@
 									<c:when test="${vo.state eq '1'}">
 										<div class="d-inline card text-danger text-center px-3 py-1 border-danger font-weight-bold">진행</div>
 									</c:when>
-									<c:when test="${vo.state eq '2'}">
+									<c:when test="${vo.state eq '2' || vo.state eq '7'}">
 										<div class="d-inline card text-white text-center px-3 py-1 bg-info font-weight-bold">승인</div>
 									</c:when>
 									<c:when test="${vo.state eq '3'}">
@@ -122,7 +122,7 @@
 								<div class="card bg-danger px-3 py-2 my-2 font-weight-bold text-white">
 									<div class="row">
 										<span class="d-inline col">${signLineVO.name} ${signLineVO.position}</span>
-										<span class="d-inline col-auto">오류 문의</span>
+										<span class="d-inline col-auto">오류</span>
 									</div>
 								</div>
 							</c:otherwise>

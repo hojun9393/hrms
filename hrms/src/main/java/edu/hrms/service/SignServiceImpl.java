@@ -1,5 +1,6 @@
 package edu.hrms.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -106,5 +107,20 @@ public class SignServiceImpl implements SignService{
 	@Override
 	public int updateOverState(int overTimeNo) {
 		return signDAO.updateOverState(overTimeNo);
+	}
+	
+	@Override
+	public List<DocVO> selectDocSearch(HashMap<String, String> map) {
+		return signDAO.selectDocSearch(map);
+	}
+
+	@Override
+	public List<VacaVO> selectVacaSearch(HashMap<String, String> map) {
+		return signDAO.selectVacaSearch(map);
+	}
+
+	@Override
+	public List<OverVO> selectOverSearch(HashMap<String, String> map) {
+		return signDAO.selectOverSearch(map);
 	}
 }

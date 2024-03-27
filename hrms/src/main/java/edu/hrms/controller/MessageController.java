@@ -1,7 +1,9 @@
 package edu.hrms.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -19,6 +21,15 @@ public class MessageController {
 	public String write() {
 		
 		return "/message/write";
+	}
+	
+	@RequestMapping(value = "/receiverPlus.do", method = RequestMethod.GET)
+	public Map<String, Object> receiverPlus() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		
+		
+		return map;
 	}
 	
 }
