@@ -192,8 +192,8 @@ function receiverDelFn(obj){
 function receiverPlusFn(){
 	$.ajax({
 		url:"receiverPlus.do",
-		success function(){
-			
+		success:function(data){
+			console.log(data);
 		}
 	});
 }

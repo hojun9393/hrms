@@ -20,7 +20,6 @@ public class UserVO extends User {
 	private String addr;
 	private int keepVaca;
 	private int useVaca;
-
 	
 	public UserVO(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,

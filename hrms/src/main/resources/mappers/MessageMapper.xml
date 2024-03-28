@@ -2,5 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.hrms.mapper.messageMapper">
-
+	<select id="selectReceiverAll" resultType="msgReceiveVO">
+		SELECT * FROM user;
+	</select>
+	
+	<select id="selectDeptCount" resultType="Map">
+		SELECT CASE WHEN dept = 'M' THEN '관리부'
+   	 	WHEN dept = 'D' THEN '개발부'
+        WHEN dept = 'S' THEN '영업부'
+        WHEN dept = 'P' THEN '기획부'
+        WHEN dept = 'H' THEN '인사부'
+        ELSE '부서미정' END AS dept, count(dept) as count from user group by dept;
+	</select>
 </mapper>
