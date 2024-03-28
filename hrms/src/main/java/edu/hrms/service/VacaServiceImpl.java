@@ -1,5 +1,6 @@
 package edu.hrms.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.hrms.dao.VacaDAO;
+import edu.hrms.vo.OvertimeSignVO;
+import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
 
@@ -44,6 +47,20 @@ public class VacaServiceImpl implements VacaService {
 	public VacaVO selectVacaByVacaNo(int vacaNo) {
 		return vacaDAO.selectVacaByVacaNo(vacaNo);
 	}
+	
+	@Override
+	public List<VacaSignVO> getVacaSignList(List<SignLineVO> signLineList, int vacaNo) {
+		// insert 할 때 사용하는 메소드
+		List<VacaSignVO> vacaSignList = new ArrayList<>();
+		for(SignLineVO vo : signLineList) {
+			VacaSignVO vsvo = new VacaSignVO();
+			vsvo.setVacaNo(vacaNo);
+			vsvo.setSignLineNo(vo.getSignLineNo());
+			vacaSignList.add(vsvo);
+		}
+		return vacaSignList;
+	}
+	
 	@Override
 	public List<VacaSignVO> getVacaSignList(int vacaNo) {
 		return vacaDAO.getVacaSignList(vacaNo);

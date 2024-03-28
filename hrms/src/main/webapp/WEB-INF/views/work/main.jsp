@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
 <head>
@@ -69,12 +70,13 @@
 									</div>
 									<div class="col">
 										<div class="progress progress-sm mr-2">
-											<div class="progress-bar bg-info" role="progressbar"
-												style="width:90%;" aria-valuenow="50" aria-valuemin="0"
+											<div id="workBar" class="progress-bar bg-info" role="progressbar"
+												style="" aria-valuenow="50" aria-valuemin="0"
 												aria-valuemax="100"></div>
 										</div>
 									</div>
 								</div>
+								<span class="text-lightgray"> / 52:00:00</span>
 							</div>
 							<div class="col-auto">
 								<i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -114,10 +116,10 @@
 					<!-- Card Header - Dropdown -->
 					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 						<h6 class="m-0 font-weight-bold text-primary">
-							<span class="menubar" onclick="displayFn(1)">내 근무</span> 
-							<span class="menubar" onclick="displayFn(2)">내 초과근무</span> 
+							<span id="myWork" class="menubar" onclick="displayFn(1)">내 근무</span> 
+							<span id="myOvertime" class="menubar" onclick="displayFn(2)">내 초과근무</span> 
 						<sec:authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_CEO', 'ROLE_DIRECTOR', 'ROLE_LEADER')">
-							<span class="menubar" onclick="displayFn(3)">근무 조회</span> 
+							<span id="allWork" class="menubar" onclick="displayFn(3)">근무 조회</span> 
 						</sec:authorize>
 						</h6>
 					</div>
@@ -153,18 +155,28 @@
 											<td>${item.start }</td>
 											<td>${item.end }</td>
 											<td>
-												<c:if test="${item.overtime_state eq '(결재 대기)' }">
-													<span class="text-gray">${item.overtime } ${item.overtime_state }</span>
-												</c:if>
-												<c:if test="${item.overtime_state eq '(결재 진행중)' }">
-													<span class="text-red">${item.overtime } ${item.overtime_state }</span>
-												</c:if>
-												<c:if test="${item.overtime_state eq '(승인)' }">
-													<span class="text-green">${item.overtime } ${item.overtime_state }</span>
-												</c:if>
-												<c:if test="${item.overtime_state eq null }">
-													${item.overtime }
-												</c:if>
+												<c:forEach var="i" begin="0" end="1">
+													<c:set var="ot" value="${fn:split(item.overtime,',')[i]}" />
+													<c:set var="ots" value="${fn:split(item.overtime_state,',')[i]}" />
+													<c:choose>
+														<c:when test="${ots eq '(결재 대기)'}">
+															<c:set var="className" value="text-gray" />
+														</c:when>
+														<c:when test="${ots eq '(결재 진행중)'}">
+															<c:set var="className" value="text-red" />
+														</c:when>
+														<c:when test="${ots eq '(승인)'}">
+															<c:set var="className" value="text-green" />
+														</c:when>
+														<c:when test="${empty ots}">
+															<c:set var="className" value="" />
+														</c:when>
+													</c:choose>
+													<c:if test="${i==1 }"><br></c:if>
+													<c:if test="${not empty ot}">
+														<span class="${className }">${ot } ${ots}</span> 
+													</c:if>
+												</c:forEach>
 											</td>
 											<td>${item.total }</td>
 										</tr>
@@ -256,7 +268,7 @@
 										<th>이름</th>
 										<th>출근</th>
 										<th>퇴근</th>
-										<th>초과</th>
+										<th>초과근무</th>
 										<th>총 근무</th>
 									</tr>
 								</thead>
@@ -271,7 +283,30 @@
 											</td>
 											<td>${item.start }</td>
 											<td>${item.end }</td>
-											<td>${item.overtime }</td>
+											<td>
+												<c:forEach var="i" begin="0" end="1">
+													<c:set var="ot" value="${fn:split(item.overtime,',')[i]}" />
+													<c:set var="ots" value="${fn:split(item.overtime_state,',')[i]}" />
+													<c:choose>
+														<c:when test="${ots eq '(결재 대기)'}">
+															<c:set var="className" value="text-gray" />
+														</c:when>
+														<c:when test="${ots eq '(결재 진행중)'}">
+															<c:set var="className" value="text-red" />
+														</c:when>
+														<c:when test="${ots eq '(승인)'}">
+															<c:set var="className" value="text-green" />
+														</c:when>
+														<c:when test="${empty ots}">
+															<c:set var="className" value="" />
+														</c:when>
+													</c:choose>
+													<c:if test="${i==1 }"><br></c:if>
+													<c:if test="${not empty ot}">
+														<span class="${className }">${ot } ${ots}</span> 
+													</c:if>
+												</c:forEach>
+											</td>
 											<td>${item.total }</td>
 										</tr>
 									</c:forEach>
@@ -300,6 +335,7 @@
 							</div>
 						</sec:authorize>
 						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -316,6 +352,10 @@
 	
 	const today = '${today}';
 	
+	const myWork = document.querySelector("#myWork");
+	const myOvertime = document.querySelector("#myOvertime");
+	const allWork = document.querySelector("#allWork");
+	
 	window.onload = function(){
 		let goToWorkButton = $("#goToWorkButton");
 		let leaveWorkButton = $("#leaveWorkButton");
@@ -325,7 +365,12 @@
 		if('${end}' != null && '${end}' != ''){
 			leaveWorkButton.attr("class", "d-none d-sm-inline-block btn btn-sm btn-success shadow-sm");
 		}
+		myWork.setAttribute("class","menubar text-decoration");
 		
+		const workBar = $("#workBar");
+		let percent = '${myThisWeekTotalWorkTimePlusMyTotalOvertimeTime}'.substring(0,2)/52*100+"%";
+		console.log(percent);
+		workBar.attr("style",`width:\${percent}`);
 	}
 	
 	function displayFn(obj){
@@ -333,17 +378,25 @@
 			menu1.style.display = "block";
 			menu2.style.display = "none";
 			menu3.style.display = "none";
+			myWork.setAttribute("class","menubar text-decoration");
+			myOvertime.setAttribute("class","menubar");
+			if(allWork!=null) allWork.setAttribute("class","menubar");
 			
 		}else if(obj==2){
 			menu1.style.display = "none";
 			menu2.style.display = "block";
 			menu3.style.display = "none";
+			myWork.setAttribute("class","menubar");
+			myOvertime.setAttribute("class","menubar text-decoration");
+			if(allWork!=null) allWork.setAttribute("class","menubar");
 			
 		}else if(obj==3){
 			menu1.style.display = "none";
 			menu2.style.display = "none";
 			menu3.style.display = "block";
-			
+			myWork.setAttribute("class","menubar");
+			myOvertime.setAttribute("class","menubar");
+			if(allWork!=null) allWork.setAttribute("class","menubar text-decoration");
 		}
 	}
 	
@@ -375,9 +428,39 @@
 						html += "<td>"+data[i].date + " " + data[i].dayOfWeek+"</td>";
 						html += "<td>"+data[i].start+"</td>";
 						html += "<td>"+data[i].end+"</td>";
-						html += "<td>"+data[i].overtime+"</td>";
+						html += "<td>";
+						if(data[i].overtime.includes(',')){
+							for(let j=0; j<2; j++){
+								let ot = data[i].overtime.split(',')[j];
+								let ots = data[i].overtime_state.split(',')[j];
+								let className = "";
+								switch(ots){
+									case '(결재 대기)' : className = "text-gray"; break;
+									case '(결재 진행중)' : className = "text-red"; break;
+									case '(승인)' : className = "text-green"; break;
+									case null : className = ""; break;
+								}
+								if(j==1){html += "<br>";}
+								html += "<span class='"+className+"'>"+ot+" "+ots+"</span>";
+							}
+						}else{
+							switch(data[i].overtime_state){
+								case '(결재 대기)' : className = "text-gray"; break;
+								case '(결재 진행중)' : className = "text-red"; break;
+								case '(승인)' : className = "text-green"; break;
+								case null : className = ""; break;
+							}
+							html += `<span class='\${className}'>\${data[i].overtime} `
+							if(data[i].overtime_state!=null){
+								html += `\${data[i].overtime_state}`;
+							}
+							html += "</span>";
+						}
+						html += "</td>"
+						
 						html += "<td>"+data[i].total+"</td>";
 						html += "</tr>";
+					 
 					}
 					outputBody.html(html);
 					
@@ -424,11 +507,40 @@
 						html += "</td>";
 						html += `<td>\${data.list[i].start}</td>`;
 						html += "<td>"+data.list[i].end+"</td>";
-						html += "<td>"+data.list[i].overtime+"</td>";
+						html += "<td>";
+						if(data.list[i].overtime.includes(',')){
+							for(let j=0; j<2; j++){
+								let ot = data.list[i].overtime.split(',')[j];
+								let ots = data.list[i].overtime_state.split(',')[j];
+								let className = "";
+								switch(ots){
+									case '(결재 대기)' : className = "text-gray"; break;
+									case '(결재 진행중)' : className = "text-red"; break;
+									case '(승인)' : className = "text-green"; break;
+									case null : className = ""; break;
+								}
+								if(j==1){html += "<br>";}
+								html += "<span class='"+className+"'>"+ot+" "+ots+"</span>";
+							}
+						}else{
+							switch(data.list[i].overtime_state){
+								case '(결재 대기)' : className = "text-gray"; break;
+								case '(결재 진행중)' : className = "text-red"; break;
+								case '(승인)' : className = "text-green"; break;
+								case null : className = ""; break;
+							}
+							html += `<span class='\${className}'>\${data.list[i].overtime} `
+							if(data.list[i].overtime_state!=null){
+								html += `\${data.list[i].overtime_state}`;
+							}
+							html += "</span>";
+						}
+						html += "</td>"
 						html += "<td>"+data.list[i].total+"</td>";
 					}
 					outputBody.html(html);
 					
+					// 페이징
 					html = "";
 					outputBody = $(".page_nation");
 					

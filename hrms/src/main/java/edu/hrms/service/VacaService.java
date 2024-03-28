@@ -3,6 +3,7 @@ package edu.hrms.service;
 import java.util.List;
 import java.util.Map;
 
+import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
 
@@ -21,6 +22,8 @@ public interface VacaService {
 	int insertVacaSign(List<VacaSignVO> list);
 	
 	VacaVO selectVacaByVacaNo(int vacaNo);
+	
+	List<VacaSignVO> getVacaSignList(List<SignLineVO> signLineList, int vacaNo);
 	
 	List<VacaSignVO> getVacaSignList(int vacaNo);
 	

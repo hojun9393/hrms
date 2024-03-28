@@ -1,5 +1,6 @@
 package edu.hrms.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,11 +61,6 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public List<SignLineVO> getSignLineList(Map<String, Object> map) {
-		return workDAO.getSignLineList(map);
-	}
-	
-	@Override
 	public int getMaxNoByUserId(String userid) {
 		return workDAO.getMaxNoByUserId(userid);
 	}
@@ -90,7 +86,21 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
+	public List<OvertimeSignVO> getOvertimeSignList(List<SignLineVO> signLineList, int overtimeNo) {
+		// insert 할 때 사용하는 메소드
+		List<OvertimeSignVO> overtimeSignList = new ArrayList<>();
+		for(SignLineVO vo : signLineList) {
+			OvertimeSignVO ovo = new OvertimeSignVO();
+			ovo.setOvertimeNo(overtimeNo);
+			ovo.setSignLineNo(vo.getSignLineNo());
+			overtimeSignList.add(ovo);
+		}
+		return overtimeSignList;
+	}
+	
+	@Override
 	public List<OvertimeSignVO> getOvertimeSignList(int overtimeNo) {
+		// db에서 데이터 가져올 때 사용하는 메소드
 		return workDAO.getOvertimeSignList(overtimeNo);
 	}
 	
@@ -115,8 +125,7 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public Map<String, Object> getSignLineMap(String userid, String position) {
-		
+	public List<SignLineVO> getSignLineList(String userid, String position) {
 		if(position.equals("E")) {
 			position = "C,D,L";
 		}else if(position.equals("L")) {
@@ -128,7 +137,18 @@ public class WorkServiceImpl implements WorkService {
 		Map<String, Object> signLineMap = new HashMap<>();
 		signLineMap.put("userid", userid);
 		signLineMap.put("positionArr", positionArr);
-		return signLineMap;
+		return workDAO.getSignLineList(signLineMap);
+	}
+	
+	@Override
+	public String[] getDeptArr(String dept) {
+		String[] deptArr = null;
+		if(dept.equals("M")) {
+			deptArr = new String[] {"M","D","S","P","H"};
+		}else {
+			deptArr = new String[] {dept};
+		}
+		return deptArr;
 	}
 	
 	@Override

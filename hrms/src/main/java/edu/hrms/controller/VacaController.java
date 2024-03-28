@@ -62,8 +62,7 @@ public class VacaController {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
 		
-		Map<String, Object> signLineMap = workService.getSignLineMap(login.getUserid(), login.getPosition());
-		List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
+		List<SignLineVO> signLineList = workService.getSignLineList(login.getUserid(), login.getPosition());
 		
 		model.addAttribute("signLineList", signLineList);
 		
@@ -86,32 +85,8 @@ public class VacaController {
 		
 		vacaService.insertVaca(map);
 		int vacaNo = vacaService.getMaxNoByUserId(userid);
-		
-		String myPosition = login.getPosition();
-		String position = "";
-		if(myPosition.equals("E")) {
-			position = "C,D,L";
-		}else if(myPosition.equals("L")) {
-			position = "C,D";
-		}else if(myPosition.equals("D")) {
-			position = "C";
-		}
-		String[] positionArr = position.split(",");
-		
-		Map<String, Object> signLineMap = new HashMap<>();
-		signLineMap.put("userid", userid);
-		signLineMap.put("positionArr", positionArr);
-		
-		List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
-		
-		List<VacaSignVO> vacaSignList = new ArrayList<>();
-		
-		for(SignLineVO vo : signLineList) {
-			VacaSignVO vsvo = new VacaSignVO();
-			vsvo.setVacaNo(vacaNo);
-			vsvo.setSignLineNo(vo.getSignLineNo());
-			vacaSignList.add(vsvo);
-		}
+		List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition());
+		List<VacaSignVO> vacaSignList = vacaService.getVacaSignList(signLineList, vacaNo);
 		
 		vacaService.insertVacaSign(vacaSignList);
 		
@@ -142,17 +117,22 @@ public class VacaController {
 		
 		int count = 0;
 		String nowState = "대기";
-		for(VacaSignVO data : list) {
-			if(data.getState()==2) {
+		for(VacaSignVO vsvo : list) {
+			if(vsvo.getState()==1) {
 				count++;
 				nowState = "진행";
-			}else if(data.getState()==3) {
+			}else if(vsvo.getState()==2) {
+				count++;
+				nowState = "진행";
+			}else if(vsvo.getState()==3) {
 				nowState = "반려";
 				break;
 			}
 		}
 		if(vo.getState().equals("9")) {
 			nowState = "철회";
+		}else if(vo.getState().equals("2")) {
+			nowState = "승인";
 		}
 		model.addAttribute("count", count);
 		model.addAttribute("nowState", nowState);

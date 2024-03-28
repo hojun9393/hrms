@@ -26,7 +26,7 @@ public interface WorkService {
 	
 	int insertOvertime(Map<String, String> map);
 	
-	List<SignLineVO> getSignLineList(Map<String, Object> map);
+	List<SignLineVO> getSignLineList(String userid, String position);
 	
 	int getMaxNoByUserId(String userid);
 	
@@ -46,9 +46,11 @@ public interface WorkService {
 	
 	OvertimeVO selectOvertime(int overtimeNo);
 	
+	List<OvertimeSignVO> getOvertimeSignList(List<SignLineVO> signLineList, int overtimeNo);
+	
 	List<OvertimeSignVO> getOvertimeSignList(int overtimeNo);
 	
-	Map<String, Object> getSignLineMap(String userid, String position);
+	String[] getDeptArr(String dept);
 	
 	List<WorkVO> selectAllWork(Map<String, Object> map);
 	

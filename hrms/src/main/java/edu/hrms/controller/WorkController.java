@@ -1,7 +1,6 @@
 package edu.hrms.controller;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,6 +36,14 @@ public class WorkController {
 	
 	@Autowired
 	CalcCalendar calcCalendar;
+	
+	
+//	@Secured("ROLE_ADMIN")
+//	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
+//	public String main_admin() {
+//		
+//		return "main_admin";
+//	}
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
 	public String main(Model model, Authentication authentication) {
@@ -90,18 +98,21 @@ public class WorkController {
 		model.addAttribute("isOvertimeApplicationTodayAfternoon", ovoAfternoon);
 		model.addAttribute("isOvertimeApplicationTodayEvening", ovoEvening);
 		
-		Map<String, Object> allWorkListMap = new HashMap<>();
-		allWorkListMap.put("dept", login.getDept());
-		allWorkListMap.put("startDate", startDate);
-		allWorkListMap.put("endDate", endDate);
-		int cnt = workService.getCountOfAllWorkList(allWorkListMap);
-		
-		PagingVO pagingVO = new PagingVO(1, cnt, 5);
-		allWorkListMap.put("pagingVO",pagingVO);
-		
-		List<WorkVO> allWorkList = workService.selectAllWork(allWorkListMap);
-		model.addAttribute("pagingVO", pagingVO);
-		model.addAttribute("allWorkList", allWorkList);
+		if(!login.getAuthority().equals("ROLE_EMPLOYEE")) {
+			Map<String, Object> allWorkListMap = new HashMap<>();
+			String[] deptArr = workService.getDeptArr(login.getDept());
+			allWorkListMap.put("deptArr", deptArr);
+			allWorkListMap.put("startDate", startDate);
+			allWorkListMap.put("endDate", endDate);
+			int cnt = workService.getCountOfAllWorkList(allWorkListMap);
+			
+			PagingVO pagingVO = new PagingVO(1, cnt, 5);
+			allWorkListMap.put("pagingVO",pagingVO);
+			
+			List<WorkVO> allWorkList = workService.selectAllWork(allWorkListMap);
+			model.addAttribute("pagingVO", pagingVO);
+			model.addAttribute("allWorkList", allWorkList);
+		}
 		
 		return "/work/main";
 	}
@@ -259,8 +270,7 @@ public class WorkController {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
 		
-		Map<String, Object> signLineMap = workService.getSignLineMap(login.getUserid(), login.getPosition());
-		List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
+		List<SignLineVO> signLineList = workService.getSignLineList(login.getUserid(), login.getPosition());
 		
 		model.addAttribute("signLineList", signLineList);
 		
@@ -287,33 +297,10 @@ public class WorkController {
 				response.getWriter().append("<script>alert('오늘 이미 결재 대기중인 점심 초과근무가 있습니다.');location.href='main.do';</script>");
 			}else {
 				workService.insertOvertime(map);
+				
+				List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition());
 				int overtimeNo = workService.getMaxNoByUserId(userid);
-				
-				String myPosition = login.getPosition();
-				String position = "";
-				if(myPosition.equals("E")) {
-					position = "C,D,L";
-				}else if(myPosition.equals("L")) {
-					position = "C,D";
-				}else if(myPosition.equals("D")) {
-					position = "C";
-				}
-				String[] positionArr = position.split(",");
-				
-				Map<String, Object> signLineMap = new HashMap<>();
-				signLineMap.put("userid", userid);
-				signLineMap.put("positionArr", positionArr);
-				
-				List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
-				
-				List<OvertimeSignVO> overtimeSignList = new ArrayList<>();
-				
-				for(SignLineVO vo : signLineList) {
-					OvertimeSignVO ovo = new OvertimeSignVO();
-					ovo.setOvertimeNo(overtimeNo);
-					ovo.setSignLineNo(vo.getSignLineNo());
-					overtimeSignList.add(ovo);
-				}
+				List<OvertimeSignVO> overtimeSignList = workService.getOvertimeSignList(signLineList, overtimeNo);
 				
 				workService.insertOvertimeSign(overtimeSignList);
 				
@@ -325,33 +312,10 @@ public class WorkController {
 				response.getWriter().append("<script>alert('오늘 이미 결재 대기중인 저녁 초과근무가 있습니다.');location.href='main.do';</script>");
 			}else {
 				workService.insertOvertime(map);
+				
+				List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition());
 				int overtimeNo = workService.getMaxNoByUserId(userid);
-				
-				String myPosition = login.getPosition();
-				String position = "";
-				if(myPosition.equals("E")) {
-					position = "C,D,L";
-				}else if(myPosition.equals("L")) {
-					position = "C,D";
-				}else if(myPosition.equals("D")) {
-					position = "C";
-				}
-				String[] positionArr = position.split(",");
-				
-				Map<String, Object> signLineMap = new HashMap<>();
-				signLineMap.put("userid", userid);
-				signLineMap.put("positionArr", positionArr);
-				
-				List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
-				
-				List<OvertimeSignVO> overtimeSignList = new ArrayList<>();
-				
-				for(SignLineVO vo : signLineList) {
-					OvertimeSignVO ovo = new OvertimeSignVO();
-					ovo.setOvertimeNo(overtimeNo);
-					ovo.setSignLineNo(vo.getSignLineNo());
-					overtimeSignList.add(ovo);
-				}
+				List<OvertimeSignVO> overtimeSignList = workService.getOvertimeSignList(signLineList, overtimeNo);
 				
 				workService.insertOvertimeSign(overtimeSignList);
 				
@@ -386,7 +350,6 @@ public class WorkController {
 		int count = 0;
 		String nowState = "대기";
 		for(OvertimeSignVO osvo : osList) {
-			System.out.println(osvo.toString());
 			if(osvo.getState()==1) {
 				count++;
 				nowState = "진행";
@@ -446,7 +409,7 @@ public class WorkController {
 		}else if(obj.equals("2")) {
 			list = workService.selectAllMyOvertime(listMap);
 		}else if(obj.equals("3")) {
-			listMap.put("dept", login.getDept());
+			listMap.put("deptArr", workService.getDeptArr(login.getDept()));
 			listMap.put("searchInput", searchInput);
 			int cnt = workService.getCountOfAllWorkList(listMap);
 			PagingVO pagingVO = new PagingVO(Integer.parseInt(pNum), cnt, 5);

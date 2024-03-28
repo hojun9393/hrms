@@ -62,6 +62,9 @@
 									<c:when test="${nowState eq '진행' }">
 										<div class="d-inline card text-danger text-center px-3 py-1 border-danger font-weight-bold">진행</div>
 									</c:when>
+									<c:when test="${nowState eq '승인' }">
+										<div class="d-inline card bg-info text-white text-center px-3 py-1 border-info font-weight-bold">승인</div>
+									</c:when>
 									<c:when test="${nowState eq '반려' }">
 										<div class="d-inline card bg-dark text-white text-center px-3 py-1 border-dark font-weight-bold">반려</div>
 									</c:when>
