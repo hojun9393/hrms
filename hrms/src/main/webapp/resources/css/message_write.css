@@ -12,12 +12,15 @@
 	background-color: #B7CFF7;
 	border-radius: 10px;
 }
-.dept{
+.deptSelected{
 	background-color: #B7CFF7;
 	border-radius: 5px;
 	color: black;
 }
+.dept{
+	cursor: pointer;
+}
 .deptEmpl{
 	overflow: auto;
-	height: 300px;
+	height: 400px;
 }

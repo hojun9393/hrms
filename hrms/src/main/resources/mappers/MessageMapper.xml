@@ -3,15 +3,28 @@
 			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.hrms.mapper.messageMapper">
 	<select id="selectReceiverAll" resultType="msgReceiveVO">
-		SELECT * FROM user;
-	</select>
-	
-	<select id="selectDeptCount" resultType="Map">
-		SELECT CASE WHEN dept = 'M' THEN '관리부'
+		SELECT userid, name, dept, 
+		CASE WHEN dept = 'M' THEN '관리부'
    	 	WHEN dept = 'D' THEN '개발부'
         WHEN dept = 'S' THEN '영업부'
         WHEN dept = 'P' THEN '기획부'
         WHEN dept = 'H' THEN '인사부'
-        ELSE '부서미정' END AS dept, count(dept) as count from user group by dept;
+        ELSE '부서미정' END AS deptCase, 
+		CASE WHEN position = 'A' THEN '관리자'
+   	 	WHEN position = 'C' THEN '대표'
+        WHEN position = 'D' THEN '부장'
+        WHEN position = 'L' THEN '팀장'
+        WHEN position = 'E' THEN '사원'
+        ELSE '직급미정' END AS position FROM user;
+	</select>
+	
+	<select id="selectDeptCount" resultType="Map">
+		SELECT dept, 
+		CASE WHEN dept = 'M' THEN '관리부'
+   	 	WHEN dept = 'D' THEN '개발부'
+        WHEN dept = 'S' THEN '영업부'
+        WHEN dept = 'P' THEN '기획부'
+        WHEN dept = 'H' THEN '인사부'
+        ELSE '부서미정' END AS deptCase, count(dept) as count from user group by dept;
 	</select>
 </mapper>

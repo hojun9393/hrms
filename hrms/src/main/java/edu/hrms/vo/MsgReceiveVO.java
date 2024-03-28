@@ -1,24 +1,37 @@
 package edu.hrms.vo;
 
 public class MsgReceiveVO {
-	private String userid;
+	private int msgRNo;
+	private int msgNo;
+	private String state;
+	private int userid;
 	private String name;
-	private String authority;
-	private String email;
 	private String dept;
 	private String position;
-	private String joinDate;
-	private String retireDate;
-	private int state;
-	private String phone;
-	private String addr;
-	private int keepVaca;
-	private int useVaca;
+	private String deptCase;
 	
-	public String getUserid() {
+	public int getMsgRNo() {
+		return msgRNo;
+	}
+	public void setMsgRNo(int msgRNo) {
+		this.msgRNo = msgRNo;
+	}
+	public int getMsgNo() {
+		return msgNo;
+	}
+	public void setMsgNo(int msgNo) {
+		this.msgNo = msgNo;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public int getUserid() {
 		return userid;
 	}
-	public void setUserid(String userid) {
+	public void setUserid(int userid) {
 		this.userid = userid;
 	}
 	public String getName() {
@@ -26,18 +39,6 @@ public class MsgReceiveVO {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public String getAuthority() {
-		return authority;
-	}
-	public void setAuthority(String authority) {
-		this.authority = authority;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
 	}
 	public String getDept() {
 		return dept;
@@ -51,47 +52,11 @@ public class MsgReceiveVO {
 	public void setPosition(String position) {
 		this.position = position;
 	}
-	public String getJoinDate() {
-		return joinDate;
+	public String getDeptCase() {
+		return deptCase;
 	}
-	public void setJoinDate(String joinDate) {
-		this.joinDate = joinDate;
-	}
-	public String getRetireDate() {
-		return retireDate;
-	}
-	public void setRetireDate(String retireDate) {
-		this.retireDate = retireDate;
-	}
-	public int getState() {
-		return state;
-	}
-	public void setState(int state) {
-		this.state = state;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	public String getAddr() {
-		return addr;
-	}
-	public void setAddr(String addr) {
-		this.addr = addr;
-	}
-	public int getKeepVaca() {
-		return keepVaca;
-	}
-	public void setKeepVaca(int keepVaca) {
-		this.keepVaca = keepVaca;
-	}
-	public int getUseVaca() {
-		return useVaca;
-	}
-	public void setUseVaca(int useVaca) {
-		this.useVaca = useVaca;
+	public void setDeptCase(String deptCase) {
+		this.deptCase = deptCase;
 	}
 	
 }
