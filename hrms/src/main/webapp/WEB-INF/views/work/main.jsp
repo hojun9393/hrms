@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
 <head>
@@ -115,7 +116,9 @@
 						<h6 class="m-0 font-weight-bold text-primary">
 							<span class="menubar" onclick="displayFn(1)">내 근무</span> 
 							<span class="menubar" onclick="displayFn(2)">내 초과근무</span> 
+						<sec:authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_CEO', 'ROLE_DIRECTOR', 'ROLE_LEADER')">
 							<span class="menubar" onclick="displayFn(3)">근무 조회</span> 
+						</sec:authorize>
 						</h6>
 					</div>
 					<!-- Card Body -->
@@ -235,6 +238,7 @@
 						
 						<!-- 근무 조회 -->
 						<div id="menu3" class="display-none">
+						<sec:authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_CEO', 'ROLE_DIRECTOR', 'ROLE_LEADER')">
 							<div class="mb-3 col">
 								<input type="text" name="" value="" id="startDate3" class="datepicker inp" placeholder="시작일 선택" readonly="true" onchange="reloadListFn(3,1)">
 								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate3)" style="cursor: pointer;"></i> ~ 
@@ -294,6 +298,7 @@
 									</c:if>
 								</div>
 							</div>
+						</sec:authorize>
 						</div>
 					</div>
 				</div>
@@ -504,6 +509,7 @@
 				let goOrLeave = "GO";
 			   $.ajax({
 					url:"workInsert.do",
+					type:"POST",
 					data: {dateStr : dateStr, timeStr : timeStr, goOrLeave : goOrLeave},
 					success:function(data){
 						alert("출근 처리 되었습니다.");
@@ -526,6 +532,8 @@
 					type:"POST",
 					data: {dateStr : dateStr, timeStr : timeStr, goOrLeave : goOrLeave},
 					success:function(data){
+						console.log(data);
+					
 						if(data=="SUCCESS"){
 							alert("퇴근 처리 되었습니다.");
 							location.href="main.do";
@@ -548,12 +556,8 @@
 									type:"POST",
 									data: {dateStr : dateStr},
 									success:function(data){
-										if(data===true){
-											alert("퇴근 처리 되었습니다.");
-											location.href="main.do";
-										}else{
-											alert("오류가 발생했습니다.");
-										}
+										alert("퇴근 처리 되었습니다.");
+										location.href="main.do";
 									}
 								})
 							}

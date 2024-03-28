@@ -58,6 +58,9 @@
 									<c:when test="${nowState eq '진행' }">
 										<div class="d-inline card text-danger text-center px-3 py-1 border-danger font-weight-bold">진행</div>
 									</c:when>
+									<c:when test="${nowState eq '승인' }">
+										<div class="d-inline card bg-info text-white text-center px-3 py-1 border-info font-weight-bold">승인</div>
+									</c:when>
 									<c:when test="${nowState eq '반려' }">
 										<div class="d-inline card bg-dark text-white text-center px-3 py-1 border-dark font-weight-bold">반려</div>
 									</c:when>
@@ -120,7 +123,7 @@
 					<div class="mb-4 text-center">
 						<hr>
 						<a href="main.do" class="btn btn-light border-dark btn-user"> 목록으로 </a> 
-						<c:if test="${ovo.state ne 9} OR ${ovo.state ne 3}">
+						<c:if test="${ovo.state ne '9' || ovo.state ne '3'}">
 							<a onclick="withdrawalFn()" class="btn btn-dark btn-user"> 철회하기 </a>
 						</c:if>
 					</div>

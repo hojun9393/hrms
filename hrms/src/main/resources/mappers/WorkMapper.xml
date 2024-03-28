@@ -18,9 +18,9 @@
             		,'00:00:00')
              	AS total
 			FROM (SELECT *, SUBTIME(
-							IF(end<![CDATA[>]]>'18:00:00','18:00:00',IF(end BETWEEN '12:00:01' AND '12:59:59','13:00:00',end)), 
-							IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:59','12:00:00',start)))
-                            AS subtime_nolunchtime
+											IF(end<![CDATA[>]]>'18:00:00',IF(start<![CDATA[>=]]>'18:00:00',end,'18:00:00'),IF(end BETWEEN '12:00:01' AND '12:59:59','13:00:00',end)), 
+											IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:59','12:00:00',start))
+											) AS subtime_nolunchtime
 					FROM work
             	WHERE userid = #{userid} AND	
 							date BETWEEN #{startDay} AND #{endDay}) work_temp
@@ -56,6 +56,15 @@
 			SET end = #{nowTime}
 		   WHERE userid = #{userid}
 		   	AND date = #{date}
+		   	<if test="afternoonOrEvening.equals('afternoon')">
+		   		AND start = '12:00:00'
+		   	</if>
+		   	<if test="afternoonOrEvening.equals('evening')">
+		   		AND start != '12:00:00'
+		   	</if>
+		   	<if test="afternoonOrEvening != null">
+		   		AND state NOT IN (3,9)
+		   	</if>
 	</update>
 	
 	<insert id="insertOvertime" parameterType="java.util.Map">	
@@ -104,7 +113,7 @@
 	
 	
 	<select id="selectAllMyWork" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
-		SELECT w.wno, w.userid, w.date, w.start
+		SELECT w.wno, w.userid, w.date, w.start, subtime_nolunchtime
 				, IFNULL(w.end,'-') AS end
 		      , (CASE o.state
 		      		WHEN 0 THEN '(결재 대기)'
@@ -113,11 +122,12 @@
 		      	END) overtime_state
 				, IFNULL((SUBTIME(o.end, o.start)),'-') AS overtime 
 				, IFNULL(ADDTIME(IF(w.start<![CDATA[<]]>'13:00:00' AND w.end<![CDATA[>=]]>'13:00:00'
-										, SUBTIME(subtime_nolunchtime, '01:00:00')
-										, subtime_nolunchtime)
-									, IF(o.state = 2
-										, SUBTIME(o.end, o.start)
-										, "00:00:00"))
+											, SUBTIME(subtime_nolunchtime, '01:00:00')
+											, subtime_nolunchtime)
+										, IF(o.state = 2
+												, SUBTIME(o.end, o.start)
+												, "00:00:00")
+										)
 				,'-') AS total
             , subtime_nolunchtime
 				, (CASE DAYOFWEEK(w.date) 
@@ -130,9 +140,9 @@
 						WHEN '7' THEN '(토)'
 						END) dayOfWeek
 			FROM (SELECT *, SUBTIME(
-								IF(end<![CDATA[>]]>'18:00:00','18:00:00',IF(end BETWEEN '12:00:01' AND '12:59:59','13:00:00',end)), 
-								IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:59','12:00:00',start)))
-								AS subtime_nolunchtime
+											IF(end<![CDATA[>]]>'18:00:00',IF(start<![CDATA[>=]]>'18:00:00',end,'18:00:00'),IF(end BETWEEN '12:00:01' AND '12:59:59','13:00:00',end)), 
+											IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:59','12:00:00',start))
+											) AS subtime_nolunchtime
 					FROM work
 					WHERE userid = #{userid}) AS w
 			LEFT JOIN overtime o ON w.userid = o.userid 
@@ -210,7 +220,7 @@
 			FROM overtime
 			WHERE userid = #{userid}
 				AND date = #{today} 
-				AND start = '12:00'
+				AND start = '12:00:00'
 				AND state NOT IN (3,9)
 	</select>
 	
@@ -219,7 +229,7 @@
 			FROM overtime
 			WHERE userid = #{userid}
 				AND date = #{today}
-				AND start != '12:00' 
+				AND start != '12:00:00' 
 				AND state NOT IN (3,9)
 	</select>
 	

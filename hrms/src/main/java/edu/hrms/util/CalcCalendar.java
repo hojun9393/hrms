@@ -62,7 +62,7 @@ public class CalcCalendar {
 		return result;
 	}
 	
-	public boolean compareDatetimeBefore(String timeParam){
+	public boolean isParamBeforeNow(String timeParam){
 		
 		SimpleDateFormat sdfDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date startTime;

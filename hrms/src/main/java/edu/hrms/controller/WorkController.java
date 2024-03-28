@@ -120,12 +120,14 @@ public class WorkController {
 		
 		if(goOrLeave.equals("GO")) {
 			workService.insert(map);
+			return "SUCCESS";
 			
 		}else if(goOrLeave.equals("LEAVE")) {
 			String today = calcCalendar.getTodayDate();
 			map.put("today", today);
 			OvertimeVO ovoAfternoon = workService.overtimeApplicationTodayAfternoon(map);
 			OvertimeVO ovoEvening = workService.overtimeApplicationTodayEvening(map);
+			
 			if(ovoAfternoon==null && ovoEvening==null) {
 				workService.update(map);
 				return "SUCCESS";
@@ -136,24 +138,39 @@ public class WorkController {
 			String[] afternoon = null;
 			String[] evening = null;
 			if(ovoAfternoon!=null) {
-				afternoon = new String[2];
-				String endTimeAfternoon = ovoAfternoon.getDate()+" "+ovoAfternoon.getEnd();
-				isLeaveAfterEndtimeAfternoon = calcCalendar.compareDatetime(endTimeAfternoon);
-				afternoon[0] = ovoAfternoon.getStart().split(":")[0];
-				afternoon[1] = ovoAfternoon.getEnd().split(":")[0];
+				// 13:00 이전에만 데이터 담아야함
+				boolean before13PM = calcCalendar.isParamBeforeNow(dateStr+" 13:00:00");
+				if(before13PM) {
+					afternoon = new String[2];
+					String endTimeAfternoon = ovoAfternoon.getDate()+" "+ovoAfternoon.getEnd();
+					isLeaveAfterEndtimeAfternoon = calcCalendar.compareDatetime(endTimeAfternoon);
+					afternoon[0] = ovoAfternoon.getStart().split(":")[0];
+					afternoon[1] = ovoAfternoon.getEnd().split(":")[0];
+				}else if(ovoEvening==null) {
+					workService.update(map);
+					return "SUCCESS";
+				}
 			}
 			if(ovoEvening!=null) {
-				evening = new String[2];
-				String endTimeEvening = ovoEvening.getDate()+" "+ovoEvening.getEnd();
-				isLeaveAfterEndtimeEvening = calcCalendar.compareDatetime(endTimeEvening);
-				evening[0] = ovoEvening.getStart().split(":")[0];
-				evening[1] = ovoEvening.getEnd().split(":")[0];
+				// 초과근무 끝 시간보다 퇴근시간(now)이 이전일 경우에만 데이터 담아야함
+				boolean isEndBeforeNow = calcCalendar.isParamBeforeNow(dateStr+" "+ovoEvening.getEnd());
+				if(isEndBeforeNow) {
+					evening = new String[2];
+					String endTimeEvening = ovoEvening.getDate()+" "+ovoEvening.getEnd();
+					isLeaveAfterEndtimeEvening = calcCalendar.compareDatetime(endTimeEvening);
+					evening[0] = ovoEvening.getStart().split(":")[0];
+					evening[1] = ovoEvening.getEnd().split(":")[0];
+				}else {
+					workService.update(map);
+					return "SUCCESS";
+				}
 			}
 			
 			if(isLeaveAfterEndtimeAfternoon && isLeaveAfterEndtimeEvening) {
-				
+				// 점심 초과근무, 저녁 초과근무 끝시간보다 늦게 퇴근 찍는 경우
+				// 퇴근시간 업데이트 하고 끝
 				workService.update(map);
-				// 수정 필요
+				return "SUCCESS";
 				
 			}else {
 				Map<String, String[]> endtimeMessage = new HashMap<>();
@@ -167,46 +184,71 @@ public class WorkController {
 	
 	@RequestMapping(value = "/updateOvertime.do", method = RequestMethod.POST)
 	@ResponseBody
-	public boolean updateOvertime(String dateStr, Authentication authentication) {
+	public void updateOvertime(String dateStr, Authentication authentication) {
 		UserVO login = (UserVO)authentication.getPrincipal();
 		
 		Map<String, String> map = new HashMap<>();
 		map.put("userid", login.getUserid());
-		map.put("date", dateStr);
 		map.put("nowTime", calcCalendar.getNowTime());
+		map.put("date", dateStr);
+		map.put("today", dateStr);
 		workService.update(map);
-		map.put("today", calcCalendar.getTodayDate());
 		
 		OvertimeVO ovoAfternoon = workService.overtimeApplicationTodayAfternoon(map);
 		OvertimeVO ovoEvening = workService.overtimeApplicationTodayEvening(map);
 		
 		// 점심 초과근무
 		if(ovoAfternoon!=null) {
+			System.out.println("점심");
 			String startTimeAfternoon = ovoAfternoon.getDate()+" "+ovoAfternoon.getStart();
-			boolean isLeaveBeforeStarttimeAfternoon = calcCalendar.compareDatetimeBefore(startTimeAfternoon);
+			boolean isLeaveBeforeStarttimeAfternoon = calcCalendar.isParamBeforeNow(startTimeAfternoon);
+			if(isLeaveBeforeStarttimeAfternoon) {
+				System.out.println("초과근무 시작 전 퇴근");
+				// 초과근무 시작시간 전에 퇴근하는 경우
+				// 초과근무 철회, 사인라인 삭제 로직
+				workService.withdrawal(ovoAfternoon.getOvertimeNo());
+				workService.overtimesignDelete(ovoAfternoon.getOvertimeNo());
+			}else {
+				System.out.println("초과근무 시작 후 퇴근");
+				// 초과근무 시작시간 후에 퇴근하는 경우
+				// 초과근무 끝나는 시간 현재 시간으로 업데이트 로직
+				
+				// 지금이 13:00보다 이전이냐
+				boolean before13PM = calcCalendar.isParamBeforeNow(dateStr+" 13:00:00");
+				if(before13PM) {
+					// 13:00보다 이전
+					// 초과근무 끝나는 시간 현재 시간으로 업데이트
+					System.out.println("before13PM");
+					map.put("afternoonOrEvening", "afternoon");
+					workService.updateOvertime(map);
+				}else {
+					// 13:00보다 이후
+					// 초과근무 끝나는 시간 업데이트할 필요 없음
+					System.out.println("after13PM");
+					
+				}
+			}
 		}
 		
 		// 저녁 초과근무
 		if(ovoEvening!=null) {
+			System.out.println("저녁");
 			String startTimeEvening = ovoEvening.getDate()+" "+ovoEvening.getStart();
-			boolean isLeaveBeforeStarttimeEvening = calcCalendar.compareDatetimeBefore(startTimeEvening);
+			boolean isLeaveBeforeStarttimeEvening = calcCalendar.isParamBeforeNow(startTimeEvening);
 			if(isLeaveBeforeStarttimeEvening) {
+				System.out.println("초과근무 시작 전 퇴근");
 				// 초과근무 시작시간 전에 퇴근하는 경우
-				
-				// 초과근무 철회 로직
+				// 초과근무 철회, 사인라인 삭제 로직
 				workService.withdrawal(ovoEvening.getOvertimeNo());
 				workService.overtimesignDelete(ovoEvening.getOvertimeNo());
-				workService.update(map);
 			}else {
+				System.out.println("초과근무 시작 후 퇴근");
 				// 초과근무 시작시간 후에 퇴근하는 경우
-				
 				// 초과근무 끝나는 시간 현재 시간으로 업데이트 로직
-				
+				map.put("afternoonOrEvening", "evening");
+				workService.updateOvertime(map);
 			}
 		}
-		workService.updateOvertime(map);
-		
-		return false;
 		
 		
 		
@@ -234,42 +276,89 @@ public class WorkController {
 		String userid = login.getUserid();
 		map.put("userid", userid);
 		map.put("date", date);
+		map.put("today", date);
 		map.put("start", start);
 		map.put("end", end);
 		map.put("content", content);
 		
-		workService.insertOvertime(map);
-		int overtimeNo = workService.getMaxNoByUserId(userid);
-		
-		String myPosition = login.getPosition();
-		String position = "";
-		if(myPosition.equals("E")) {
-			position = "C,D,L";
-		}else if(myPosition.equals("L")) {
-			position = "C,D";
-		}else if(myPosition.equals("D")) {
-			position = "C";
+		if(start.equals("12:00")) {
+			OvertimeVO ovoAfternoon = workService.overtimeApplicationTodayAfternoon(map);
+			if(ovoAfternoon!=null) {
+				response.getWriter().append("<script>alert('오늘 이미 결재 대기중인 점심 초과근무가 있습니다.');location.href='main.do';</script>");
+			}else {
+				workService.insertOvertime(map);
+				int overtimeNo = workService.getMaxNoByUserId(userid);
+				
+				String myPosition = login.getPosition();
+				String position = "";
+				if(myPosition.equals("E")) {
+					position = "C,D,L";
+				}else if(myPosition.equals("L")) {
+					position = "C,D";
+				}else if(myPosition.equals("D")) {
+					position = "C";
+				}
+				String[] positionArr = position.split(",");
+				
+				Map<String, Object> signLineMap = new HashMap<>();
+				signLineMap.put("userid", userid);
+				signLineMap.put("positionArr", positionArr);
+				
+				List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
+				
+				List<OvertimeSignVO> overtimeSignList = new ArrayList<>();
+				
+				for(SignLineVO vo : signLineList) {
+					OvertimeSignVO ovo = new OvertimeSignVO();
+					ovo.setOvertimeNo(overtimeNo);
+					ovo.setSignLineNo(vo.getSignLineNo());
+					overtimeSignList.add(ovo);
+				}
+				
+				workService.insertOvertimeSign(overtimeSignList);
+				
+				response.getWriter().append("<script>alert('초과근무 신청이 완료되었습니다.');location.href='main.do';</script>");
+			}
+		}else {
+			OvertimeVO ovoEvening = workService.overtimeApplicationTodayEvening(map);
+			if(ovoEvening!=null) {
+				response.getWriter().append("<script>alert('오늘 이미 결재 대기중인 저녁 초과근무가 있습니다.');location.href='main.do';</script>");
+			}else {
+				workService.insertOvertime(map);
+				int overtimeNo = workService.getMaxNoByUserId(userid);
+				
+				String myPosition = login.getPosition();
+				String position = "";
+				if(myPosition.equals("E")) {
+					position = "C,D,L";
+				}else if(myPosition.equals("L")) {
+					position = "C,D";
+				}else if(myPosition.equals("D")) {
+					position = "C";
+				}
+				String[] positionArr = position.split(",");
+				
+				Map<String, Object> signLineMap = new HashMap<>();
+				signLineMap.put("userid", userid);
+				signLineMap.put("positionArr", positionArr);
+				
+				List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
+				
+				List<OvertimeSignVO> overtimeSignList = new ArrayList<>();
+				
+				for(SignLineVO vo : signLineList) {
+					OvertimeSignVO ovo = new OvertimeSignVO();
+					ovo.setOvertimeNo(overtimeNo);
+					ovo.setSignLineNo(vo.getSignLineNo());
+					overtimeSignList.add(ovo);
+				}
+				
+				workService.insertOvertimeSign(overtimeSignList);
+				
+				response.getWriter().append("<script>alert('초과근무 신청이 완료되었습니다.');location.href='main.do';</script>");
+			}
 		}
-		String[] positionArr = position.split(",");
 		
-		Map<String, Object> signLineMap = new HashMap<>();
-		signLineMap.put("userid", userid);
-		signLineMap.put("positionArr", positionArr);
-		
-		List<SignLineVO> signLineList = workService.getSignLineList(signLineMap);
-		
-		List<OvertimeSignVO> overtimeSignList = new ArrayList<>();
-		
-		for(SignLineVO vo : signLineList) {
-			OvertimeSignVO ovo = new OvertimeSignVO();
-			ovo.setOvertimeNo(overtimeNo);
-			ovo.setSignLineNo(vo.getSignLineNo());
-			overtimeSignList.add(ovo);
-		}
-		
-		workService.insertOvertimeSign(overtimeSignList);
-		
-		response.getWriter().append("<script>alert('초과근무 신청이 완료되었습니다.');location.href='main.do';</script>");
 		response.getWriter().flush();
 	}
 	
@@ -296,17 +385,23 @@ public class WorkController {
 		
 		int count = 0;
 		String nowState = "대기";
-		for(OvertimeSignVO data : osList) {
-			if(data.getState()==2) {
+		for(OvertimeSignVO osvo : osList) {
+			System.out.println(osvo.toString());
+			if(osvo.getState()==1) {
 				count++;
 				nowState = "진행";
-			}else if(data.getState()==3) {
+			}else if(osvo.getState()==2) {
+				count++;
+				nowState = "진행";
+			}else if(osvo.getState()==3) {
 				nowState = "반려";
 				break;
 			}
 		}
 		if(ovo.getState().equals("9")) {
 			nowState = "철회";
+		}else if(ovo.getState().equals("2")) {
+			nowState = "승인";
 		}
 		model.addAttribute("count", count);
 		model.addAttribute("nowState", nowState);

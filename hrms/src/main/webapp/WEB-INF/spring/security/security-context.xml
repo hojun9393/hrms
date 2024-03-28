@@ -23,7 +23,7 @@
 									username-parameter="username" password-parameter="password "/>
 		<security:session-management>
 			<security:concurrency-control max-sessions="1" expired-url="/security/login.do"
-													error-if-maximum-exceeded="true" />
+													error-if-maximum-exceeded="false" />
 		</security:session-management>
 		<security:logout logout-url="/logout.do" logout-success-url="/logoutOk.do"
 								invalidate-session="true" 

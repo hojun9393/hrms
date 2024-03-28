@@ -49,7 +49,7 @@
 			</a>
 		</li>
 		<li class="nav-item ${ navSelected.equals('user') ? 'active' : '' }">
-			<a class="nav-link" href="${pageContext.request.contextPath}/employee/main.do"> 
+			<a class="nav-link" href="${pageContext.request.contextPath}/user/main.do"> 
 				<i class="fas fa-fw fa-users"></i> 
 				<span>사원</span>
 			</a>

@@ -15,8 +15,15 @@ public class WorkVO {
 	private String dept;
 	private String dayOfWeek;
 	private String overtime_state;
+	private String subtime_nolunchtime;
 	
 	
+	public String getSubtime_nolunchtime() {
+		return subtime_nolunchtime;
+	}
+	public void setSubtime_nolunchtime(String subtime_nolunchtime) {
+		this.subtime_nolunchtime = subtime_nolunchtime;
+	}
 	public String getOvertime_state() {
 		return overtime_state;
 	}
@@ -101,7 +108,8 @@ public class WorkVO {
 	public String toString() {
 		return "WorkVO [wNo=" + wNo + ", userid=" + userid + ", date=" + date + ", start=" + start + ", end=" + end
 				+ ", overtime=" + overtime + ", total=" + total + ", name=" + name + ", state=" + state + ", position="
-				+ position + ", dept=" + dept + ", dayOfWeek=" + dayOfWeek + ", overtime_state=" + overtime_state + "]";
+				+ position + ", dept=" + dept + ", dayOfWeek=" + dayOfWeek + ", overtime_state=" + overtime_state
+				+ ", subtime_nolunchtime=" + subtime_nolunchtime + "]";
 	}
 	
 	
