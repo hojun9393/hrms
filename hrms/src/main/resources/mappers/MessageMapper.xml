@@ -34,5 +34,6 @@
 			select LAST_INSERT_ID() as id
 		</selectKey>
 		<!-- INSERT INTO msgReceive(msgNo, userid) values(#{msgNo}, #{userId}); -->
+		
 	</insert>
 </mapper>
