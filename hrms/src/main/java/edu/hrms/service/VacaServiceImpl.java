@@ -1,6 +1,7 @@
 package edu.hrms.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.hrms.dao.VacaDAO;
-import edu.hrms.vo.OvertimeSignVO;
+import edu.hrms.util.CalcCalendar;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
@@ -18,6 +19,9 @@ public class VacaServiceImpl implements VacaService {
 	
 	@Autowired
 	VacaDAO vacaDAO;
+	
+	@Autowired
+	CalcCalendar calcCalendar;
 	
 	@Override
 	public List<VacaVO> selectMyVacaList(Map<String, String> map) {
@@ -39,6 +43,23 @@ public class VacaServiceImpl implements VacaService {
 	public int getMaxNoByUserId(String userid) {
 		return vacaDAO.getMaxNoByUserId(userid);
 	}
+	@Override
+	public List<SignLineVO> getSignLineList(String userid, String position) {
+		if(position.equals("E")) {
+			position = "C,D,L";
+		}else if(position.equals("L")) {
+			position = "C,D";
+		}else if(position.equals("D")) {
+			position = "C";
+		}
+		String[] positionArr = position.split(",");
+		Map<String, Object> signLineMap = new HashMap<>();
+		signLineMap.put("userid", userid);
+		signLineMap.put("positionArr", positionArr);
+		return vacaDAO.getSignLineList(signLineMap);
+	
+	}
+	
 	@Override
 	public int insertVacaSign(List<VacaSignVO> list) {
 		return vacaDAO.insertVacaSign(list);
@@ -73,8 +94,26 @@ public class VacaServiceImpl implements VacaService {
 	public int vacaSignDelete(int vacaNo) {
 		return vacaDAO.vacaSignDelete(vacaNo);
 	}
+	
 	@Override
-	public int updateVacaStateToUse(String today) {
-		return vacaDAO.updateVacaStateToUse(today);
+	public int minusUserVaca(List<VacaVO> list) {
+		
+		for(VacaVO vo : list) {
+			String startDate = vo.getStartDate();
+			String endDate = vo.getEndDate();
+			
+			
+			
+		}
+		
+		
+		
+		
+		return 0;
+	}
+	
+	@Override
+	public List<VacaVO> selectVacaListToUpdate(String today) {
+		return vacaDAO.selectVacaListToUpdate(today);
 	}
 }

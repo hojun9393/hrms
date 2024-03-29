@@ -23,6 +23,8 @@ public interface VacaService {
 	
 	VacaVO selectVacaByVacaNo(int vacaNo);
 	
+	List<SignLineVO> getSignLineList(String userid, String position);
+	
 	List<VacaSignVO> getVacaSignList(List<SignLineVO> signLineList, int vacaNo);
 	
 	List<VacaSignVO> getVacaSignList(int vacaNo);
@@ -31,5 +33,7 @@ public interface VacaService {
 	
 	int vacaSignDelete(int vacaNo);
 	
-	int updateVacaStateToUse(String today);
+	List<VacaVO> selectVacaListToUpdate(String today);
+	
+	int minusUserVaca(List<VacaVO> list);
 }

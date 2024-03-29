@@ -16,7 +16,11 @@ public class UserDeniedHandler implements AccessDeniedHandler {
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
 		System.out.println("권한 없음");
-		response.sendRedirect(request.getContextPath());
+		
+		response.setContentType("text/html; charset=utf-8");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().append("<script>alert('권한이 없습니다.');location.href='" + request.getContextPath() + "'</script>");
+		response.getWriter().flush();
 		
 	}
 

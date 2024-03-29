@@ -369,7 +369,6 @@
 		
 		const workBar = $("#workBar");
 		let percent = '${myThisWeekTotalWorkTimePlusMyTotalOvertimeTime}'.substring(0,2)/52*100+"%";
-		console.log(percent);
 		workBar.attr("style",`width:\${percent}`);
 	}
 	
@@ -692,8 +691,56 @@
 		}
 	}
 	
-	
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/calendar_max_0.js"></script>
-<%-- <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script> --%>
+<script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax_Const.js"></script>
+<script>
+	$("#startDate1").datepicker({
+		  dateFormat: 'yy-mm-dd',
+		  maxDate: 0,
+		  onClose: function(selectedDate) {
+			  $('#endDate1').datepicker('destroy'); 
+			  $("#endDate1").val("");
+			  let minD = new Date(selectedDate);
+			  minD.setDate(minD.getDate()+1);
+		  
+		    $("#endDate1").datepicker({
+		      dateFormat: 'yy-mm-dd',
+		      minDate: minD,
+		      maxDate: 0
+		    })
+		  }
+	});
+	$("#startDate2").datepicker({
+		  dateFormat: 'yy-mm-dd',
+		  maxDate: 0,
+		  onClose: function(selectedDate) {
+			  $('#endDate2').datepicker('destroy'); 
+			  $("#endDate2").val("");
+			  let minD = new Date(selectedDate);
+			  minD.setDate(minD.getDate()+1);
+		  
+		    $("#endDate2").datepicker({
+		      dateFormat: 'yy-mm-dd',
+		      minDate: minD,
+		      maxDate: 0
+		    })
+		  }
+	});
+	$("#startDate3").datepicker({
+		  dateFormat: 'yy-mm-dd',
+		  maxDate: 0,
+		  onClose: function(selectedDate) {
+			  $('#endDate3').datepicker('destroy'); 
+			  $("#endDate3").val("");
+			  let minD = new Date(selectedDate);
+			  minD.setDate(minD.getDate()+1);
+		  
+		    $("#endDate3").datepicker({
+		      dateFormat: 'yy-mm-dd',
+		      minDate: minD,
+		      maxDate: 0
+		    })
+		  }
+	});
+</script>
 <%@ include file="../include/footer.jsp"%>

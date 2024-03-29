@@ -127,7 +127,7 @@
 					<div class="mb-4 text-center">
 						<hr>
 						<a onclick="goMainFn()" class="btn btn-light border-dark btn-user"> 목록으로 </a> 
-						<c:if test="${vo.state ne 9} OR ${vo.state ne 3}">
+						<c:if test="${vo.state ne '9' || vo.state ne '3'}">
 							<a onclick="withdrawalFn()" class="btn btn-dark btn-user"> 철회하기 </a>
 						</c:if>
 					</div>

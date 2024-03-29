@@ -20,9 +20,17 @@ $.datepicker.setDefaults({
 	yearSuffix: "년"
 })
 
-$(".datepicker").datepicker({
+/*function noWeekendsOrHolidays(date) {
+	var noWeekend = $.datepicker.noWeekends(date);
+	return noWeekend[0] ? [true] : noWeekend;
+}*/
 
-})
+/*$(".datepicker").datepicker({
+	beforeShowDay: function(date){
+		console.log("js test");
+		return [(date.getDay() != 0 && date.getDay() != 6)];
+	}
+})*/
 
 function iClickFn(clicked) {
 	clicked.focus();

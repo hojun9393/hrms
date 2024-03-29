@@ -38,17 +38,24 @@ public class WorkController {
 	CalcCalendar calcCalendar;
 	
 	
-//	@Secured("ROLE_ADMIN")
-//	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
-//	public String main_admin() {
-//		
-//		return "main_admin";
-//	}
+	@Secured("ROLE_ADMIN")
+	@RequestMapping(value = "/main_admin.do", method = RequestMethod.GET)
+	public String main_admin() {
+		
+		return "main_admin";
+	}
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
-	public String main(Model model, Authentication authentication) {
+	public String main(Model model, Authentication authentication, HttpServletResponse response) {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
+		if(login.getAuthority().equals("ROLE_ADMIN")) {
+			try {
+				response.sendRedirect("/work/main_admin.do");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 		Map<String, String> map = new HashMap<>();
 		String userid = login.getUserid();

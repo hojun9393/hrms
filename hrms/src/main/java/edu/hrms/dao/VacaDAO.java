@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
 
@@ -38,6 +39,10 @@ public class VacaDAO {
 		return sqlSession.selectOne(namespace+".getMaxNoByUserId", userid);
 	}
 	
+	public List<SignLineVO> getSignLineList(Map<String, Object> map) {
+		return sqlSession.selectList(namespace+".getSignLineList", map);
+	}
+	
 	public int insertVacaSign(List<VacaSignVO> list) {
 		return sqlSession.insert(namespace+".insertVacaSign", list);
 	}
@@ -58,8 +63,8 @@ public class VacaDAO {
 		return sqlSession.delete(namespace+".vacaSignDelete", vacaNo);
 	}
 	
-	public int updateVacaStateToUse(String today) {
-		return sqlSession.update(namespace+".updateVacaStateToUse", today);
+	public List<VacaVO> selectVacaListToUpdate(String today) {
+		return sqlSession.selectList(namespace+".selectVacaListToUpdate", today);
 	}
 	
 }

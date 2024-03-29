@@ -131,28 +131,36 @@
 	}
 	
 	function itemChange() {
-		let endTimeArr = ["10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+		let startDate = $("#startDate").val();
+		let endDate = $("#endDate").val();
 		
-		var selectItem = $("#startTime").val();
-		var changeItem;
-		if(selectItem === "09:00"){
-			changeItem = endTimeArr.slice(0,8);
-		}else if(selectItem === "10:00" ) {
-			changeItem = endTimeArr.slice(1,8);
-		}else if (selectItem === "11:00") {
-			changeItem = endTimeArr.slice(2,8);
-		}else if (selectItem === "13:00") {
-			changeItem = endTimeArr.slice(3,8);
-		}else if (selectItem === "14:00") {
-			changeItem = endTimeArr.slice(4,8);
-		}else if (selectItem === "15:00") {
-			changeItem = endTimeArr.slice(5,8);
-		}else if (selectItem === "16:00") {
-			changeItem = endTimeArr.slice(6,8);
-		}else if (selectItem === "17:00") {
-			changeItem = endTimeArr.slice(7,8);
+		let endTimeArr = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+		let changeItem;
+		if(startDate==endDate){
+			var selectItem = $("#startTime").val();
+			if(selectItem === "09:00"){
+				changeItem = endTimeArr.slice(0,9);
+			}else if(selectItem === "10:00" ) {
+				changeItem = endTimeArr.slice(1,9);
+			}else if (selectItem === "11:00") {
+				changeItem = endTimeArr.slice(2,9);
+			}else if (selectItem === "12:00") {
+				changeItem = endTimeArr.slice(3,9);
+			}else if (selectItem === "13:00") {
+				changeItem = endTimeArr.slice(4,9);
+			}else if (selectItem === "14:00") {
+				changeItem = endTimeArr.slice(5,9);
+			}else if (selectItem === "15:00") {
+				changeItem = endTimeArr.slice(6,9);
+			}else if (selectItem === "16:00") {
+				changeItem = endTimeArr.slice(7,9);
+			}else if (selectItem === "17:00") {
+				changeItem = endTimeArr.slice(8,9);
+			}
+		
+		}else{
+			changeItem = endTimeArr;
 		}
-		
 		$('#endTime').empty();
 		let firstOption = $("<option value='NONE'>종료 시간</option>");
 		$('#endTime').append(firstOption);
@@ -160,10 +168,52 @@
 			let option = $("<option>" + changeItem[i] + "</option>");
 			$('#endTime').append(option);
 		}
+		
 	}
 	
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/calendar_min_0.js"></script>
-<%-- <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script> --%>
+<%-- <script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax_Const.js"></script> --%>
+<script src="${pageContext.request.contextPath}/resources/js/calendar_noWeekends.js"></script>
+<script>
+	function noWeekends (date){
+		return [(date.getDay() != 0 && date.getDay() != 6)];
+	}
+	
+	function addBusinessDays(startDate, numDays) {
+		var currentDate = new Date(startDate.getTime());
+		var businessDaysAdded = 0;
+		while (businessDaysAdded < numDays) {
+		  currentDate.setDate(currentDate.getDate() + 1);
+		
+		  if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+		    businessDaysAdded++;
+		  }
+		}
+		
+		return currentDate;
+	}	
+
+	$("#startDate").datepicker({
+		beforeShowDay: noWeekends,
+		dateFormat: 'yy-mm-dd',
+		minDate: 0,
+		maxDate: "+14d",
+		onClose: function(selectedDate) {
+			let paramDate = new Date(selectedDate);
+			let maxD = addBusinessDays(paramDate, 6);
+			
+			$("#endDate").val("");
+			$('#endDate').datepicker('destroy');
+			
+			$("#endDate").datepicker({
+				beforeShowDay: noWeekends,
+				dateFormat: 'yy-mm-dd',
+				minDate: selectedDate,
+				maxDate: maxD
+			})
+		}
+	})
+	
+</script>
 <!-- /.container-fluid -->
 <%@ include file="../include/footer.jsp"%>

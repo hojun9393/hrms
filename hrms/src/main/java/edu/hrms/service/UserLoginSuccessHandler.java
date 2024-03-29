@@ -22,11 +22,11 @@ public class UserLoginSuccessHandler implements AuthenticationSuccessHandler {
 		String name = login.getName();
 		String dept = login.getDept();
 		switch(dept) {
-		case "M" : dept = ""; break;
-		case "D" : dept = "개발부"; break;
-		case "S" : dept = "영업부"; break;
-		case "P" : dept = "기획부"; break;
-		case "H" : dept = "인사부"; break;
+			case "M" : dept = ""; break;
+			case "D" : dept = "개발부"; break;
+			case "S" : dept = "영업부"; break;
+			case "P" : dept = "기획부"; break;
+			case "H" : dept = "인사부"; break;
 		}
 		String position = login.getPosition();
 		switch(position) {

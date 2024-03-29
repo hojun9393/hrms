@@ -52,6 +52,7 @@ public class VacaController {
 		model.addAttribute("myRecentVacaApplication", vacaService.myRecentVacaApplication(userid));
 		
 		Map<String, Integer> user = vacaService.myRemainVaca(userid);
+		System.out.println(user.toString());
 		model.addAttribute("user", user);
 		return "/vacation/main";
 		
@@ -83,9 +84,11 @@ public class VacaController {
 		map.put("endTime", endTime);
 		map.put("reason", reason);
 		
-		vacaService.insertVaca(map);
+		int vacaNoTest = vacaService.insertVaca(map);
+		System.out.println(vacaNoTest);
 		int vacaNo = vacaService.getMaxNoByUserId(userid);
-		List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition());
+		System.out.println(vacaNo);
+		List<SignLineVO> signLineList = vacaService.getSignLineList(userid, login.getPosition());
 		List<VacaSignVO> vacaSignList = vacaService.getVacaSignList(signLineList, vacaNo);
 		
 		vacaService.insertVacaSign(vacaSignList);
@@ -145,13 +148,10 @@ public class VacaController {
 		
 		VacaVO vo = vacaService.selectVacaByVacaNo(vacaNo);
 		
-		if(vo.getState().equals("0")) {
-			vacaService.withdrawal(vacaNo);
-			vacaService.vacaSignDelete(vacaNo);
-			response.getWriter().append("<script>alert('연차 신청이 철회되었습니다.');location.href='main.do';</script>");
-		}else {
-			response.getWriter().append("<script>alert('결재 진행중인 연차 신청은 철회할 수 없습니다.');location.href='main.do';</script>");
-		}
+		vacaService.withdrawal(vacaNo);
+		vacaService.vacaSignDelete(vacaNo);
+		
+		response.getWriter().append("<script>alert('연차 신청이 철회되었습니다.');location.href='main.do';</script>");
 		response.getWriter().flush();
 	}
 	
