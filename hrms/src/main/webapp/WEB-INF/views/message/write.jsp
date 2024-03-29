@@ -127,8 +127,11 @@ function receiverPlusFn(){
 					let receiverList = '';
 					receiverList += '<div class="font-weight-bold px-2 py-1 m-1 d-none" id="receiverCheckBox'+data.deptCount[i].dept+'">';
 					for(let j=0; j<data.receiverList.length; j++){
+						if(data.receiverList[j].userid == ${userId}){
+							continue;
+						}
 						if(data.deptCount[i].dept == data.receiverList[j].dept){
-							receiverList += '<input type="checkbox" name="userId" id="checkBox'+labelCount+'" value="'+data.receiverList[j].userid+'"> <label for="checkBox'+labelCount+'">';
+							receiverList += '<input type="checkbox" name="receiver" id="checkBox'+labelCount+'" value="'+data.receiverList[j].userid+'"> <label for="checkBox'+labelCount+'">';
 							receiverList += '<span class="text-gray-900">'+data.receiverList[j].name+'</span> <span class="text-xs font-weight-bold">'+data.receiverList[j].position+'</span></label><br>';
 							labelCount++;
 						}
@@ -148,6 +151,9 @@ function receiverPlusFn(){
 				let receiverList = '';
 				receiverList += '<div class="font-weight-bold px-2 py-1 m-1" id="receiverCheckBoxAll">';
 				for(let j=0; j<data.receiverList.length; j++){
+						if(data.receiverList[j].userid == ${userId}){
+							continue;
+						}
 						receiverList += '<input type="checkbox" id="checkBox'+labelCount+'" value="'+data.receiverList[j].userid+'"> <label for="checkBox'+labelCount+'">';
 						receiverList += '<span class="text-gray-900">'+data.receiverList[j].name+'</span> '
 						receiverList += '<span class="text-xs font-weight-bold">'+data.receiverList[j].position+'</span> <div class="d-inline card text-primary text-center px-1 border-primary font-weight-bold text-xs">'+data.receiverList[j].deptCase+'</div></label><br>';
@@ -259,9 +265,18 @@ function receiverDelFn(obj, userid){
 }
 
 function sumitFn(){
-	let checked = $('input[type=checkbox][id^=checkBox]:disabled');
-	checked.prop('disabled', false);
-	$('[name=frm]').submit();
+	let rec = $('#receiverCheckBox'+dept);
+	let checkCount = $(":checkbox:checked", rec).length;
+	let content = $('textarea[name=content]').val();
+	if(checkCount == 0){
+		alert("쪽지를 수신할 사원을 선택해 주세요.")
+	}else if(content == ""){
+		alert("쪽지 내용을 입력해 주세요.")
+	}else{
+		let checked = $('input[type=checkbox][id^=checkBox]:disabled');
+		checked.prop('disabled', false);
+		$('[name=frm]').submit();
+	}
 }
 </script>
 

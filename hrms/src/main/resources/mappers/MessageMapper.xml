@@ -27,4 +27,12 @@
         WHEN dept = 'H' THEN '인사부'
         ELSE '부서미정' END AS deptCase, count(dept) as count from user group by dept;
 	</select>
+	
+	<insert id="insertMsg" parameterType="Map">
+		INSERT INTO msg(userid, content) values(#{userId}, #{content});
+		<selectKey keyProperty="id" resultType="int" order="AFTER" >
+			select LAST_INSERT_ID() as id
+		</selectKey>
+		<!-- INSERT INTO msgReceive(msgNo, userid) values(#{msgNo}, #{userId}); -->
+	</insert>
 </mapper>

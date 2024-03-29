@@ -25,4 +25,9 @@ public class MessageServiceImpl implements MessageService{
 		return messageDAO.selectDeptCount();
 	}
 
+	@Override
+	public int insertMsg(Map<String, Object> map) {
+		return messageDAO.insertMsg(map);
+	}
+
 }

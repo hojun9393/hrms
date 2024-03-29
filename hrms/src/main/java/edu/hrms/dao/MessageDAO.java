@@ -24,4 +24,8 @@ public class MessageDAO {
 	public List<Map<String, String>> selectDeptCount(){
 		return sqlSession.selectList(namespace+".selectDeptCount");
 	}
+	
+	public int insertMsg(Map<String,Object> map) {
+		return sqlSession.insert(namespace+".insertMsg", map);
+	}
 }
