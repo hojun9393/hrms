@@ -67,4 +67,8 @@ public class VacaDAO {
 		return sqlSession.selectList(namespace+".selectVacaListToUpdate", today);
 	}
 	
+	public int minusUserVaca(List<Map<String, Integer>> list) {
+		return sqlSession.update(namespace+".minusUserVaca", list);
+	}
+	
 }

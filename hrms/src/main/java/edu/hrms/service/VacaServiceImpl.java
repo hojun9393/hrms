@@ -96,24 +96,25 @@ public class VacaServiceImpl implements VacaService {
 	}
 	
 	@Override
-	public int minusUserVaca(List<VacaVO> list) {
-		
-		for(VacaVO vo : list) {
-			String startDate = vo.getStartDate();
-			String endDate = vo.getEndDate();
-			
-			
-			
-		}
-		
-		
-		
-		
-		return 0;
-	}
-	
-	@Override
 	public List<VacaVO> selectVacaListToUpdate(String today) {
 		return vacaDAO.selectVacaListToUpdate(today);
 	}
+	
+	@Override
+	public int minusUserVaca(List<VacaVO> volist) {
+		
+		List<Map<String, Integer>> list = new ArrayList<>();
+		
+		for(VacaVO vo : volist) {
+			Map<String, Integer> map = new HashMap<>();
+			map.put("userid", vo.getUserId());
+			map.put("useVaca", calcCalendar.getTotalUseHour(vo));
+			list.add(map);
+		}
+		
+		return vacaDAO.minusUserVaca(list);
+	}
+	
+	// 여기에 vacation state 사용완료로 변경 로직 작성
+	
 }

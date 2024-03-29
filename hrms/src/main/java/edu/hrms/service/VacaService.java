@@ -36,4 +36,7 @@ public interface VacaService {
 	List<VacaVO> selectVacaListToUpdate(String today);
 	
 	int minusUserVaca(List<VacaVO> list);
+	
+	
+	
 }

@@ -1,10 +1,8 @@
 package edu.hrms.util;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,10 +12,13 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import edu.hrms.vo.VacaVO;
+
 @Repository
 public class CalcCalendar {
 
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	SimpleDateFormat sdf_date = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+	SimpleDateFormat sdf_datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
 	Calendar calendar = Calendar.getInstance();
 	LocalDate todayDate = LocalDate.now();
 	
@@ -31,9 +32,9 @@ public class CalcCalendar {
 		Map<String, String> map = new HashMap<>();
 		map.put("weekOfYear", Integer.toString(calendar.get(Calendar.WEEK_OF_YEAR)));
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-		map.put("startDay", sdf.format(calendar.getTime()));
+		map.put("startDay", sdf_date.format(calendar.getTime()));
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-		map.put("endDay", sdf.format(calendar.getTime()));
+		map.put("endDay", sdf_date.format(calendar.getTime()));
 		
 		return map;
 	}
@@ -47,12 +48,11 @@ public class CalcCalendar {
 	}
 	
 	public boolean compareDatetime(String timeParam){
-		SimpleDateFormat sdfDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date time;
 		Date now = new Date();
 		boolean result = false;
 		try {
-			time = sdfDatetime.parse(timeParam);
+			time = sdf_datetime.parse(timeParam);
 			result = now.after(time);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -61,12 +61,11 @@ public class CalcCalendar {
 	}
 	
 	public boolean isParamBeforeNow(String timeParam){
-		SimpleDateFormat sdfDatetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date startTime;
 		Date now = new Date();
 		boolean result = false;
 		try {
-			startTime = sdfDatetime.parse(timeParam);
+			startTime = sdf_datetime.parse(timeParam);
 			result = now.before(startTime);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -74,15 +73,32 @@ public class CalcCalendar {
 		return result;
 	}
 	
+	public boolean isNow_text_param(String timeParam, String before_or_after) {
+		Date now = new Date();
+		Date time;
+		boolean result = false;
+		
+		try {
+			time = sdf_datetime.parse(timeParam);
+			if(before_or_after.equals("before")) {
+				result = now.before(time);
+			}else if(before_or_after.equals("after")) {
+				result = now.after(time);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 	
 	
 	public int getVacationDays(String startDate, String endDate) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Date dateStartDate = null;
 		Date dateEndDate = null;
 	    try {
-	        dateStartDate = df.parse(startDate);
-	        dateEndDate = df.parse(endDate);
+	        dateStartDate = sdf_date.parse(startDate);
+	        dateEndDate = sdf_date.parse(endDate);
 	    } catch (ParseException parseException) {
 	        System.out.println(parseException.getStackTrace());
 	    }
@@ -101,7 +117,7 @@ public class CalcCalendar {
 	        	weekendDays++;
 	        }
 	        cal1.add(Calendar.DATE, 1);
-	        startDate = df.format(cal1.getTime());
+	        startDate = sdf_date.format(cal1.getTime());
 	    }
 	    System.out.println("vacationDays : " + vacationDays);
 	    System.out.println("weekendDays : " + weekendDays);
@@ -109,14 +125,88 @@ public class CalcCalendar {
 	    return vacationDays;
 	}
 	
-	public int getUseHour(String startDate, String endDate) {
+	public int getUseHours(String date, String time, String start_or_end) {
 		
-		int useHours = 0;
-		int vacationDays = getVacationDays(startDate, endDate);
+		// simpleDateFormat.parse(String) = String을 Date 타입으로 형변환
+		// calendar.setTime(Date) => Date를 Calendar 타입으로 형변환
+		// calendar.getTime() => Date 타입으로 calendar 객체의 시간 리턴
 		
+		String startTime = null;
+		String endTime = null;
 		
+		if(start_or_end.equals("start")) {
+			startTime = time;
+			endTime = "18:00:00";
+		}else if(start_or_end.equals("end")) {
+			startTime = "09:00:00";
+			endTime = time;
+		}
 		
-		return useHours;
+		int hours = 0;
+		try {
+			Date startTime_date = sdf_datetime.parse(date+" "+startTime);
+			Date endTime_date = sdf_datetime.parse(date+" "+endTime);
+			Date time12_00_01PM_date = sdf_datetime.parse(date+" "+"12:00:01");
+			
+			Calendar startTime_cal = Calendar.getInstance();
+			Calendar endTime_cal = Calendar.getInstance();
+			
+			startTime_cal.setTime(startTime_date);
+			endTime_cal.setTime(endTime_date);
+			
+			long startDatetime = startTime_cal.getTimeInMillis();
+			long endDatetime = endTime_cal.getTimeInMillis();
+			
+			long hoursLong = (endDatetime-startDatetime)/(1000*60*60);
+			hours = Long.valueOf(hoursLong).intValue();
+			
+			System.out.println("점심시간 계산 전: "+hours);
+			
+			if(startTime_date.before(time12_00_01PM_date) && endTime_date.after(time12_00_01PM_date)) {
+				hours -= 1;
+			}
+			System.out.println("점심시간 계산 후: "+hours);
+			
+		}catch(ParseException e) { e.printStackTrace(); }
+		
+		return hours;
+	}
+	
+	public int getTotalUseHour(VacaVO vo) {
+		
+		String startDate = vo.getStartDate();
+		String endDate = vo.getEndDate();
+		String startTime = vo.getStartTime();
+		String endTime = vo.getEndTime();
+		
+		// 연차 사용일수 1일일 경우 => 끝시간에서 시작시간 빼면 됨(점심시간 계산 필요)
+		
+		// 연차 사용일수 2일일 경우
+		// 1. 시작일 18시에서 시작일 시작시간 뺀다(점심시간 계산 필요)
+		// 2. 끝일 끝시간에서 끝일 09시 뺀다(점심시간 계산 필요)
+		// 3. 1+2 한다
+		
+		// 연차 사용일수 3일 이상일 경우
+		// 1. 시작일 18시에서 시작일 시작시간 뺀다(점심시간 계산 필요)
+		// 2. 끝일 끝시간에서 끝일 09시 뺀다(점심시간 계산 필요)
+		// 3. 1+2에 나머지 일수*8시간 더한다
+		
+		int totalHours = 0;
+		// 연차시간 계산 로직
+		// 1. 먼저 주말 제외한 연차 일수 구한다
+		int days = getVacationDays(startDate, endDate);
+		
+		// 2. 일수(1일, 2일, 3일 이상)에 따라 분기 처리한다
+		totalHours = getUseHours(startDate, startTime, "start");
+		if(days>=2) {
+			totalHours += getUseHours(endDate, endTime, "end");
+		}
+		if(days>=3) {
+			totalHours += (days-2)*8;
+		}
+		
+		return totalHours;
+		
 	}
 	
 	

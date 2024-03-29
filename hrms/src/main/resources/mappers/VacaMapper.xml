@@ -173,6 +173,22 @@
 				AND startDate = #{today}
 	</select>
 	
+	<update id="minusUserVaca" parameterType="list">
+		<foreach collection="list" item="item">
+			UPDATE user
+				SET useVaca = useVaca + #{item.useVaca}
+				SET keepVaca = keepVaca - #{item.useVaca}
+				WHERE userid = #{item.userid}
+		</foreach>
+	</update>
+	
+	<update id="updateVacaStateToUse">
+		
+	</update>
+	
+	
+	
+	
 </mapper>
 
 
