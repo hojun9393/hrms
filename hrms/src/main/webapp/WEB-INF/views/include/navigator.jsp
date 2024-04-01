@@ -13,7 +13,7 @@
 			</div>
 			<div class="sidebar-brand-text mx-3">인사관리시스템</div>
 		</a>
-	 
+	  
 		<!-- Divider -->
 		<hr class="sidebar-divider my-0">
 	
