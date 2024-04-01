@@ -269,9 +269,9 @@ function sumitFn(){
 	let checkCount = $(":checkbox:checked", rec).length;
 	let content = $('textarea[name=content]').val();
 	if(checkCount == 0){
-		alert("쪽지를 수신할 사원을 선택해 주세요.")
+		alert("쪽지를 수신할 사원을 선택해 주세요.");
 	}else if(content == ""){
-		alert("쪽지 내용을 입력해 주세요.")
+		alert("쪽지 내용을 입력해 주세요.");
 	}else{
 		let checked = $('input[type=checkbox][id^=checkBox]:disabled');
 		checked.prop('disabled', false);

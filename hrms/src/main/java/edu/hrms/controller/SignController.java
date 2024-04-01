@@ -303,7 +303,7 @@ public class SignController {
 		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.getDocNo());
 		for(int i=0; i<signLineVO.size(); i++) {
 			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(docVO.getMySignLineNo())) {
-				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateApprovedDoc(docVO);
 					signService.updateDocState(docVO.getDocNo());
 				}else {
@@ -329,7 +329,7 @@ public class SignController {
 		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.getDocNo());
 		for(int i=0; i<signLineVO.size(); i++) {
 			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(docVO.getMySignLineNo())) {
-				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateRejectedDoc(docVO);
 					signService.updateDocState(docVO.getDocNo());
 				}else {
@@ -356,7 +356,7 @@ public class SignController {
 		List<SignLineVO> signLineVO = signService.selectSignLineFromVacaNo(vacaVO.getVacaNo());
 		for(int i=0; i<signLineVO.size(); i++) {
 			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(vacaVO.getMySignLineNo())) {
-				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateApprovedVaca(vacaVO);
 					signService.updateVacaState(vacaVO.getVacaNo());
 				}else {
@@ -382,7 +382,7 @@ public class SignController {
 		List<SignLineVO> signLineVO = signService.selectSignLineFromVacaNo(vacaVO.getVacaNo());
 		for(int i=0; i<signLineVO.size(); i++) {
 			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(vacaVO.getMySignLineNo())) {
-				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateRejectedVaca(vacaVO);
 					signService.updateVacaState(vacaVO.getVacaNo());
 				}else {
@@ -408,7 +408,7 @@ public class SignController {
 		List<SignLineVO> signLineVO = signService.selectSignLineFromOverTimeNo(overVO.getOverTimeNo());
 		for(int i=0; i<signLineVO.size(); i++) {
 			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(overVO.getMySignLineNo())) {
-				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateApprovedOver(overVO);
 					signService.updateOverState(overVO.getOverTimeNo());
 				}else {
@@ -434,7 +434,7 @@ public class SignController {
 		List<SignLineVO> signLineVO = signService.selectSignLineFromOverTimeNo(overVO.getOverTimeNo());
 		for(int i=0; i<signLineVO.size(); i++) {
 			if(signLineVO.get(i).getSignLineNo()==Integer.parseInt(overVO.getMySignLineNo())) {
-				if(signLineVO.get(i).getNextState().equals("0") || signLineVO.get(i).getNextState() == null) {
+				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateRejectedOver(overVO);
 					signService.updateOverState(overVO.getOverTimeNo());
 				}else {

@@ -11,6 +11,7 @@
 		<typeAlias type="edu.hrms.vo.SignLineVO" alias="signLineVO"/>
 		<typeAlias type="edu.hrms.vo.NoticeVO" alias="noticeVO"/> 
 		<typeAlias type="edu.hrms.vo.UserVO" alias="userVO"/> 
+		<typeAlias type="edu.hrms.vo.MsgVO" alias="msgVO"/>
 		<typeAlias type="edu.hrms.vo.MsgReceiveVO" alias="msgReceiveVO"/>
 	</typeAliases>
 </configuration>

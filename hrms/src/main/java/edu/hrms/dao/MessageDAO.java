@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import edu.hrms.vo.MsgReceiveVO;
+import edu.hrms.vo.MsgVO;
 
 @Repository
 public class MessageDAO {
@@ -27,5 +28,13 @@ public class MessageDAO {
 	
 	public int insertMsg(Map<String,Object> map) {
 		return sqlSession.insert(namespace+".insertMsg", map);
+	}
+	
+	public int insertMsgReceive(Map<String,Object> map) {
+		return sqlSession.insert(namespace+".insertMsgReceive", map);
+	}
+	
+	public List<MsgVO> selectMsgAll(int userId){
+		return sqlSession.selectList(namespace+".selectMsgAll", userId);
 	}
 }

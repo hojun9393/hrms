@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import edu.hrms.dao.MessageDAO;
 import edu.hrms.vo.MsgReceiveVO;
+import edu.hrms.vo.MsgVO;
 
 @Service
 public class MessageServiceImpl implements MessageService{
@@ -28,6 +29,16 @@ public class MessageServiceImpl implements MessageService{
 	@Override
 	public int insertMsg(Map<String, Object> map) {
 		return messageDAO.insertMsg(map);
+	}
+
+	@Override
+	public int insertMsgReceive(Map<String, Object> map) {
+		return messageDAO.insertMsgReceive(map);
+	}
+
+	@Override
+	public List<MsgVO> selectMsgAll(int userId) {
+		return messageDAO.selectMsgAll(userId);
 	}
 
 }

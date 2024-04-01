@@ -68,6 +68,34 @@
 							</tr>
 						</thead>
 						<tbody>
+							<c:forEach items="${list}" var="vo">
+								<tr>
+									<td>
+										<div
+											class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">${vo.dept}</div>
+										<span class="text-dark font-weight-bold">${vo.name}</span> <span
+										class="text-xs font-weight-bold">${vo.position}</span>
+									</td>
+									<c:choose>
+										<c:when test="${vo.state eq '0'}">
+											<td>
+												<a class="text-dark font-weight-bold" data-toggle="modal" data-target="#messageModal" href="#">
+												${vo.content}</a> 
+												<span class="d-inline rounded-circle text-white text-center px-1 bg-danger text-xs">N</span>
+											</td>
+										</c:when>
+										<c:otherwise>
+											<td>
+												<a class="text-gray-700" data-toggle="modal" data-target="#messageModal" href="#">
+												${vo.content}</a>
+											</td>
+										</c:otherwise>
+									</c:choose>
+									<td>
+										<div class="text-dark">${vo.sendDate}</div>
+									</td>
+								</tr>								
+							</c:forEach>
 							<tr>
 								<td>
 									<div
