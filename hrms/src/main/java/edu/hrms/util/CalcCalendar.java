@@ -78,14 +78,14 @@ public class CalcCalendar {
 		Date time;
 		boolean result = false;
 		
-		try {
+		try{
 			time = sdf_datetime.parse(timeParam);
 			if(before_or_after.equals("before")) {
 				result = now.before(time);
 			}else if(before_or_after.equals("after")) {
 				result = now.after(time);
 			}
-		} catch (ParseException e) {
+		}catch (ParseException e) {
 			e.printStackTrace();
 		}
 		
@@ -119,8 +119,8 @@ public class CalcCalendar {
 	        cal1.add(Calendar.DATE, 1);
 	        startDate = sdf_date.format(cal1.getTime());
 	    }
-	    System.out.println("vacationDays : " + vacationDays);
-	    System.out.println("weekendDays : " + weekendDays);
+//	    System.out.println("vacationDays : " + vacationDays);
+//	    System.out.println("weekendDays : " + weekendDays);
 	    
 	    return vacationDays;
 	}
@@ -160,14 +160,14 @@ public class CalcCalendar {
 			long hoursLong = (endDatetime-startDatetime)/(1000*60*60);
 			hours = Long.valueOf(hoursLong).intValue();
 			
-			System.out.println("점심시간 계산 전: "+hours);
+//			System.out.println("점심시간 계산 전: "+hours);
 			
 			if(startTime_date.before(time12_00_01PM_date) && endTime_date.after(time12_00_01PM_date)) {
 				hours -= 1;
 			}
-			System.out.println("점심시간 계산 후: "+hours);
+//			System.out.println("점심시간 계산 후: "+hours);
 			
-		}catch(ParseException e) { e.printStackTrace(); }
+		} catch(ParseException e) { e.printStackTrace(); }
 		
 		return hours;
 	}
@@ -204,6 +204,11 @@ public class CalcCalendar {
 		if(days>=3) {
 			totalHours += (days-2)*8;
 		}
+		
+		System.out.println("-----------------------------------------");
+		System.out.println("userid: "+vo.getUserId());
+		System.out.println("총 사용연차 시간: "+totalHours);
+		System.out.println("-----------------------------------------");
 		
 		return totalHours;
 		

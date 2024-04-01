@@ -102,7 +102,6 @@ public class VacaServiceImpl implements VacaService {
 	
 	@Override
 	public int minusUserVaca(List<VacaVO> volist) {
-		
 		List<Map<String, Integer>> list = new ArrayList<>();
 		
 		for(VacaVO vo : volist) {
@@ -111,10 +110,11 @@ public class VacaServiceImpl implements VacaService {
 			map.put("useVaca", calcCalendar.getTotalUseHour(vo));
 			list.add(map);
 		}
-		
 		return vacaDAO.minusUserVaca(list);
 	}
 	
-	// 여기에 vacation state 사용완료로 변경 로직 작성
-	
+	@Override
+	public int updateVacaStateToUse(List<VacaVO> list) {
+		return vacaDAO.updateVacaStateToUse(list);
+	}
 }

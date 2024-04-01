@@ -71,4 +71,8 @@ public class VacaDAO {
 		return sqlSession.update(namespace+".minusUserVaca", list);
 	}
 	
+	public int updateVacaStateToUse(List<VacaVO> list) {
+		return sqlSession.update(namespace+".updateVacaStateToUse", list);
+	}
+	
 }

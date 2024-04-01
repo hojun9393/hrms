@@ -173,17 +173,21 @@
 				AND startDate = #{today}
 	</select>
 	
-	<update id="minusUserVaca" parameterType="list">
-		<foreach collection="list" item="item">
-			UPDATE user
-				SET useVaca = useVaca + #{item.useVaca}
-				SET keepVaca = keepVaca - #{item.useVaca}
-				WHERE userid = #{item.userid}
+	<update id="minusUserVaca" parameterType="java.util.List">
+		<foreach collection="list" item="item" separator=",">
+			UPDATE user SET 
+				useVaca = useVaca + #{item.useVaca}
+				, keepVaca = keepVaca - #{item.useVaca}
+				WHERE userid = #{item.userid};
 		</foreach>
 	</update>
 	
-	<update id="updateVacaStateToUse">
-		
+	<update id="updateVacaStateToUse" parameterType="List">
+		<foreach collection="list" item="item">
+			UPDATE vacation
+				SET state = 7
+				WHERE userid = #{userId};
+		</foreach>
 	</update>
 	
 	

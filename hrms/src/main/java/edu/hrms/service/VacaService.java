@@ -37,6 +37,6 @@ public interface VacaService {
 	
 	int minusUserVaca(List<VacaVO> list);
 	
-	
+	int updateVacaStateToUse(List<VacaVO> list);
 	
 }

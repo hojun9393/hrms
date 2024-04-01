@@ -127,6 +127,8 @@
 					<!-- Card Body -->
 					<div class="card-body">
 					
+						<a href="test.do">연차 사용완료 테스트</a>
+					
 						<!-- 내 연차 -->
 						<div id="menu1">
 							<div class="mb-3 col">
