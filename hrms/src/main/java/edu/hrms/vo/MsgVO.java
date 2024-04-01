@@ -1,14 +1,39 @@
 package edu.hrms.vo;
 
-import java.util.List;
-
 public class MsgVO {
 	private int msgNo;
 	private int userId;
 	private String content;
 	private String sendDate;
-	private List<MsgReceiveVO> MsgReceiveVOList;
+	private String state;
+	private String name;
+	private String dept;
+	private String position;
 	
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDept() {
+		return dept;
+	}
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+	public String getPosition() {
+		return position;
+	}
+	public void setPosition(String position) {
+		this.position = position;
+	}
 	public int getMsgNo() {
 		return msgNo;
 	}
@@ -32,12 +57,6 @@ public class MsgVO {
 	}
 	public void setSendDate(String sendDate) {
 		this.sendDate = sendDate;
-	}
-	public List<MsgReceiveVO> getMsgReceiveVOList() {
-		return MsgReceiveVOList;
-	}
-	public void setMsgReceiveVOList(List<MsgReceiveVO> msgReceiveVOList) {
-		MsgReceiveVOList = msgReceiveVOList;
 	}
 	
 }

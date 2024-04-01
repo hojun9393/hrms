@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.hrms.service.MessageService;
 import edu.hrms.vo.MsgReceiveVO;
+import edu.hrms.vo.MsgVO;
 import edu.hrms.vo.UserVO;
 
 @Controller
@@ -30,10 +31,12 @@ public class MessageController {
 	MessageService messageService;
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
-	public String main(Authentication authentication) {
+	public String main(Authentication authentication, Model model) {
 		UserVO loginUser = (UserVO)authentication.getPrincipal();
 		userId = Integer.parseInt(loginUser.getUserid());
 		
+		List<MsgVO> list = messageService.selectMsgAll(userId);
+		model.addAttribute("list", list);
 		return "/message/main";
 	}
 	
@@ -53,16 +56,11 @@ public class MessageController {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("userId", userId);
 		map.put("content", content);
-		/* map.put("receiver", receiver); */
-		int msgNo = messageService.insertMsg(map);
-		System.out.println(msgNo);
-		/* System.out.println(map.get("id")); */
-		for(int i=0; i<receiver.size(); i++) {
-			System.out.println(receiver.get(i));
-		}
-		System.out.println("content : "+content);
+		map.put("receiver", receiver);
+		int result = messageService.insertMsg(map);
+		int result2 = messageService.insertMsgReceive(map);
 		
-		if(msgNo>0) {
+		if(result>0 && result2>0) {
 			res.getWriter().append("<script>alert('쪽지가 전송 되었습니다.');location.href='main.do'</script>");
 		}else {
 			res.getWriter().append("<script>alert('쪽지를 전송하지 못했습니다.');location.href='main.do'</script>");
