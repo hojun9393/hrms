@@ -37,7 +37,7 @@
 			</a>
 		</li>
 		<li class="nav-item ${ navSelected.equals('docu') ? 'active' : '' }">
-			<a class="nav-link" href="document_main.jsp">
+			<a class="nav-link" href="${pageContext.request.contextPath}/docu/main.do">
 				<i class="fas fa-fw fa-folder-open"></i> 
 				<span>기안</span>
 			</a>
