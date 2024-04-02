@@ -2,6 +2,19 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
+<head>
+	<!-- 데이트피커 { -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+	<link type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<!-- } -->
+	
+	<link href="${pageContext.request.contextPath}/resources/css/table.css" rel="stylesheet">
+	<!-- 캘린더(데이트피커) 스타일 (jquery-ui.css 파일호출 보다 아래에 있어야 합니다.) { -->
+	<link href="${pageContext.request.contextPath}/resources/css/sign.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/resources/css/button.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/resources/css/pagination.css" rel="stylesheet">
+</head>
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
@@ -23,7 +36,7 @@
 					<div>
 						2024-03-02 ~ 2024-03-13
 						<i class="fas fa-calendar fa-2x text-gray-300" onclick="openModal()"></i>
-						<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
+						<a href="write.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
 							<i class="fas fa-fw fa-briefcase"></i> 기안 작성
 						</a>
 					</div>
@@ -124,46 +137,13 @@
 					</div>
 					
 					
-					<!-- ======================== 달력 ========================-->
-					<div id="modal" class="modal-overlay" style="display:none;">
-						<div class="modal-window calendar col">
-							<div class="row">
-								<div class="header col">
-									<div class="year-month"></div>
-									<div class="nav">
-										<button class="nav-btn go-prev" onclick="prevMonth()">&lt;</button>
-										<button class="nav-btn go-today" onclick="goToday()">Today</button>
-										<button class="nav-btn go-next" onclick="nextMonth()">&gt;</button>
-									</div>
-								</div>
-								<div class="main">
-									<div class="days">
-										<div class="day">일</div>
-										<div class="day">월</div>
-										<div class="day">화</div>
-										<div class="day">수</div>
-										<div class="day">목</div>
-										<div class="day">금</div>
-										<div class="day">토</div>
-									</div>
-									<div class="dates"></div>
-								</div>
-							</div>
-							<div id="close-area" class="close-area">닫기</div>
-						</div>
-					</div>
-					<!-- ======================== 달력 ========================-->
 
 				</div>
 			</div>
 		</div>
-
 	</div>
-
 </div>
 
 <!-- End of Main Content -->
 <script src="${pageContext.request.contextPath}/resources/js/menu.js"></script>
-<script src="resources/js/modal2.js"></script>
-<script src="resources/js/calendar.js"></script>
 <%@ include file="../include/footer.jsp"%>

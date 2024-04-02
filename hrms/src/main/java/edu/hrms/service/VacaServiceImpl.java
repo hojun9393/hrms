@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.hrms.dao.VacaDAO;
+import edu.hrms.dao.WorkDAO;
 import edu.hrms.util.CalcCalendar;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.VacaSignVO;
@@ -19,6 +20,9 @@ public class VacaServiceImpl implements VacaService {
 	
 	@Autowired
 	VacaDAO vacaDAO;
+	
+	@Autowired
+	WorkDAO workDAO;
 	
 	@Autowired
 	CalcCalendar calcCalendar;
@@ -43,21 +47,10 @@ public class VacaServiceImpl implements VacaService {
 	public int getMaxNoByUserId(String userid) {
 		return vacaDAO.getMaxNoByUserId(userid);
 	}
-	@Override
-	public List<SignLineVO> getSignLineList(String userid, String position) {
-		if(position.equals("E")) {
-			position = "C,D,L";
-		}else if(position.equals("L")) {
-			position = "C,D";
-		}else if(position.equals("D")) {
-			position = "C";
-		}
-		String[] positionArr = position.split(",");
-		Map<String, Object> signLineMap = new HashMap<>();
-		signLineMap.put("userid", userid);
-		signLineMap.put("positionArr", positionArr);
-		return vacaDAO.getSignLineList(signLineMap);
 	
+	@Override
+	public int checkVacaAppCnt(Map<String, String> map) {
+		return vacaDAO.checkVacaAppCnt(map);
 	}
 	
 	@Override
