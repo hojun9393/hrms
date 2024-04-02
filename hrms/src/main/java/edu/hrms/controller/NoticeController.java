@@ -37,4 +37,18 @@ public class NoticeController {
 		
 		return "/notice/write";
 	}
+	//수정페이지로이동
+	@RequestMapping(value = "/modify.do", method = RequestMethod.GET)
+	public String modify(int noticeNo, Model model) {
+		NoticeVO noticeVO = noticeService.selectNoticeOne(noticeNo);
+		model.addAttribute("vo", noticeVO);
+		return "/notice/modify";
+	}
+	//수정글 업데이트
+	@RequestMapping(value = "/modify.do", method = RequestMethod.POST)
+	public String modifyupdate(NoticeVO noticeVO, Model model) {
+		int result = noticeService.updateNotice(noticeVO);
+		return "redirect:main.do";
+	}
+	
 }

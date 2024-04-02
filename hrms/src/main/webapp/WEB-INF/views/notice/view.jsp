@@ -53,8 +53,8 @@
 				<div class="col p-5 mt-5">
 					<div class="mb-4 text-center">
 						<hr>
-						<a href="login.html" class="btn btn-secondary btn-user">목록으로</a> 
-						<a href="login.html" class="btn btn-primary btn-user">수정하기</a> 
+						<a href="main.do/" class="btn btn-secondary btn-user">목록으로</a> 
+						<a href="modify.do?noticeNo=${vo.noticeNo}" class="btn btn-primary btn-user">수정하기</a> 
 						<a href="login.html" class="btn btn-dark btn-user">삭제하기</a> 
 					</div>
 				</div>

@@ -26,10 +26,12 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 	
 	
-	/*
-	 * @Override public int insert() { return noticeDAO.insert(); }
-	 * 
-	 * @Override public int update() { return noticeDAO.update(); }
-	 */
+	
+	/* @Override public int insert() { return noticeDAO.insert(); } */
+	  
+	  @Override
+	  public int updateNotice(NoticeVO noticeVO) {
+		  return noticeDAO.updateNotice(noticeVO); }
+	 
 
 }

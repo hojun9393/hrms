@@ -5,6 +5,11 @@ import java.util.List;
 import edu.hrms.vo.NoticeVO;
 
 public interface NoticeService {
-	List<NoticeVO> selectNotice();	 
+	//selectAllNotice
+	List<NoticeVO> selectNotice();
+	//selectNoticeOne
 	NoticeVO selectNoticeOne(int noticeNo);
+	
+	int updateNotice(NoticeVO noticeVO);
+	
 }
