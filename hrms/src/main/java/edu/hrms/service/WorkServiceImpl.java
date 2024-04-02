@@ -86,6 +86,23 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
+	public List<SignLineVO> getSignLineList(String userid, String position, String type) {
+		if(position.equals("E")) {
+			position = "C,D,L";
+		}else if(position.equals("L")) {
+			position = "C,D";
+		}else if(position.equals("D")) {
+			position = "C";
+		}
+		String[] positionArr = position.split(",");
+		Map<String, Object> signLineMap = new HashMap<>();
+		signLineMap.put("userid", userid);
+		signLineMap.put("positionArr", positionArr);
+		signLineMap.put("type", type);
+		return workDAO.getSignLineList(signLineMap);
+	}
+	
+	@Override
 	public List<OvertimeSignVO> getOvertimeSignList(List<SignLineVO> signLineList, int overtimeNo) {
 		// insert 할 때 사용하는 메소드
 		List<OvertimeSignVO> overtimeSignList = new ArrayList<>();
@@ -122,23 +139,6 @@ public class WorkServiceImpl implements WorkService {
 	@Override
 	public OvertimeVO overtimeApplicationTodayEvening(Map<String, String> map) {
 		return workDAO.overtimeApplicationTodayEvening(map);
-	}
-	
-	@Override
-	public List<SignLineVO> getSignLineList(String userid, String position, String type) {
-		if(position.equals("E")) {
-			position = "C,D,L";
-		}else if(position.equals("L")) {
-			position = "C,D";
-		}else if(position.equals("D")) {
-			position = "C";
-		}
-		String[] positionArr = position.split(",");
-		Map<String, Object> signLineMap = new HashMap<>();
-		signLineMap.put("userid", userid);
-		signLineMap.put("positionArr", positionArr);
-		signLineMap.put("type", type);
-		return workDAO.getSignLineList(signLineMap);
 	}
 	
 	@Override

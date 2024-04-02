@@ -43,7 +43,10 @@
 										</div>
 									</div>
 									<div class="form-group">
-										내용 <textarea name="content" class="resize-none form-control"></textarea>
+										제목 <input name="title" class="resize-none form-control" required></input>
+									</div>
+									<div class="form-group">
+										내용 <textarea name="content" class="resize-none form-control" required></textarea>
 									</div>
 									<div class="form-group insert">
 										첨부파일 
@@ -79,24 +82,26 @@
 	var fileNo = 0;
 	var filesArr = new Array();
 	
-	/* 첨부파일 추가 */
+	// input태그 클릭시 실행 함수
 	function addFile(obj) {
 		var maxFileCnt = 5; // 첨부파일 최대 개수
 		var attFileCnt = document.querySelectorAll('.filebox').length; // 기존 추가된 첨부파일 개수
 		var remainFileCnt = maxFileCnt - attFileCnt; // 추가로 첨부가능한 개수
 		var curFileCnt = obj.files.length; // 현재 선택된 첨부파일 개수
+		
+		console.log(curFileCnt);
 	
 		// 첨부파일 개수 확인
-		if (curFileCnt > remainFileCnt) {
+		if(curFileCnt > remainFileCnt) {
 			alert("첨부파일은 최대 " + maxFileCnt + "개 까지 첨부 가능합니다.");
 		}
 	
-		for (var i = 0; i < Math.min(curFileCnt, remainFileCnt); i++) {
+		for(var i = 0; i < Math.min(curFileCnt, remainFileCnt); i++) {
 	
 			const file = obj.files[i];
 	
 			// 첨부파일 검증
-			if (validation(file)) {
+			if(validation(file)) {
 				// 파일 배열에 담기
 				var reader = new FileReader();
 				reader.onload = function() {
@@ -114,7 +119,7 @@
 				htmlData += '</div>';
 				$('.file-list').append(htmlData);
 				fileNo++;
-			} else {
+			}else {
 				continue;
 			}
 		}
@@ -125,7 +130,7 @@
 	/* 첨부파일 검증 */
 	function validation(obj) {
 		const fileTypes = [ 'application/pdf', 'image/gif', 'image/jpeg',
-				'image/png', 'image/bmp', 'image/tif',
+				'image/png', 'image/bmp', 'image/tif', 'text/plain', 'application/msword',
 				'application/haansofthwp', 'application/x-hwp' ];
 		if (obj.name.length > 100) {
 			alert("파일명이 100자 이상인 파일은 제외되었습니다.");
@@ -152,38 +157,45 @@
 	
 	/* 폼 전송 */
 	function submitForm() {
-		// 폼데이터 담기
-		var form = document.querySelector("form");
-		var formData = new FormData(form);
-		for (var i = 0; i < filesArr.length; i++) {
-			// 삭제되지 않은 파일만 폼데이터에 담기
-			if (!filesArr[i].is_delete) {
-				formData.append("files", filesArr[i]);
-			}
+		let form = document.querySelector("form");
+		
+		if(!form.checkValidity()){
+			form.reportValidity();
+			return false;
 		}
-	
-		$.ajax({
-			type : 'post',
-			url : 'write.do',
-			dataType : 'json',
-			data : formData,
-			async : true,
-			timeout : 30000,
-			cache : false,
-			headers : {
-				'cache-control' : 'no-cache',
-				'pragma' : 'no-cache'
-			},
-			contentType : false,
-			processData : false,
-			success : function() {
-				alert("파일업로드 성공");
-			},
-			error : function(xhr, desc, err) {
-				alert('에러가 발생 하였습니다.');
-				return;
+		
+		let choice = confirm("기안 작성을 완료하시겠습니까?");
+		
+		if(choice){
+			// 폼데이터 담기
+			var formData = new FormData(form);
+			for (var i = 0; i < filesArr.length; i++) {
+				// 삭제되지 않은 파일만 폼데이터에 담기
+				if (!filesArr[i].is_delete) {
+					formData.append("files", filesArr[i]);
+				}
 			}
-		})
+		
+			$.ajax({
+				type : 'post',
+				url : 'write.do',
+				dataType : 'json',
+				data : formData,
+//				async : true,
+//				timeout : 30000,
+				cache : false,
+				headers : {
+					'cache-control' : 'no-cache',
+					'pragma' : 'no-cache'
+				},
+				contentType : false,
+				processData : false,
+				success : function() {
+					alert("기안 작성이 완료되었습니다.");
+					location.href="main.do"
+				}
+			})
+		}
 	}
 </script>
 <%@ include file="../include/footer.jsp"%>

@@ -9,6 +9,7 @@ public class DocVO {
 	private String content;
 	private String state;
 	private String date;
+	private int rownum;
 	
 	private String name;
 	private String dept;
@@ -21,6 +22,23 @@ public class DocVO {
 	
 	private List<SignLineVO> signLineVO;
 
+	
+	public DocVO() {}
+	
+	public DocVO(int userId, String title, String content) {
+		super();
+		this.userId = userId;
+		this.title = title;
+		this.content = content;
+	}
+	
+	
+	public int getRownum() {
+		return rownum;
+	}
+	public void setRownum(int rownum) {
+		this.rownum = rownum;
+	}
 	public int getDocNo() {
 		return docNo;
 	}

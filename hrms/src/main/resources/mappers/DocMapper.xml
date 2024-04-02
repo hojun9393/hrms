@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.hrms.mappers.docMapper">
+	
+	<select id="selectList_myDoc" parameterType="java.util.Map" resultType="docVO">
+		SELECT docNo, title, content, date, rownum,
+				(CASE state
+					WHEN 0 THEN '대기'
+					WHEN 1 THEN '진행중'
+					WHEN 2 THEN '승인'
+					WHEN 3 THEN '반려'
+					WHEN 9 THEN '철회' END
+				) AS state
+			FROM ( SELECT @ROWNUM:=@ROWNUM+1 AS ROWNUM
+              			, d.*
+						FROM ( SELECT @ROWNUM := 0) R
+								, doc d
+			  			WHERE d.userid = #{userid}
+			  			<if test='startDate != null and endDate == null'>
+							AND startDate <![CDATA[>=]]> #{startDate}
+			 			</if>
+			 			<if test='startDate == null and endDate != null'>
+							AND startDate <![CDATA[<=]]> #{endDate}
+			 			</if>
+						<if test='startDate != null and endDate != null'>
+							AND startDate BETWEEN #{startDate} AND #{endDate}
+			 			</if>
+			 			ORDER BY d.docNo ASC ) SUB
+ 			ORDER BY rownum DESC
+	</select>
+	
+	<insert id="insert" parameterType="docVO">
+		INSERT INTO doc (userid, title, content)
+					values (#{userId}, #{title}, #{content})
+	</insert>
+	
+	<select id="getMaxNoByUserId" parameterType="int" resultType="int">
+		SELECT MAX(docNo) docNo
+			FROM doc
+			WHERE userid = #{userId}
+	</select>
+	
+	<insert id="insertDocFile" parameterType="java.util.List">
+		INSERT INTO docfile (docNo, realNm, originNm) 
+			VALUES
+			<foreach collection="list" index="index" item="item" separator=",">
+				(#{item.docNo}, #{item.realNm}, #{item.originNm})
+			</foreach>
+	</insert>
+	
+	<insert id="insertDocSign" parameterType="java.util.List">
+		INSERT INTO docsign (docNo, signLineNo) 
+			VALUES
+			<foreach collection="list" index="index" item="item" separator=",">
+				(#{item.docNo}, #{item.signLineNo})
+			</foreach>
+	</insert>
+	
+	
+	
+</mapper>
+
+
+
