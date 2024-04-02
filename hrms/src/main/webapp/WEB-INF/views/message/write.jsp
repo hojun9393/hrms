@@ -287,7 +287,7 @@ $(document).ready(function(){
 			let reply = $('input[type=checkbox][id^=checkBox][value='+sendUserId+']', rec);
 			reply.prop('checked', true);
 			recPlusFn();
-		}, 100);
+		}, 500);
 	}
 })
 </script>

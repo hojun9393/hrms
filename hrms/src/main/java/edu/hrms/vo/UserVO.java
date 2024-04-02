@@ -20,6 +20,8 @@ public class UserVO extends User {
 	private String addr;
 	private int keepVaca;
 	private int useVaca;
+	private String deptCase;
+	private String positionCase;
 	
 	public UserVO(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,
@@ -36,7 +38,7 @@ public class UserVO extends User {
 					boolean credentialsNonExpired, boolean accountNonLocked,
 					Collection<? extends GrantedAuthority> authorities, String authority, 
 					String name, String email, String dept, String position, String joinDate, String retireDate, int state,
-					String phone, String addr, int keepVaca, int useVaca) {
+					String phone, String addr, int keepVaca, int useVaca, String deptCase, String positionCase) {
 		
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
 		
@@ -54,9 +56,26 @@ public class UserVO extends User {
 		this.addr = addr;
 		this.keepVaca = keepVaca;
 		this.useVaca = useVaca;
+		this.deptCase = deptCase;
+		this.positionCase = positionCase;
+	}
+	
+	public String getDeptCase() {
+		return deptCase;
 	}
 
-	
+	public void setDeptCase(String deptCase) {
+		this.deptCase = deptCase;
+	}
+
+	public String getPositionCase() {
+		return positionCase;
+	}
+
+	public void setPositionCase(String positionCase) {
+		this.positionCase = positionCase;
+	}
+
 	public String getEmail() {
 		return email;
 	}

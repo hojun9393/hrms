@@ -257,6 +257,14 @@
 			success:function(){
 				$(obj).attr('class', 'text-gray-700');
 				$(obj).next().remove();
+				let attr = $('#msgNav'+msgRNo).children().eq(1).attr('class');
+				if(!attr == ""){
+					$('#msgNav'+msgRNo).children().eq(1).attr('class', '');
+					$('#msgBadge').html($('#msgBadge').html()-1);
+					if($('#msgBadge').html() == 0){
+						$('#msgBadge').remove();
+					}
+				}
 			}
 		});
 	}

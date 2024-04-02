@@ -50,4 +50,8 @@ public class MessageDAO {
 		return sqlSession.delete(namespace+".deleteMsgReceive", msgRNo);
 	}
 	
+	public List<MsgVO> selectMsgAllNav(int userId){
+		return sqlSession.selectList(namespace+".selectMsgAllNav", userId);
+	}
+	
 }

@@ -56,6 +56,8 @@ public class UserAuthenticationService implements UserDetailsService {
 								, user.get("addr").toString()
 								, Integer.parseInt(user.get("keepVaca").toString())
 								, Integer.parseInt(user.get("useVaca").toString())
+								, user.get("deptCase").toString()
+								, user.get("positionCase").toString()
 								);
 		
 		/*UserVO vo = new UserVO(user.get("username").toString()

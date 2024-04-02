@@ -89,8 +89,9 @@ public class MessageController {
 	
 	@RequestMapping(value = "/msgRead.do")
 	@ResponseBody
-	public void msgRead(int msgRNo) {
-		messageService.updateMsgRead(msgRNo);
+	public int msgRead(int msgRNo) {
+		int result = messageService.updateMsgRead(msgRNo);
+		return result;
 	}
 	
 	@RequestMapping(value = "/msgCancel.do", method = RequestMethod.GET)

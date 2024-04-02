@@ -15,4 +15,6 @@ public interface MessageService {
 	List<MsgVO> selectMsgReceiveAll(int userId);
 	int updateMsgRead(int msgRNo);
 	int deleteMsgReceive(int msgRNo);
+	List<MsgVO> selectMsgAllNav(int userId);
+	
 }
