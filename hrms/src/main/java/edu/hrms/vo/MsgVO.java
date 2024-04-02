@@ -2,6 +2,7 @@ package edu.hrms.vo;
 
 public class MsgVO {
 	private int msgNo;
+	private int msgRNo;
 	private int userId;
 	private String content;
 	private String sendDate;
@@ -10,6 +11,12 @@ public class MsgVO {
 	private String dept;
 	private String position;
 	
+	public int getMsgRNo() {
+		return msgRNo;
+	}
+	public void setMsgRNo(int msgRNo) {
+		this.msgRNo = msgRNo;
+	}
 	public String getState() {
 		return state;
 	}

@@ -79,14 +79,14 @@
 									<c:choose>
 										<c:when test="${vo.state eq '0'}">
 											<td>
-												<a class="text-dark font-weight-bold" data-toggle="modal" data-target="#messageModal" href="#">
+												<a class="text-dark font-weight-bold" data-toggle="modal" data-target="#messageModal${vo.msgNo}" href="#" onclick="msgReadFn(${vo.msgRNo},this)">
 												${vo.content}</a> 
 												<span class="d-inline rounded-circle text-white text-center px-1 bg-danger text-xs">N</span>
 											</td>
 										</c:when>
 										<c:otherwise>
 											<td>
-												<a class="text-gray-700" data-toggle="modal" data-target="#messageModal" href="#">
+												<a class="text-gray-700" data-toggle="modal" data-target="#messageModal${vo.msgNo}" href="#">
 												${vo.content}</a>
 											</td>
 										</c:otherwise>
@@ -96,63 +96,6 @@
 									</td>
 								</tr>								
 							</c:forEach>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
-									<span class="text-dark font-weight-bold">김길동</span> <span
-									class="text-xs font-weight-bold">부장</span>
-								</td>
-								<td><a class="text-dark font-weight-bold"
-									data-toggle="modal" data-target="#messageModal" href="#">
-										새로운 안읽은 메시지 </a> <span
-									class="d-inline rounded-circle text-white text-center px-1 bg-danger text-xs">N</span>
-								</td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">인사부</div>
-									<span class="text-dark font-weight-bold">홍길동</span> <span
-									class="text-xs font-weight-bold">팀장</span>
-								</td>
-								<td><a class="text-dark font-weight-bold"
-									href="signView.jsp">새로운 안읽은 메시지</a> <span
-									class="d-inline rounded-circle text-white text-center px-1 bg-danger text-xs">N</span>
-								</td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">영업부</div>
-									<span class="text-dark font-weight-bold">홍길옹</span> <span
-									class="text-xs font-weight-bold">팀원</span>
-								</td>
-								<td><a class="text-dark font-weight-bold"
-									href="signView.jsp">그냥 안읽은 메시지</a></td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">영업부</div>
-									<span class="text-dark font-weight-bold">홍길옹</span> <span
-									class="text-xs font-weight-bold">팀원</span>
-								</td>
-								<td><a class="text-gray-700" href="signView.jsp">읽은 메시지</a>
-								</td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-							</tr>
 						</tbody>
 					</table>
 					<table class="table table-bordered text-center sent d-none"
@@ -167,206 +110,156 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
-									<span class="text-dark font-weight-bold">김길동</span> <span
-									class="text-xs font-weight-bold">부장</span>
-								</td>
-								<td><a class="text-dark" href="signView.jsp">보낸 메시지</a></td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-								<td><span
-									class="card d-inline text-danger py-1 px-2 border-danger font-weight-bold">읽지않음</span>
-								</td>
-								<td><a class="text-dark font-weight-bold"
-									data-toggle="modal" data-target="#messageCancelModal" href="#"><i
-										class="fas fa-fw fa-trash-alt"></i></a></td>
-							</tr>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">인사부</div>
-									<span class="text-dark font-weight-bold">홍길동</span> <span
-									class="text-xs font-weight-bold">팀장</span>
-								</td>
-								<td><a class="text-dark" href="signView.jsp">보낸 메시지</a></td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-								<td><span
-									class="card d-inline text-white py-1 px-4 bg-info font-weight-bold">읽음</span>
-								</td>
-								<td><i class="fas fa-fw fa-ban text-gray-500"></i></td>
-							</tr>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">영업부</div>
-									<span class="text-dark font-weight-bold">홍길옹</span> <span
-									class="text-xs font-weight-bold">팀원</span>
-								</td>
-								<td><a class="text-dark" href="signView.jsp">보낸 메시지</a></td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-								<td><span
-									class="card d-inline text-white py-1 px-4 bg-info font-weight-bold">읽음</span>
-								</td>
-								<td><i class="fas fa-fw fa-ban text-gray-500"></i></td>
-							</tr>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">영업부</div>
-									<span class="text-dark font-weight-bold">홍길옹</span> <span
-									class="text-xs font-weight-bold">팀원</span>
-								</td>
-								<td><a class="text-dark" href="signView.jsp">보낸 메시지</a></td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-								<td><span
-									class="card d-inline text-white py-1 px-4 bg-info font-weight-bold">읽음</span>
-								</td>
-								<td><i class="fas fa-fw fa-ban text-gray-500"></i></td>
-							</tr>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
-									<span class="text-dark font-weight-bold">김길동</span> <span
-									class="text-xs font-weight-bold">부장</span>
-								</td>
-								<td><a class="text-dark" href="signView.jsp">보낸 메시지</a></td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-								<td><span
-									class="card d-inline text-danger py-1 px-2 border-danger font-weight-bold">읽지않음</span>
-								</td>
-								<td><i class="fas fa-fw fa-trash-alt"></i></td>
-							</tr>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
-									<span class="text-dark font-weight-bold">김길동</span> <span
-									class="text-xs font-weight-bold">부장</span>
-								</td>
-								<td><a class="text-dark" href="signView.jsp">보낸 메시지</a></td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-								<td><span
-									class="card d-inline text-danger py-1 px-2 border-danger font-weight-bold">읽지않음</span>
-								</td>
-								<td><i class="fas fa-fw fa-trash-alt"></i></td>
-							</tr>
-							<tr>
-								<td>
-									<div
-										class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
-									<span class="text-dark font-weight-bold">김길동</span> <span
-									class="text-xs font-weight-bold">부장</span>
-								</td>
-								<td><a class="text-dark" href="signView.jsp">보낸 메시지</a></td>
-								<td>
-									<div class="text-dark">2024-03-18 12:28</div>
-								</td>
-								<td><span
-									class="card d-inline text-danger py-1 px-2 border-danger font-weight-bold">읽지않음</span>
-								</td>
-								<td><i class="fas fa-fw fa-trash-alt"></i></td>
-							</tr>
+							<c:forEach items="${recList}" var="vo">
+								<tr>
+									<td>
+										<div
+											class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
+										<span class="text-dark font-weight-bold">${vo.name}</span> <span
+										class="text-xs font-weight-bold">${vo.position}</span>
+									</td>
+									<td><a class="text-dark" data-toggle="modal" data-target="#messageCancelModal${vo.msgRNo}" href="#">${vo.content}</a></td>
+									<td>
+										<div class="text-dark">${vo.sendDate}</div>
+									</td>
+									
+										<c:choose>
+											<c:when test="${vo.state eq '1'}">
+												<td>
+													<span class="card d-inline text-white py-1 px-4 bg-info font-weight-bold">읽음</span>
+												</td>
+												<td>
+													<i class="fas fa-fw fa-ban text-gray-500"></i>
+												</td>
+											</c:when>
+											<c:otherwise>
+												<td>
+													<span class="card d-inline text-danger py-1 px-2 border-danger font-weight-bold">읽지않음</span>
+												</td>
+												<td>
+													<a class="text-dark font-weight-bold" data-toggle="modal" data-target="#messageCancelModal${vo.msgRNo}" href="#">
+													<i class="fas fa-fw fa-trash-alt"></i></a>
+												</td>
+											</c:otherwise>
+										</c:choose>
+									
+								</tr>
+							</c:forEach>
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
-
-	<div class="modal fade" id="messageModal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header bg-primary text-white">
-					<h5 class="modal-title" id="exampleModalLabel">쪽지 읽기</h5>
-					<button class="close" type="button" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true" class="text-white">x</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="row m-2">
-						<div class="col-2 pr-0">
-							<img class="img-profile rounded-circle"
-								src="${pageContext.request.contextPath}/resources/img/undraw_profile.svg" width="50px">
-						</div>
-						<div class="col-5 pl-0">
-							<span class="card border-primary px-2 d-inline text-primary">관리부</span><br>
-							<span class="text-dark font-weight-bold">김아무개</span> <span
-								class="text-xs font-weight-bold">관리자</span>
-						</div>
-						<div class="col-5">2024-03-18 16:08</div>
+	
+	<c:forEach items="${list}" var="vo">
+		<div class="modal fade" id="messageModal${vo.msgNo}" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header bg-primary text-white">
+						<h5 class="modal-title" id="exampleModalLabel">쪽지 읽기</h5>
+						<button class="close" type="button" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true" class="text-white">x</span>
+						</button>
 					</div>
-					<div class="row m-3">
-						<div
-							class="col-12 card bg-gray-200 p-3 text-dark font-weight-bold messageContent">
-							쪽지 내용입니다.</div>
+					<div class="modal-body">
+						<div class="row m-2">
+							<div class="col-2 pr-0">
+								<img class="img-profile rounded-circle"
+									src="${pageContext.request.contextPath}/resources/img/undraw_profile.svg" width="50px">
+							</div>
+							<div class="col-5 pl-0">
+								<span class="card border-primary px-2 d-inline text-primary">${vo.dept}</span><br>
+								<span class="text-dark font-weight-bold">${vo.name}</span> <span
+									class="text-xs font-weight-bold">${vo.position}</span>
+							</div>
+							<div class="col-5">${vo.sendDate}</div>
+						</div>
+						<div class="row m-3">
+							<div
+								class="col-12 card bg-gray-200 p-3 text-dark font-weight-bold messageContent">
+								${vo.content}</div>
+						</div>
 					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button"
-						data-dismiss="modal">닫기</button>
-					<a class="btn btn-primary" href="login.html">답장</a>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button"
+							data-dismiss="modal">닫기</button>
+						<form action="reply.do" method="post">
+							<input type="hidden" name="sendUserId" value="${vo.userId}">
+							<button type="submit" class="btn btn-primary">답장</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-
-	<div class="modal fade" id="messageCancelModal" tabindex="-1"
-		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header bg-primary text-white">
-					<h5 class="modal-title" id="exampleModalLabel">쪽지 읽기</h5>
-					<button class="close" type="button" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true" class="text-white">x</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="row m-2">
-						<div class="col-2 pr-0">
-							<img class="img-profile rounded-circle"
-								src="${pageContext.request.contextPath}/resources/img/undraw_profile.svg" width="50px">
-						</div>
-						<div class="col-5 pl-0">
-							<span class="card border-primary px-2 d-inline text-primary">관리부</span><br>
-							<span class="text-dark font-weight-bold">김아무개</span> <span
-								class="text-xs font-weight-bold">관리자</span>
-						</div>
-						<div class="col-5">2024-03-18 16:08</div>
+	</c:forEach>
+	
+	<c:forEach items="${recList}" var="vo">
+		<div class="modal fade" id="messageCancelModal${vo.msgRNo}" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header bg-primary text-white">
+						<h5 class="modal-title" id="exampleModalLabel">쪽지 읽기</h5>
+						<button class="close" type="button" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true" class="text-white">x</span>
+						</button>
 					</div>
-					<div class="row m-3">
-						<div
-							class="col-12 card bg-gray-200 p-3 text-dark font-weight-bold messageContent">
-							쪽지 내용입니다.</div>
+					<div class="modal-body">
+						<div class="row m-2">
+							<div class="col-2 pr-0">
+								<img class="img-profile rounded-circle"
+									src="${pageContext.request.contextPath}/resources/img/undraw_profile.svg" width="50px">
+							</div>
+							<div class="col-5 pl-0">
+								<span class="card border-primary px-2 d-inline text-primary">${vo.dept}</span><br>
+								<span class="text-dark font-weight-bold">${vo.name}</span> <span
+									class="text-xs font-weight-bold">${vo.position}</span>
+							</div>
+							<div class="col-5">${vo.sendDate}</div>
+						</div>
+						<div class="row m-3">
+							<div
+								class="col-12 card bg-gray-200 p-3 text-dark font-weight-bold messageContent">
+								${vo.content}</div>
+						</div>
 					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button"
-						data-dismiss="modal">닫기</button>
-					<a class="btn btn-primary" href="login.html">발신취소</a>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button"
+							data-dismiss="modal">닫기</button>
+						<c:if test="${vo.state eq '0'}">
+							<a class="btn btn-primary" onclick="msgCancelFn(${vo.msgRNo})">발신취소</a>
+						</c:if>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</c:forEach>
 	<!-- 캘린더 옵션 { -->
 	<script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax.js"></script>
 
 	<script src="${pageContext.request.contextPath}/resources/js/message_main.js"></script>
+	
+	<script>
+	function msgCancelFn(msgRNo){
+		if(confirm("발신 취소하시겠습니까?")){
+			location.href='msgCancel.do?msgRNo='+msgRNo;
+		}
+	}
+	
+	function msgReadFn(msgRNo, obj){
+		$.ajax({
+			url:"msgRead.do",
+			data:{msgRNo:msgRNo},
+			success:function(){
+				$(obj).attr('class', 'text-gray-700');
+				$(obj).next().remove();
+			}
+		});
+	}
+
+	</script>
 	<%@ include file="../include/footer.jsp"%>

@@ -12,4 +12,7 @@ public interface MessageService {
 	int insertMsg(Map<String,Object> map);
 	int insertMsgReceive(Map<String, Object> map);
 	List<MsgVO> selectMsgAll(int userId);
+	List<MsgVO> selectMsgReceiveAll(int userId);
+	int updateMsgRead(int msgRNo);
+	int deleteMsgReceive(int msgRNo);
 }

@@ -41,4 +41,19 @@ public class MessageServiceImpl implements MessageService{
 		return messageDAO.selectMsgAll(userId);
 	}
 
+	@Override
+	public List<MsgVO> selectMsgReceiveAll(int userId) {
+		return messageDAO.selectMsgReceiveAll(userId);
+	}
+
+	@Override
+	public int updateMsgRead(int msgRNo) {
+		return messageDAO.updateMsgRead(msgRNo);
+	}
+
+	@Override
+	public int deleteMsgReceive(int msgRNo) {
+		return messageDAO.deleteMsgReceive(msgRNo);
+	}
+
 }

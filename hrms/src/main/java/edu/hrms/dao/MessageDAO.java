@@ -37,4 +37,17 @@ public class MessageDAO {
 	public List<MsgVO> selectMsgAll(int userId){
 		return sqlSession.selectList(namespace+".selectMsgAll", userId);
 	}
+	
+	public List<MsgVO> selectMsgReceiveAll(int userId){
+		return sqlSession.selectList(namespace+".selectMsgReceiveAll", userId);
+	}
+
+	public int updateMsgRead(int msgRNo) {
+		return sqlSession.update(namespace+".updateMsgRead", msgRNo);
+	}
+
+	public int deleteMsgReceive(int msgRNo) {
+		return sqlSession.delete(namespace+".deleteMsgReceive", msgRNo);
+	}
+	
 }

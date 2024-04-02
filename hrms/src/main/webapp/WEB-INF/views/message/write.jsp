@@ -101,9 +101,8 @@
     </div>
 </form>
 <script>
-
-var dept = "All";
 var flag = false;
+var dept = "All";
 function receiverPlusFn(){
 	if(flag == false){
 		$.ajax({
@@ -161,7 +160,7 @@ function receiverPlusFn(){
 				}
 				receiverList += '</div>';
 				$("#checkBoxList").html($("#checkBoxList").html()+receiverList);
-				
+
 				checkAllFn();
 			}
 		});
@@ -278,6 +277,19 @@ function sumitFn(){
 		$('[name=frm]').submit();
 	}
 }
+
+$(document).ready(function(){
+	let sendUserId = `${sendUserId}`;
+	if(!sendUserId == ""){
+		receiverPlusFn();
+		setTimeout(() => {
+			let rec = $('#receiverCheckBoxAll');
+			let reply = $('input[type=checkbox][id^=checkBox][value='+sendUserId+']', rec);
+			reply.prop('checked', true);
+			recPlusFn();
+		}, 100);
+	}
+})
 </script>
 
 <%@ include file="../include/footer.jsp"%>

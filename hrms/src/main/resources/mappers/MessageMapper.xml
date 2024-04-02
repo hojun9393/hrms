@@ -56,8 +56,35 @@
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position,
-        m.msgNo, m.content, m.sendDate,
+        m.msgNo, m.content, m.sendDate, mr.msgRNo,
         mr.state FROM user u INNER JOIN msg m on u.userid = m.userid INNER JOIN msgReceive mr on m.msgNO = mr.msgNo 
         WHERE mr.userid = #{userId};
 	</select>
+	
+	<select id="selectMsgReceiveAll" parameterType="int" resultType="msgVO">
+		SELECT mr.userid, u.name, 
+		CASE WHEN u.dept = 'M' THEN '관리부'
+   	 	WHEN u.dept = 'D' THEN '개발부'
+        WHEN u.dept = 'S' THEN '영업부'
+        WHEN u.dept = 'P' THEN '기획부'
+        WHEN u.dept = 'H' THEN '인사부'
+        ELSE '부서미정' END AS dept, 
+		CASE WHEN u.position = 'A' THEN '관리자'
+   	 	WHEN u.position = 'C' THEN '대표'
+        WHEN u.position = 'D' THEN '부장'
+        WHEN u.position = 'L' THEN '팀장'
+        WHEN u.position = 'E' THEN '사원'
+        ELSE '직급미정' END AS position,
+		m.msgNo, m.content, m.sendDate, mr.msgRno,
+        mr.state FROM user u INNER JOIN msgReceive mr on u.userid = mr.userid INNER JOIN msg m on mr.msgNo = m.msgNo 
+        WHERE m.userid= #{userId};
+	</select>
+	
+	<update id="updateMsgRead" parameterType="int">
+		UPDATE msgReceive SET state = 1 WHERE msgRNo = #{msgRNo};
+	</update>
+	
+	<delete id="deleteMsgReceive" parameterType="int">
+		DELETE FROM msgReceive WHERE msgRNo = #{msgRNo} AND state = 0;
+	</delete>
 </mapper>

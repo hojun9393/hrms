@@ -36,7 +36,9 @@ public class MessageController {
 		userId = Integer.parseInt(loginUser.getUserid());
 		
 		List<MsgVO> list = messageService.selectMsgAll(userId);
+		List<MsgVO> recList = messageService.selectMsgReceiveAll(userId);
 		model.addAttribute("list", list);
+		model.addAttribute("recList", recList);
 		return "/message/main";
 	}
 	
@@ -46,6 +48,12 @@ public class MessageController {
 		return "/message/write";
 	}
 	
+	@RequestMapping(value = "/reply.do", method = RequestMethod.POST)
+	public String write(Model model, int sendUserId) {
+		model.addAttribute("userId", userId);
+		model.addAttribute("sendUserId", sendUserId);
+		return "/message/write";
+	}
    
 	@RequestMapping(value = "/write.do", method = RequestMethod.POST)
 	public void write(@RequestParam List<Integer> receiver, String content, HttpServletResponse res) throws IOException {
@@ -77,6 +85,24 @@ public class MessageController {
 		map.put("receiverList", receiverList);
 		map.put("deptCount", deptCount);
 		return map;
+	}
+	
+	@RequestMapping(value = "/msgRead.do")
+	@ResponseBody
+	public void msgRead(int msgRNo) {
+		messageService.updateMsgRead(msgRNo);
+	}
+	
+	@RequestMapping(value = "/msgCancel.do", method = RequestMethod.GET)
+	public void msgCancel(int msgRNo, HttpServletResponse res) throws IOException {
+		int result = messageService.deleteMsgReceive(msgRNo);
+		
+		if(result>0) {
+			res.getWriter().append("<script>alert('발신취소 되었습니다.');location.href='main.do'</script>");
+		}else {
+			res.getWriter().append("<script>alert('발신취소하지 못했습니다.');location.href='main.do'</script>");
+		}
+		res.getWriter().flush();
 	}
 	
 }
