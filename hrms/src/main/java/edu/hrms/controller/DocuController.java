@@ -49,7 +49,7 @@ public class DocuController {
 		System.out.println(content);
 		System.out.println(files.size());
 		
-		String path = request.getSession().getServletContext().getRealPath("/resources/upload");
+		String path = request.getSession().getServletContext().getRealPath("/resources/upload"); 
 		File dir = new File(path);
 		if(!dir.exists()) {
 			dir.mkdirs(); // 존재하지 않는 모든 상위 폴더 생성

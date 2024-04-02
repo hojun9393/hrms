@@ -63,7 +63,7 @@ public class VacaController {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
 		
-		List<SignLineVO> signLineList = workService.getSignLineList(login.getUserid(), login.getPosition());
+		List<SignLineVO> signLineList = workService.getSignLineList(login.getUserid(), login.getPosition(), "V");
 		
 		model.addAttribute("signLineList", signLineList);
 		
@@ -84,16 +84,20 @@ public class VacaController {
 		map.put("endTime", endTime);
 		map.put("reason", reason);
 		
-		int vacaNoTest = vacaService.insertVaca(map);
-		System.out.println(vacaNoTest);
-		int vacaNo = vacaService.getMaxNoByUserId(userid);
-		System.out.println(vacaNo);
-		List<SignLineVO> signLineList = vacaService.getSignLineList(userid, login.getPosition());
-		List<VacaSignVO> vacaSignList = vacaService.getVacaSignList(signLineList, vacaNo);
-		
-		vacaService.insertVacaSign(vacaSignList);
-		
-		response.getWriter().append("<script>alert('연차 신청이 완료되었습니다.');location.href='main.do';</script>");
+		// 해당 날짜 연차 신청 여부 확인
+		int cnt = vacaService.checkVacaAppCnt(map);
+		System.out.println("cnt: "+cnt);
+		if(cnt>0) {
+			response.getWriter().append("<script>alert('해당 날짜에 이미 신청한 결재 대기\\(혹은 진행\\)중인 연차 내역이 있습니다.');location.href='main.do';</script>");
+		}else {
+			vacaService.insertVaca(map);
+			int vacaNo = vacaService.getMaxNoByUserId(userid);
+			List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition(), "O");
+			List<VacaSignVO> vacaSignList = vacaService.getVacaSignList(signLineList, vacaNo);
+			
+			vacaService.insertVacaSign(vacaSignList);
+			response.getWriter().append("<script>alert('연차 신청이 완료되었습니다.');location.href='main.do';</script>");
+		}
 		response.getWriter().flush();
 	}
 	
@@ -175,22 +179,6 @@ public class VacaController {
 		
 		List<VacaVO> list = vacaService.selectMyVacaList(myVacaListMap);
 		return list;
-	}
-	
-	@RequestMapping(value = "/test.do")
-	public void test() {
-		// 연차 사용완료로 변경 로직
-		// 1. 업데이트할 연차 리스트를 뽑는다.
-		List<VacaVO> list = vacaService.selectVacaListToUpdate(calcCalendar.getTodayDate());
-		
-		// 2. 1의 연차 리스트의 유저 보유, 사용 연차를 업데이트한다.
-		int updateTimeCnt = vacaService.minusUserVaca(list);
-		
-		// 3. 1의 연차 상태를 사용완료로 변경한다.
-//		int updateStateCnt = vacaService.updateVacaStateToUse(list);
-		
-		System.out.println("user 변경 수: "+updateTimeCnt);
-//		System.out.println("vacation 변경 수: "+updateStateCnt);
 	}
 	
 	
