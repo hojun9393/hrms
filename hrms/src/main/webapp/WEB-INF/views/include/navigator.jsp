@@ -12,7 +12,7 @@
 				<i class="fas fa-building"></i>
 			</div>
 			<div class="sidebar-brand-text mx-3">인사관리시스템</div>
-		</a>
+		</a> 
 	  
 		<!-- Divider -->
 		<hr class="sidebar-divider my-0">
