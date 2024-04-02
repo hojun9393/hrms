@@ -125,7 +125,7 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public List<SignLineVO> getSignLineList(String userid, String position, String type) {
+	public List<SignLineVO> getSignLineList(String userid, String position) {
 		if(position.equals("E")) {
 			position = "C,D,L";
 		}else if(position.equals("L")) {
@@ -137,7 +137,6 @@ public class WorkServiceImpl implements WorkService {
 		Map<String, Object> signLineMap = new HashMap<>();
 		signLineMap.put("userid", userid);
 		signLineMap.put("positionArr", positionArr);
-		signLineMap.put("type", type);
 		return workDAO.getSignLineList(signLineMap);
 	}
 	

@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="../include/navigator.jsp"%>
-<!DOCTYPE html>
 <head>
 	<!-- 데이트피커 { -->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
@@ -10,12 +9,13 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<!-- } -->
 	
-	<link href="${pageContext.request.contextPath}/resources/css/table.css" rel="stylesheet">
 	<!-- 캘린더(데이트피커) 스타일 (jquery-ui.css 파일호출 보다 아래에 있어야 합니다.) { -->
 	<link href="${pageContext.request.contextPath}/resources/css/sign.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/resources/css/table.css" rel="stylesheet">
 	<link href="${pageContext.request.contextPath}/resources/css/button.css" rel="stylesheet">
 	<link href="${pageContext.request.contextPath}/resources/css/pagination.css" rel="stylesheet">
 </head>
+<!DOCTYPE html>
 	<!-- Begin Page Content -->
 	<div class="container-fluid">
 
@@ -126,6 +126,8 @@
 					</div>
 					<!-- Card Body -->
 					<div class="card-body">
+					
+						<a href="test.do">연차 사용완료 테스트</a>
 					
 						<!-- 내 연차 -->
 						<div id="menu1">

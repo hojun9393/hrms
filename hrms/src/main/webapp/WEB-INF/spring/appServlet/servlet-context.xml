@@ -42,8 +42,6 @@
 		
 	</interceptors>
 	
-	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"/>
-	
 	<security:global-method-security secured-annotations="enabled"/>
 	
 	<task:scheduler id="vacaScheduler" pool-size="5" />

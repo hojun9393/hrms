@@ -39,8 +39,8 @@ public class VacaDAO {
 		return sqlSession.selectOne(namespace+".getMaxNoByUserId", userid);
 	}
 	
-	public int checkVacaAppCnt(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".checkVacaAppCnt", map);
+	public List<SignLineVO> getSignLineList(Map<String, Object> map) {
+		return sqlSession.selectList(namespace+".getSignLineList", map);
 	}
 	
 	public int insertVacaSign(List<VacaSignVO> list) {

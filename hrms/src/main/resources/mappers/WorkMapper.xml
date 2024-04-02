@@ -90,7 +90,7 @@
 				, s.type, s.signOrder 
 			FROM signline s 
 			INNER JOIN user u ON s.userid = u.userid
-			WHERE (type=#{type} OR type='A') AND
+			WHERE (type='O' OR type='A') AND
 		  			(SUBSTRING(s.userid,1,2) = SUBSTRING(#{userid},1,2) OR s.userid='99000') AND
 		  			u.position IN 
 		  			<foreach item="item" index="index" collection="positionArr" open="(" separator="," close=")">

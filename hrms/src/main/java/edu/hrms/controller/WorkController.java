@@ -277,7 +277,7 @@ public class WorkController {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
 		
-		List<SignLineVO> signLineList = workService.getSignLineList(login.getUserid(), login.getPosition(), "O");
+		List<SignLineVO> signLineList = workService.getSignLineList(login.getUserid(), login.getPosition());
 		
 		model.addAttribute("signLineList", signLineList);
 		
@@ -305,7 +305,7 @@ public class WorkController {
 			}else {
 				workService.insertOvertime(map);
 				
-				List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition(), "O");
+				List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition());
 				int overtimeNo = workService.getMaxNoByUserId(userid);
 				List<OvertimeSignVO> overtimeSignList = workService.getOvertimeSignList(signLineList, overtimeNo);
 				
@@ -320,7 +320,7 @@ public class WorkController {
 			}else {
 				workService.insertOvertime(map);
 				
-				List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition(), "O");
+				List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition());
 				int overtimeNo = workService.getMaxNoByUserId(userid);
 				List<OvertimeSignVO> overtimeSignList = workService.getOvertimeSignList(signLineList, overtimeNo);
 				

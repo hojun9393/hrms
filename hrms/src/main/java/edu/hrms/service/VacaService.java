@@ -15,8 +15,6 @@ public interface VacaService {
 	
 	Map<String, Integer> myRemainVaca(String userid);
 	
-	int checkVacaAppCnt(Map<String, String> map);
-	
 	int insertVaca(Map<String, String> map);
 	
 	int getMaxNoByUserId(String userid);
@@ -24,6 +22,8 @@ public interface VacaService {
 	int insertVacaSign(List<VacaSignVO> list);
 	
 	VacaVO selectVacaByVacaNo(int vacaNo);
+	
+	List<SignLineVO> getSignLineList(String userid, String position);
 	
 	List<VacaSignVO> getVacaSignList(List<SignLineVO> signLineList, int vacaNo);
 	

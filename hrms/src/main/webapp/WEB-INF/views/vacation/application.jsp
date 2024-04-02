@@ -172,7 +172,8 @@
 	}
 	
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax_Const.js"></script>
+<%-- <script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax_Const.js"></script> --%>
+<script src="${pageContext.request.contextPath}/resources/js/calendar_noWeekends.js"></script>
 <script>
 	function noWeekends (date){
 		return [(date.getDay() != 0 && date.getDay() != 6)];

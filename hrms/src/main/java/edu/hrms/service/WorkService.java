@@ -26,7 +26,7 @@ public interface WorkService {
 	
 	int insertOvertime(Map<String, String> map);
 	
-	List<SignLineVO> getSignLineList(String userid, String position, String type);
+	List<SignLineVO> getSignLineList(String userid, String position);
 	
 	int getMaxNoByUserId(String userid);
 	
