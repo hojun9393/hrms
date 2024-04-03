@@ -6,17 +6,20 @@ import java.util.Map;
 import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.OvertimeVO;
 import edu.hrms.vo.SignLineVO;
+import edu.hrms.vo.SuperSignVO;
 import edu.hrms.vo.WorkVO;
 
 public interface WorkService {
 
 	WorkVO selectMyWork(Map<String, String> map);
 	
+	public Map<String, String> getWorkTimeMap(String userid);
+	
 	String selectMyThisWeekTotalWorkTime(Map<String, String> map);
 	
 	String selectMyThisWeekTotalOvertimeTime(Map<String, String> map);
 	
-	String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(Map<String, String> map);
+	String selectMyThisWeekTotalWorkTimePlusMyTotalOvertimeTime(String myThisWeekTotalWorkTime, String myThisWeekTotalOvertimeTime);
 	
 	int insert(Map<String, String> map);
 
@@ -56,6 +59,7 @@ public interface WorkService {
 	
 	int getCountOfAllWorkList(Map<String, Object> map);
 	
+	public List<? extends SuperSignVO> processList(List<? extends SuperSignVO> list);
 	
-	
+	public Map<String, Object> getCountNowstate(List<? extends SuperSignVO> list);
 }

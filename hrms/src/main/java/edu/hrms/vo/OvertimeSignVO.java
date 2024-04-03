@@ -1,14 +1,16 @@
 package edu.hrms.vo;
 
-public class OvertimeSignVO {
+public class OvertimeSignVO extends SuperSignVO {
 
 	private int overtimeSignNo;
 	private int overtimeNo;
 	private int signLineNo;
 	private int state;
+	
 	private String name;
 	private String dept;
 	private String position;
+	
 	private int signOrder;
 	private int prev_state;
 	

@@ -1,6 +1,7 @@
 package edu.hrms.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,7 +14,7 @@ import edu.hrms.vo.SignLineVO;
 
 public interface DocService {
 
-	List<DocVO> selectList_myDoc(String userid);
+	List<DocVO> selectList(Map<String, String> map);
 	
 	int insert(DocVO vo);
 	
@@ -28,4 +29,11 @@ public interface DocService {
 	List<DocSignVO> getDocSignList(List<SignLineVO> signLineList, int docNo);
 	
 	int insertDocSign(List<DocSignVO> list);
+	
+	List<DocSignVO> getDocSignList(int docNo);
+	
+	DocVO selectDocByDocNo(int docNo);
+	
+	public List<DocFileVO> selectDocFileByDocNo(int docNo);
+	
 }

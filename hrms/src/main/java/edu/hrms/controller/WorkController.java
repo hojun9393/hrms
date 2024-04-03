@@ -73,38 +73,34 @@ public class WorkController {
 			model.addAttribute("end", vo.getEnd());
 		}
 		
-		Map<String, String> workTimeMap = calcCalendar.getFirstLastDays(today);
-		workTimeMap.put("userid",userid);
+		// 로그인 한 사원 근무 시간 얻기
+		Map<String, String> workTimeMap = workService.getWorkTimeMap(userid);
 		String myThisWeekTotalWorkTime = workService.selectMyThisWeekTotalWorkTime(workTimeMap);
 		String myThisWeekTotalOvertimeTime = workService.selectMyThisWeekTotalOvertimeTime(workTimeMap);
-		
-		Map<String, String> myTotalWorkTimeMap = new HashMap<>();
-		myTotalWorkTimeMap.put("workTime", myThisWeekTotalWorkTime);
-		myTotalWorkTimeMap.put("overtimeTime", myThisWeekTotalOvertimeTime);
-		
-		String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime = workService.myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(myTotalWorkTimeMap);
-		
+		String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime = workService.selectMyThisWeekTotalWorkTimePlusMyTotalOvertimeTime(myThisWeekTotalWorkTime, myThisWeekTotalOvertimeTime);
 		model.addAttribute("myThisWeekTotalOvertimeTime", myThisWeekTotalOvertimeTime);
 		model.addAttribute("myThisWeekTotalWorkTimePlusMyTotalOvertimeTime", myThisWeekTotalWorkTimePlusMyTotalOvertimeTime);
 		
+		// 로그인 한 사원 근무 리스트 얻기
 		Map<String, Object> listMap = new HashMap<>();
 		String startDate = null;
-		String endDate = calcCalendar.getTodayDate();
+		String endDate = today;
 		listMap.put("userid", userid);
 		listMap.put("startDate", startDate);
 		listMap.put("endDate", endDate);
 		
 		List<WorkVO> workList = workService.selectAllMyWork(listMap);
-		model.addAttribute("workList", workList); // 로그인 한 사원 근무 리스트
+		model.addAttribute("workList", workList);
 		
 		List<OvertimeVO> overtimeList = workService.selectAllMyOvertime(listMap);
-		model.addAttribute("overtimeList", overtimeList); // 로그인 한 사원 초과근무 리스트
+		model.addAttribute("overtimeList", overtimeList);
 		
 		OvertimeVO ovoAfternoon = workService.overtimeApplicationTodayAfternoon(map);
 		OvertimeVO ovoEvening = workService.overtimeApplicationTodayEvening(map);
 		model.addAttribute("isOvertimeApplicationTodayAfternoon", ovoAfternoon);
 		model.addAttribute("isOvertimeApplicationTodayEvening", ovoEvening);
 		
+		// 팀장 이상 사원만 조회 가능한 근무리스트
 		if(!login.getAuthority().equals("ROLE_EMPLOYEE")) {
 			Map<String, Object> allWorkListMap = new HashMap<>();
 			String[] deptArr = workService.getDeptArr(login.getDept());
@@ -267,9 +263,6 @@ public class WorkController {
 				workService.updateOvertime(map);
 			}
 		}
-		
-		
-		
 	}
 	
 	@RequestMapping(value = "/overtime_application.do", method = RequestMethod.GET)
@@ -338,43 +331,23 @@ public class WorkController {
 		
 		OvertimeVO ovo = workService.selectOvertime(overtimeNo);
 		model.addAttribute("ovo", ovo);
+		
+		// 1. db에서 sign 리스트 얻어온다
 		List<OvertimeSignVO> osList = workService.getOvertimeSignList(overtimeNo);
-		boolean returningFlag = false;
-		for(OvertimeSignVO data : osList) {
-			if(data.getPrev_state()==2 && data.getState()==0) {
-				data.setState(1);
-			}
-			if(returningFlag) {
-				data.setState(9);
-			}
-			if(data.getPrev_state()==3) {
-				data.setState(9);
-				returningFlag = true;
-			}
-		}
+		
+		// 2. 1에서 얻은 리스트 가공한다
+		osList = (List<OvertimeSignVO>) workService.processList(osList);
 		model.addAttribute("osList", osList);
 		
-		int count = 0;
-		String nowState = "대기";
-		for(OvertimeSignVO osvo : osList) {
-			if(osvo.getState()==1) {
-				count++;
-				nowState = "진행";
-			}else if(osvo.getState()==2) {
-				count++;
-				nowState = "진행";
-			}else if(osvo.getState()==3) {
-				nowState = "반려";
-				break;
-			}
-		}
+		// 3. 1에서 얻은 리스트로 결재 현황 카운트, 진행상황  구한다
+		Map<String, Object> map = workService.getCountNowstate(osList);
 		if(ovo.getState().equals("9")) {
-			nowState = "철회";
+			map.put("nowState", "철회");
 		}else if(ovo.getState().equals("2")) {
-			nowState = "승인";
+			map.put("nowState", "승인");
 		}
-		model.addAttribute("count", count);
-		model.addAttribute("nowState", nowState);
+		model.addAttribute("count", map.get("count"));
+		model.addAttribute("nowState", map.get("nowState"));
 		
 		return "/work/overtime_view";
 	}
@@ -413,8 +386,10 @@ public class WorkController {
 		List<?> list = new ArrayList<>();
 		if(obj.equals("1")) {
 			list = workService.selectAllMyWork(listMap);
+			
 		}else if(obj.equals("2")) {
 			list = workService.selectAllMyOvertime(listMap);
+			
 		}else if(obj.equals("3")) {
 			listMap.put("deptArr", workService.getDeptArr(login.getDept()));
 			listMap.put("searchInput", searchInput);

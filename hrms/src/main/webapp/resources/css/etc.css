@@ -171,3 +171,9 @@ textarea.resize-none{
 .doc-content {
 	height:20vh;
 }
+.text-md {
+    font-size: 1.0rem
+}
+.cursor-pointer{
+	cursor:pointer;
+}

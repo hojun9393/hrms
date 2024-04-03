@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +16,7 @@ import edu.hrms.dao.DocDAO;
 import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocSignVO;
 import edu.hrms.vo.DocVO;
+import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.VacaSignVO;
 
@@ -25,8 +27,8 @@ public class DocServiceImpl implements DocService {
 	DocDAO docDAO;
 	
 	@Override
-	public List<DocVO> selectList_myDoc(String userid) {
-		return docDAO.selectList_myDoc(userid);
+	public List<DocVO> selectList(Map<String, String> map) {
+		return docDAO.selectList(map);
 	}
 	
 	@Override
@@ -88,6 +90,7 @@ public class DocServiceImpl implements DocService {
 	}
 	
 	@Override
+	// insert 할 때 사용할 signVO 리스트 생성 메소드
 	public List<DocSignVO> getDocSignList(List<SignLineVO> signLineList, int docNo) {
 		List<DocSignVO> docSignList = new ArrayList<>();
 		for(SignLineVO vo : signLineList) {
@@ -103,5 +106,22 @@ public class DocServiceImpl implements DocService {
 	public int insertDocSign(List<DocSignVO> list) {
 		return docDAO.insertDocSign(list);
 	}
+	
+	@Override
+	public DocVO selectDocByDocNo(int docNo) {
+		return docDAO.selectDocByDocNo(docNo);
+	}
+	
+	@Override
+	// db에서 signVO 리스트 가져올 때 사용하는 메소드
+	public List<DocSignVO> getDocSignList(int docNo) {
+		return docDAO.getDocSignList(docNo);
+	}
+	
+	@Override
+	public List<DocFileVO> selectDocFileByDocNo(int docNo) {
+		return docDAO.selectDocFileByDocNo(docNo);
+	}
+	
 	
 }

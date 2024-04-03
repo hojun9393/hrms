@@ -75,4 +75,9 @@ public class VacaDAO {
 		return sqlSession.update(namespace+".updateVacaStateToUse", list);
 	}
 	
+	
+	public List<VacaVO> selectApprovedVacaList_all(){
+		return sqlSession.selectList(namespace+".selectApprovedVacaList_all");
+	}
+	
 }

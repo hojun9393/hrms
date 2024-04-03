@@ -110,4 +110,9 @@ public class VacaServiceImpl implements VacaService {
 	public int updateVacaStateToUse(List<VacaVO> list) {
 		return vacaDAO.updateVacaStateToUse(list);
 	}
+	
+	@Override
+	public List<VacaVO> selectApprovedVacaList_all() {
+		return vacaDAO.selectApprovedVacaList_all();
+	}
 }

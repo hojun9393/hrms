@@ -3,9 +3,22 @@
 			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.hrms.mappers.docMapper">
 	
-	<select id="selectList_myDoc" parameterType="java.util.Map" resultType="docVO">
-		SELECT docNo, title, content, date, rownum,
-				(CASE state
+	<select id="selectList" parameterType="Map" resultType="docVO">
+		SELECT docNo, title, content, date, rownum, u.name,
+				(CASE 
+					WHEN u.dept = 'M' THEN '대표'
+	            WHEN u.dept = 'D' THEN '개발부'
+	            WHEN u.dept = 'S' THEN '영업부'
+	            WHEN u.dept = 'P' THEN '기획부'
+	            WHEN u.dept = 'H' THEN '인사부' END
+				) AS dept, 
+				(CASE 
+					WHEN u.position = 'C' THEN '대표'
+	            WHEN u.position = 'D' THEN '부장'
+	            WHEN u.position = 'L' THEN '팀장'
+	            WHEN u.position = 'E' THEN '사원' END
+				) AS position,
+				(CASE sub.state
 					WHEN 0 THEN '대기'
 					WHEN 1 THEN '진행중'
 					WHEN 2 THEN '승인'
@@ -16,17 +29,32 @@
               			, d.*
 						FROM ( SELECT @ROWNUM := 0) R
 								, doc d
-			  			WHERE d.userid = #{userid}
+			  			WHERE 1=1
+			  			<if test='userid != null'>
+							AND d.userid = #{userid}
+			 			</if>
 			  			<if test='startDate != null and endDate == null'>
-							AND startDate <![CDATA[>=]]> #{startDate}
+							AND date <![CDATA[>=]]> #{startDate}
 			 			</if>
 			 			<if test='startDate == null and endDate != null'>
-							AND startDate <![CDATA[<=]]> #{endDate}
+							AND date <![CDATA[<]]> DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 			 			</if>
 						<if test='startDate != null and endDate != null'>
-							AND startDate BETWEEN #{startDate} AND #{endDate}
+							AND date BETWEEN #{startDate} AND DATE_ADD(#{endDate}, INTERVAL 1 DAY)
 			 			</if>
-			 			ORDER BY d.docNo ASC ) SUB
+			 			<if test='state != null'>
+			 				AND d.state = '2'
+			 			</if>
+			 			ORDER BY d.docNo ASC ) sub
+			INNER JOIN user u
+				ON sub.userid = u.userid 
+				<if test='position!=null and !position.equals("")'>
+			 		AND u.position = #{position}
+	 			</if>
+	 			<if test='searchVal!=null and !searchVal.equals("")'>
+			 		AND u.name LIKE CONCAT ('%',#{searchVal},'%')
+	 			</if>
+				AND u.dept = #{dept}
  			ORDER BY rownum DESC
 	</select>
 	
@@ -57,7 +85,53 @@
 			</foreach>
 	</insert>
 	
+	<select id="selectDocByDocNo" parameterType="int" resultType="docVO">
+		SELECT d.docNo, d.userid, d.title, d.content, d.date, d.state, u.name,
+				(CASE 
+					WHEN u.dept = 'M' THEN '대표'
+	            WHEN u.dept = 'D' THEN '개발부'
+	            WHEN u.dept = 'S' THEN '영업부'
+	            WHEN u.dept = 'P' THEN '기획부'
+	            WHEN u.dept = 'H' THEN '인사부' END
+				) AS dept,
+				(CASE 
+					WHEN u.position = 'C' THEN '대표'
+	            WHEN u.position = 'D' THEN '부장'
+	            WHEN u.position = 'L' THEN '팀장'
+	            WHEN u.position = 'E' THEN '사원' END
+				) AS position
+			FROM doc d
+			INNER JOIN user u 
+				ON d.userid = u.userid
+			WHERE docNo = #{docNo}
+	</select>
 	
+	<select id="getDocSignList" parameterType="int" resultType="docSignVO">
+		SELECT ds.*, u.name, u.dept, 
+				(CASE 
+					WHEN u.position = 'C' THEN '대표'
+	            WHEN u.position = 'D' THEN '부장'
+	            WHEN u.position = 'L' THEN '팀장'
+	            WHEN u.position = 'E' THEN '사원' END
+				) AS position
+	        	, s.signorder,
+	        	LAG(ds.state) OVER() AS prev_state
+			FROM docsign ds
+			INNER JOIN signline s 
+				ON ds.signlineno = s.signlineno
+		   INNER JOIN user u 
+		   	ON s.userid = u.userid
+		   WHERE ds.docNo = #{docNo}
+		   ORDER BY signOrder
+	</select>
+	
+	<select id="selectDocFileByDocNo" parameterType="int" resultType="docFileVO">
+		SELECT df.* FROM docfile df
+			INNER JOIN doc d
+				ON d.docNo = df.docNo
+			WHERE df.docNo = #{docNo};
+	</select>
+
 	
 </mapper>
 

@@ -88,7 +88,7 @@
 			FROM vacation
 			WHERE state NOT IN (3,9)
 				AND (startDate BETWEEN #{startDate} AND #{endDate}
-	      		OR endDate BETWEEN #{startDate} AND #{endDate})
+	      			OR endDate BETWEEN #{startDate} AND #{endDate})
 	      	AND userid = #{userid}
 	</select>
 	
@@ -173,6 +173,27 @@
 		</foreach>
 	</update>
 	
+	
+	<select id="selectApprovedVacaList_all" parameterType="List" resultType="vacaVO">
+		SELECT v.*, u.name,
+				(CASE 
+					WHEN u.position = 'C' THEN '대표'
+	            WHEN u.position = 'D' THEN '부장'
+	            WHEN u.position = 'L' THEN '팀장'
+	            WHEN u.position = 'E' THEN '사원' END
+				) AS position,
+				(CASE 
+					WHEN u.dept = 'M' THEN '대표'
+	            WHEN u.dept = 'D' THEN '개발부'
+	            WHEN u.dept = 'S' THEN '영업부'
+	            WHEN u.dept = 'P' THEN '기획부'
+	            WHEN u.dept = 'H' THEN '인사부' END
+				) AS dept
+			FROM vacation v
+		   INNER JOIN user u
+				ON v.userid = u.userid
+			WHERE v.state IN (2,7)
+	</select>
 	
 	
 	

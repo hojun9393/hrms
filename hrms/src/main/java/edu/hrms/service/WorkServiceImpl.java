@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.hrms.dao.WorkDAO;
+import edu.hrms.util.CalcCalendar;
 import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.OvertimeVO;
 import edu.hrms.vo.SignLineVO;
+import edu.hrms.vo.SuperSignVO;
 import edu.hrms.vo.WorkVO;
 
 @Service
@@ -20,9 +22,19 @@ public class WorkServiceImpl implements WorkService {
 	@Autowired
 	WorkDAO workDAO;
 	
+	@Autowired
+	CalcCalendar calcCalendar;
+	
 	@Override
 	public WorkVO selectMyWork(Map<String, String> map) {
 		return workDAO.selectMyWork(map);
+	}
+	
+	@Override
+	public Map<String, String> getWorkTimeMap(String userid){
+		Map<String, String> workTimeMap = calcCalendar.getFirstLastDays(calcCalendar.getTodayDate());
+		workTimeMap.put("userid",userid);
+		return workTimeMap;
 	}
 	
 	@Override
@@ -36,8 +48,12 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(Map<String, String> map) {
-		return workDAO.myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(map);
+	public String selectMyThisWeekTotalWorkTimePlusMyTotalOvertimeTime(String myThisWeekTotalWorkTime, String myThisWeekTotalOvertimeTime) {
+		Map<String, String> myTotalWorkTimeMap = new HashMap<>();
+		myTotalWorkTimeMap.put("workTime", myThisWeekTotalWorkTime);
+		myTotalWorkTimeMap.put("overtimeTime", myThisWeekTotalOvertimeTime);
+		
+		return workDAO.myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(myTotalWorkTimeMap);
 	}
 	
 	@Override
@@ -103,8 +119,8 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
+	// insert 할 때 사용할 signVO 리스트 생성 메소드
 	public List<OvertimeSignVO> getOvertimeSignList(List<SignLineVO> signLineList, int overtimeNo) {
-		// insert 할 때 사용하는 메소드
 		List<OvertimeSignVO> overtimeSignList = new ArrayList<>();
 		for(SignLineVO vo : signLineList) {
 			OvertimeSignVO ovo = new OvertimeSignVO();
@@ -116,8 +132,8 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
+	// db에서 signVO 리스트 가져올 때 사용하는 메소드
 	public List<OvertimeSignVO> getOvertimeSignList(int overtimeNo) {
-		// db에서 데이터 가져올 때 사용하는 메소드
 		return workDAO.getOvertimeSignList(overtimeNo);
 	}
 	
@@ -162,5 +178,44 @@ public class WorkServiceImpl implements WorkService {
 		return workDAO.getCountOfAllWorkList(map);
 	}
 	
+	@Override
+	public List<? extends SuperSignVO> processList(List<? extends SuperSignVO> list){
+		boolean returningFlag = false;
+		for(SuperSignVO data : list) {
+			if(data.getPrev_state()==2 && data.getState()==0) {
+				data.setState(1);
+			}
+			if(returningFlag) {
+				data.setState(9);
+			}
+			if(data.getPrev_state()==3) {
+				data.setState(9);
+				returningFlag = true;
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public Map<String, Object> getCountNowstate(List<? extends SuperSignVO> list){
+		Map<String, Object> map = new HashMap<>();
+		int count = 0;
+		String nowState = "대기";
+		for(SuperSignVO vo : list) {
+			if(vo.getState()==1) {
+				count++;
+				nowState = "진행";
+			}else if(vo.getState()==2) {
+				count++;
+				nowState = "진행";
+			}else if(vo.getState()==3) {
+				nowState = "반려";
+				break;
+			}
+		}
+		map.put("count", count);
+		map.put("nowState", nowState);
+		return map;
+	}
 	
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.hrms.service.VacaService;
 import edu.hrms.service.WorkService;
 import edu.hrms.util.CalcCalendar;
+import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.UserVO;
 import edu.hrms.vo.VacaSignVO;
@@ -52,7 +53,6 @@ public class VacaController {
 		model.addAttribute("myRecentVacaApplication", vacaService.myRecentVacaApplication(userid));
 		
 		Map<String, Integer> user = vacaService.myRemainVaca(userid);
-//		System.out.println(user.toString());
 		model.addAttribute("user", user);
 		return "/vacation/main";
 		
@@ -106,43 +106,24 @@ public class VacaController {
 		
 		VacaVO vo = vacaService.selectVacaByVacaNo(vacaNo);
 		model.addAttribute("vo", vo);
+		
+		// 1. db에서 sign 리스트 얻어온다
 		List<VacaSignVO> list = vacaService.getVacaSignList(vacaNo);
-		boolean returningFlag = false;
-		for(VacaSignVO data : list) {
-			if(data.getPrev_state()==2 && data.getState()==0) {
-				data.setState(1);
-			}
-			if(returningFlag) {
-				data.setState(9);
-			}
-			if(data.getPrev_state()==3) {
-				data.setState(9);
-				returningFlag = true;
-			}
-		}
+		
+		// 2. 1에서 얻은 리스트 가공한다
+		list = (List<VacaSignVO>) workService.processList(list);
 		model.addAttribute("list", list);
 		
-		int count = 0;
-		String nowState = "대기";
-		for(VacaSignVO vsvo : list) {
-			if(vsvo.getState()==1) {
-				count++;
-				nowState = "진행";
-			}else if(vsvo.getState()==2) {
-				count++;
-				nowState = "진행";
-			}else if(vsvo.getState()==3) {
-				nowState = "반려";
-				break;
-			}
-		}
+		// 3. 1에서 얻은 리스트로 결재 현황 카운트, 진행상황  구한다
+		Map<String, Object> map = workService.getCountNowstate(list);
+				
 		if(vo.getState().equals("9")) {
-			nowState = "철회";
+			map.put("nowState", "철회");
 		}else if(vo.getState().equals("2")) {
-			nowState = "승인";
+			map.put("nowState", "승인");
 		}
-		model.addAttribute("count", count);
-		model.addAttribute("nowState", nowState);
+		model.addAttribute("count", map.get("count"));
+		model.addAttribute("nowState", map.get("nowState"));
 		
 		return "/vacation/view";
 	}

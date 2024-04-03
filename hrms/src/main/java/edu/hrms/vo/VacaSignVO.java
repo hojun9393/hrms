@@ -1,6 +1,6 @@
 package edu.hrms.vo;
 
-public class VacaSignVO {
+public class VacaSignVO extends SuperSignVO {
 
 	private int vacaSignNo;
 	private int vacaNo;

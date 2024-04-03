@@ -11,6 +11,7 @@ public class DocVO {
 	private String date;
 	private int rownum;
 	
+	private String userid;
 	private String name;
 	private String dept;
 	private String position;
@@ -33,6 +34,12 @@ public class DocVO {
 	}
 	
 	
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
 	public int getRownum() {
 		return rownum;
 	}
@@ -123,4 +130,15 @@ public class DocVO {
 	public void setMySignLineNo(String mySignLineNo) {
 		this.mySignLineNo = mySignLineNo;
 	}
+
+	
+	@Override
+	public String toString() {
+		return "DocVO [docNo=" + docNo + ", userId=" + userId + ", title=" + title + ", content=" + content + ", state="
+				+ state + ", date=" + date + ", rownum=" + rownum + ", userid=" + userid + ", name=" + name + ", dept="
+				+ dept + ", position=" + position + ", mySignState=" + mySignState + ", mySignOrder=" + mySignOrder
+				+ ", stateCount=" + stateCount + ", mySignLineNo=" + mySignLineNo + ", signLineVO=" + signLineVO + "]";
+	}
+	
+	
 }

@@ -120,8 +120,8 @@
 					<div
 						class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 						<h6 class="m-0 font-weight-bold text-primary">
-							<span class="menubar" onclick="displayFn(1)">내 연차</span> 
-							<span class="menubar" onclick="displayFn(2)">연차 조회</span> 
+							<span class="menubar" id="menubar1" onclick="displayFn(1)">내 연차</span> 
+							<span class="menubar" id="menubar2" onclick="displayFn(2)">연차 조회</span> 
 						</h6>
 					</div>
 					<!-- Card Body -->

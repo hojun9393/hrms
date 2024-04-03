@@ -27,7 +27,6 @@
 						<div class="col-lg-6">
 							<div class="p-5">
 								<form class="user" id="form" method="post" onsubmit="return false;" enctype="multipart/form-data">
-								<!-- <form class="user" method="post" action="write.do" enctype="multipart/form-data"> -->
 									<div class="form-group">
 										결재
 										<div class="row">
@@ -50,7 +49,6 @@
 									</div>
 									<div class="form-group insert">
 										첨부파일 
-										<!-- <input type="file" name="uploadFile" multiple /> -->
 										<input type="file" onchange="addFile(this);" multiple />
 										<div class="file-list"></div>
 									</div>
@@ -61,7 +59,6 @@
 										</div>
 										<div class="col-lg-6">
 											<button type="button" onclick="submitForm()"class="btn btn-primary btn-user btn-block">작성완료</button> 
-											<!-- <button class="btn btn-primary btn-user btn-block">작성완료</button> -->
 										</div>
 									</div>
 								</form>

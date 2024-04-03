@@ -34,6 +34,11 @@ public class DocFileVO {
 	}
 	
 	
+	@Override
+	public String toString() {
+		return "DocFileVO [fileNo=" + fileNo + ", docNo=" + docNo + ", realNm=" + realNm + ", originNm=" + originNm
+				+ "]";
+	}
 	
 	
 	

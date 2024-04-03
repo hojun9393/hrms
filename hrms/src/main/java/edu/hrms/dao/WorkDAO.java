@@ -67,18 +67,23 @@ public class WorkDAO {
 	public OvertimeVO selectOvertime(int overtimeNo) {
 		return sqlSession.selectOne(namespace+".selectOvertime", overtimeNo);
 	}
+	
 	public List<OvertimeSignVO> getOvertimeSignList(int overtimeNo){
 		return sqlSession.selectList(namespace+".getOvertimeSignList", overtimeNo);
 	}
+	
 	public int withdrawal(int overtimeNo) {
 		return sqlSession.update(namespace+".withdrawal", overtimeNo);
 	}
+	
 	public int overtimesignDelete(int overtimeNo) {
 		return sqlSession.delete(namespace+".overtimesignDelete", overtimeNo);
 	}
+	
 	public OvertimeVO overtimeApplicationTodayAfternoon(Map<String, String> map) {
 		return sqlSession.selectOne(namespace+".overtimeApplicationTodayAfternoon", map);
 	}
+	
 	public OvertimeVO overtimeApplicationTodayEvening(Map<String, String> map) {
 		return sqlSession.selectOne(namespace+".overtimeApplicationTodayEvening", map);
 	}

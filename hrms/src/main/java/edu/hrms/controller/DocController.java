@@ -1,15 +1,22 @@
 package edu.hrms.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +28,7 @@ import edu.hrms.service.WorkService;
 import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocSignVO;
 import edu.hrms.vo.DocVO;
+import edu.hrms.vo.SearchVO;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.UserVO;
 
@@ -37,12 +45,17 @@ public class DocController {
 	@RequestMapping(value = "/main.do")
 	public String main(Model model, Authentication authentication) {
 		UserVO login = (UserVO) authentication.getPrincipal();
-		String userid = login.getUserid();
 		
-//		List<DocVO> list_my = docService.selectList_myDoc(userid);
-//		model.addAttribute("list_my", list_my);
+		Map<String, String> map = new HashMap<>();
+		map.put("userid", login.getUserid());
+		map.put("dept", login.getDept());
+		List<DocVO> list_my = docService.selectList(map);
 		
-		
+		map.remove("userid");
+		map.put("state", "state");
+		List<DocVO> list_dept = docService.selectList(map);
+		model.addAttribute("list_my", list_my);
+		model.addAttribute("list_dept", list_dept);
 		
 		return "document/main";
 	}
@@ -52,7 +65,6 @@ public class DocController {
 		UserVO login = (UserVO) authentication.getPrincipal();
 		
 		List<SignLineVO> signLineList = workService.getSignLineList(login.getUserid(), login.getPosition(), "D");
-		
 		model.addAttribute("signLineList", signLineList);
 		
 		return "document/write";
@@ -79,8 +91,8 @@ public class DocController {
 		// 2. insert된 docNo 얻어온다
 		int docNo = docService.getMaxNoByUserId(userId);
 		
-		if(files.size()!=0) {
-			// 3. 파일 생성한다.
+		if(files.size()>0) {
+			// 3. 파일 생성 및 파일vo리스트 리턴한다.
 			List<DocFileVO> fileList = docService.createFiles(files, path, docNo);
 			
 			// 4. docfile 테이블에 insert 한다
@@ -100,7 +112,81 @@ public class DocController {
 		
 	}
 	
+	@RequestMapping(value = "/reloadList.do")
+	@ResponseBody
+	public List<DocVO> reloadList(SearchVO searchVO, Authentication authentication){
+		
+		UserVO login = (UserVO)authentication.getPrincipal();
+		if(searchVO.getStartDate()==null || searchVO.getStartDate().equals("")){
+			searchVO.setStartDate(null);
+		}
+		if(searchVO.getEndDate()==null || searchVO.getEndDate().equals("")){
+			searchVO.setEndDate(null);
+		}
+		Map<String, String> map = new HashMap<>();
+		map.put("dept", login.getDept());
+		map.put("startDate", searchVO.getStartDate());
+		map.put("endDate", searchVO.getEndDate());
+		
+		if(searchVO.getListType().equals("my")) {
+			map.put("userid", login.getUserid());
+		}else {
+			map.put("state", "state");
+			map.put("position", searchVO.getPosition());
+			map.put("searchVal", searchVO.getSearchVal());
+		}
+		System.out.println(searchVO.toString());
+		List<DocVO> list = docService.selectList(map);
+
+		return list;
+	}
 	
+	@RequestMapping(value = "/view.do", method = RequestMethod.POST)
+	public String view(Model model, int docNo) {
+		
+		DocVO vo = docService.selectDocByDocNo(docNo);
+		model.addAttribute("vo", vo);
+		
+		// 1. db에서 sign 리스트 얻어온다
+		List<DocSignVO> list = docService.getDocSignList(docNo);
+		
+		// 2. 1에서 얻은 리스트 가공한다
+		list = (List<DocSignVO>) workService.processList(list);
+		model.addAttribute("list", list);
+		
+		// 3. 1에서 얻은 리스트로 결재 현황 카운트, 진행상황  구한다
+		Map<String, Object> map = workService.getCountNowstate(list);
+		if(vo.getState().equals("9")) {
+			map.put("nowState", "철회");
+		}else if(vo.getState().equals("2")) {
+			map.put("nowState", "승인");
+		}
+		model.addAttribute("count", map.get("count"));
+		model.addAttribute("nowState", map.get("nowState"));
+		
+		List<DocFileVO> dfList = docService.selectDocFileByDocNo(docNo);
+		model.addAttribute("dfList", dfList);
+		
+		return "document/view";
+	}
+	
+	@RequestMapping(value = "/download.do", method = RequestMethod.POST)
+	public void download(HttpServletResponse response, HttpServletRequest request, DocFileVO vo) throws IOException {
+		
+		File f = new File(docService.getPath(request), vo.getRealNm());
+        // file 다운로드 설정
+        response.setContentType("application/download");
+        response.setContentLength((int)f.length());
+        response.setHeader("Content-disposition", "attachment; filename=\"" + URLEncoder.encode(vo.getOriginNm(),"UTF-8") + "\"");
+        // response 객체를 통해서 서버로부터 파일 다운로드
+        OutputStream os = response.getOutputStream();
+        // 파일 입력 객체 생성
+        FileInputStream fis = new FileInputStream(f);
+        FileCopyUtils.copy(fis, os);
+        fis.close();
+        os.close();
+		
+	}
 	
 	
 }
