@@ -188,7 +188,7 @@
 						<!-- Dropdown - User Information -->
 						<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
 							aria-labelledby="userDropdown">
-							<a class="dropdown-item" href="#"> 
+							<a class="dropdown-item" href="${pageContext.request.contextPath}/user/main.do"> 
 								<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> 내 정보
 							</a>
 							<div class="dropdown-divider"></div>
@@ -249,12 +249,15 @@
 			
 			<script>
 			function msgReadNavFn(msgRNo, obj){
+				
 				$.ajax({
 					url:"${pageContext.request.contextPath}/message/msgRead.do",
 					data:{msgRNo:msgRNo},
 					success:function(){
 						let attr = $(obj).children().eq(1).attr('class');
 						if(!attr == ""){
+							$('#msg'+msgRNo).attr('class', 'text-gray-700');
+							$('#msg'+msgRNo).next().remove();
 							$(obj).children().eq(1).attr('class', '');
 							$('#msgBadge').html($('#msgBadge').html()-1);
 							if($('#msgBadge').html() == 0){

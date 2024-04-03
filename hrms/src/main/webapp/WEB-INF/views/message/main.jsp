@@ -79,7 +79,7 @@
 									<c:choose>
 										<c:when test="${vo.state eq '0'}">
 											<td>
-												<a class="text-dark font-weight-bold" data-toggle="modal" data-target="#messageModal${vo.msgNo}" href="#" onclick="msgReadFn(${vo.msgRNo},this)">
+												<a class="text-dark font-weight-bold" data-toggle="modal" data-target="#messageModal${vo.msgNo}" id="msg${vo.msgRNo}" href="#" onclick="msgReadFn(${vo.msgRNo},this)">
 												${vo.content}</a> 
 												<span class="d-inline rounded-circle text-white text-center px-1 bg-danger text-xs">N</span>
 											</td>

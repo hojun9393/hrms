@@ -94,7 +94,7 @@
 												<div class="d-inline card text-white text-center px-2 mr-1 bg-danger">오류</div>
 											</c:otherwise>
 										</c:choose>
-										<a href="docView.do?docNo=${vo.docNo}">${vo.content}</a>
+										<a href="docView.do?docNo=${vo.docNo}">${vo.title}</a>
 									</td>
 									<td>
 										<div class="text-dark">${vo.date}</div>

@@ -58,6 +58,7 @@ public class UserAuthenticationService implements UserDetailsService {
 								, Integer.parseInt(user.get("useVaca").toString())
 								, user.get("deptCase").toString()
 								, user.get("positionCase").toString()
+								, user.get("phoneNumber").toString()
 								);
 		
 		/*UserVO vo = new UserVO(user.get("username").toString()
