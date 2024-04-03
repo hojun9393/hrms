@@ -56,4 +56,9 @@ public class MessageServiceImpl implements MessageService{
 		return messageDAO.deleteMsgReceive(msgRNo);
 	}
 
+	@Override
+	public List<MsgVO> selectMsgAllNav(int userId) {
+		return messageDAO.selectMsgAllNav(userId);
+	}
+
 }

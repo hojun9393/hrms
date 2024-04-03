@@ -1,76 +1,96 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
+<head>
+<link href="${pageContext.request.contextPath}/resources/css/user.css" rel="stylesheet" type="text/css">
+</head>
+<body>
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
-	<!-- Content Row -->
-	<div class="row">
+	<!-- Page Heading -->
+	<div class="d-sm-flex align-items-center justify-content-between mb-4">
+		<h1 class="h3 mb-0 text-gray-800">사원</h1>
+	</div>
 
-		<!-- Border Bottom Utilities -->
-		<div class="col-lg-12">
-
-			<div class="card mb-4 py-3 border-bottom-primary">
-				<div class="card-body">
-					<span class="content-head">사원 정보 수정</span>
-				</div>
-			</div>
-			<div class="card o-hidden border-0 shadow-lg my-5">
-				<div class="card-body p-0">
-					<!-- Nested Row within Card Body -->
+	<div class="card o-hidden border-0 shadow-lg">
+		<div class="card-body p-0">
+			<!-- Nested Row within Card Body -->
+			<div class="row">
+				<div class="col-12">
+					<div class="px-5 pt-5">
+						<div class="my-4">
+							<h1 class="d-inline h4 text-gray-900 font-weight-bold">
+							내 정보 수정
+							</h1>
+						</div>
+						<hr>
+					</div>
 					<div class="row">
 						<div class="col-lg-3 d-none d-lg-block"></div>
 						<div class="col-lg-6">
-							<div class="p-5">
-								<form>
-									<div class="row my-info-content">
-										<span class="text-head2">사원번호</span>
-										<span class="text-content">100001</span>
+							<div class="p-1 text-left">
+								<form action="modify.do" method="post">
+									<div class="row m-3">
+										<div class="col-3 align-self-center">
+										<span class="text-dark font-weight-bold">사원번호</span>
+										</div>
+										<input type="text" class="inp2" value="${loginUser.userid}" disabled>
 									</div>
-									<div class="row my-info-content">
-										<span class="text-head2">새 비밀번호</span>
-										<input type="password" class="form-control-custom">
+									<div class="row m-3">
+										<div class="col-3 align-self-center">
+										<span class="text-dark font-weight-bold">현재 비밀번호</span>
+										</div>
+										<input type="password" class="inp2" name="password">
 									</div>
-									<div class="row my-info-content">
-										<span class="text-head2">새 비밀번호 확인</span>
-										<input type="password" class="form-control-custom">
+									<div class="row m-3">
+										<div class="col-3 align-self-center">
+										<span class="text-dark font-weight-bold">새 비밀번호</span>
+										</div>
+										<input type="password" class="inp2">
 									</div>
-									<div class="row my-info-content">
-										<span class="text-head2">연락처</span>
-										<input type="text" class="form-control-custom">
+									<div class="row m-3">
+										<div class="col-3 align-self-center">
+										<span class="text-dark font-weight-bold">새 비밀번호 확인</span>
+										</div>
+										<input type="password" class="inp2">
 									</div>
-									<div class="row my-info-content">
-										<span class="text-head2">이메일</span>
-										<input type="text" class="form-control-custom">
+									<div class="row m-3">
+										<div class="col-3 align-self-center">
+										<span class="text-dark font-weight-bold">연락처</span>
+										</div>
+										<input type="text" class="inp2" value="${loginUser.phoneNumber}">
 									</div>
-									<div class="row my-info-content">
-										<span class="text-head2">주소</span>
-										<input type="text" class="form-control-custom form-control-user">
+									<div class="row m-3">
+										<div class="col-3 align-self-center">
+										<span class="text-dark font-weight-bold">이메일</span>
+										</div>
+										<input type="text" class="inp2" value="${loginUser.email}">
 									</div>
-								<hr>
-									
-									
-								<div class="row">
-									<div class="col-lg-6">
-										<a href="login.html" class="btn btn-secondary btn-user btn-block">뒤로가기</a> 
+									<div class="row m-3">
+										<div class="col-3 align-self-center">
+										<span class="text-dark font-weight-bold">주소</span>
+										</div>
+										<input type="text" class="inp2" value="${loginUser.addr}">
 									</div>
-									<div class="col-lg-6">
-										<a href="login.html" class="btn btn-primary btn-user btn-block">수정완료</a> 
+									<div class="row m-5">
+										<div class="col-12 text-center">
+											<a href="main.do" class="btn btn-secondary btn-user">뒤로가기</a> 
+											<button type="submit" class="btn btn-primary btn-user">수정완료</button> 
+										</div>
 									</div>
-								</div>
 								</form>
-								<hr>
 							</div>
 						</div>
 						<div class="col-lg-3 d-none d-lg-block"></div>
 					</div>
+					
 				</div>
 			</div>
-
 		</div>
-
 	</div>
 </div>
-<!-- /.container-fluid -->
+
 <%@ include file="../include/footer.jsp"%>

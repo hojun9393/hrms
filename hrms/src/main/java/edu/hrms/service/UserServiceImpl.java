@@ -1,13 +1,13 @@
 package edu.hrms.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mysql.cj.jdbc.SuspendableXAConnection;
-
 import edu.hrms.dao.UserDAO;
+import edu.hrms.vo.EmployeeVO;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,6 +18,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Map<String, Object> selectLogin(String username) {
 		return userDAO.selectLogin(username);
+	}
+
+	@Override
+	public List<EmployeeVO> selectUserAll() {
+		return userDAO.selectUserAll();
 	}
 	
 }

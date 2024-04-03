@@ -1,17 +1,25 @@
 package edu.hrms.interceptor;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.hrms.service.MessageService;
+import edu.hrms.vo.MsgVO;
+import edu.hrms.vo.UserVO;
+
 @Component
 public class HomeInterceptor implements HandlerInterceptor {
-
+	
+	@Autowired
+	MessageService messageService;
 	/*
 	 * 1. dispatcher servlet과 controller 사이에서 동작한다.
 	 * 2. 때문에 dispatcher servlet의 bean에 모두 접근이 가능하다.
@@ -61,7 +69,15 @@ public class HomeInterceptor implements HandlerInterceptor {
 				navSelected = "notice";
 			}
 			modelAndView.addObject("navSelected", navSelected);
+			
+			if(!uris[0].contains("login")) {
+				UserVO user = (UserVO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				List<MsgVO> msgList = messageService.selectMsgAllNav(Integer.parseInt(user.getUserid()));
+				
+				modelAndView.addObject("msgList", msgList);
+			}
 		}
+		
 	}
 
 	@Override

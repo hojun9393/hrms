@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="header.jsp"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!-- Page Wrapper -->
 <div id="wrapper">
 	<!-- Sidebar -->
@@ -138,84 +140,56 @@
 							role="button" data-toggle="dropdown" aria-haspopup="true"
 							aria-expanded="false"> 
 							<i class="fas fa-envelope fa-fw"></i> <!-- Counter - Messages -->
-							<span class="badge badge-danger badge-counter">7</span>
+							<c:if test="${fn:length(msgList) > 0}">
+								<span class="badge badge-danger badge-counter" id="msgBadge">${fn:length(msgList)}</span>
+							</c:if>
 						</a> <!-- Dropdown - Messages -->
 						<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
 							aria-labelledby="messagesDropdown">
 							<h6 class="dropdown-header">MESSAGE CENTER</h6>
-							<a class="dropdown-item d-flex align-items-center" href="#">
-								<div class="dropdown-list-image mr-3">
-									<img class="rounded-circle" src="${pageContext.request.contextPath}/resources/img/undraw_profile_1.svg" alt="...">
-									<div class="status-indicator bg-success"></div>
-								</div>
-								<div class="font-weight-bold">
-									<div class="text-truncate">
-										Hi there! I am wondering if you can help me with a problem I've been having.
+							<c:if test="${fn:length(msgList) eq '0'}">
+								<a class="dropdown-item align-items-center">
+									<div class="font-weight-bold text-gray-500 text-center p-3">
+										새로 받은 쪽지가 없습니다.
 									</div>
-									<div class="small text-gray-500">Emily Fowler Â· 58m</div>
-								</div>
-							</a> 
-							<a class="dropdown-item d-flex align-items-center" href="#">
-								<div class="dropdown-list-image mr-3">
-									<img class="rounded-circle" src="${pageContext.request.contextPath}/resources/img/undraw_profile_2.svg" alt="...">
-									<div class="status-indicator"></div>
-								</div>
-								<div>
-									<div class="text-truncate">I have the photos that you ordered last month, how would you like them sent to you?</div>
-									<div class="small text-gray-500">Jae Chun Â· 1d</div>
-								</div>
-							</a> 
-							<a class="dropdown-item d-flex align-items-center" href="#">
-								<div class="dropdown-list-image mr-3">
-									<img class="rounded-circle" src="${pageContext.request.contextPath}/resources/img/undraw_profile_3.svg" alt="...">
-									<div class="status-indicator bg-warning"></div>
-								</div>
-								<div>
-									<div class="text-truncate">
-										Last month's report looks great, I am very happy with the progress so far, keep up the
-										good work!
+								</a> 
+							</c:if>
+							<c:forEach items="${msgList}" var="vo">
+								<a class="dropdown-item d-flex align-items-center" data-toggle="modal" data-target="#messageModalNav${vo.msgNo}" href="#" onclick="msgReadNavFn(${vo.msgRNo},this)" id="msgNav${vo.msgRNo}">
+									<div class="dropdown-list-image mr-3">
+										<img class="rounded-circle" src="${pageContext.request.contextPath}/resources/img/undraw_profile_1.svg" alt="...">
+										<div class="status-indicator bg-success"></div>
 									</div>
-									<div class="small text-gray-500">Morgan Alvarez Â· 2d</div>
-								</div>
-							</a> 
-							<a class="dropdown-item d-flex align-items-center" href="#">
-								<div class="dropdown-list-image mr-3">
-									<img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="...">
-									<div class="status-indicator bg-success"></div>
-								</div>
-								<div>
-									<div class="text-truncate">
-										Am I a good boy? The reason I ask is because someone told me that people say this to all
-										dogs, even if they aren't good...
+									<div class="font-weight-bold">
+										<div class="text-truncate">
+											${vo.content} 
+										</div>
+										<div class="small text-gray-500">${vo.dept} ${vo.name} ${vo.position}</div>
 									</div>
-									<div class="small text-gray-500">Chicken the Dog Â· 2w</div>
-								</div>
-							</a> 
+								</a> 
+							</c:forEach>
 							<a class="dropdown-item text-center small text-gray-500" href="${pageContext.request.contextPath}/message/main.do">메시지 탭으로 이동</a>
 						</div>
 					</li>
 	
 					<div class="topbar-divider d-none d-sm-block"></div>
-	
+					<sec:authorize access="isAuthenticated()">
 					<!-- Nav Item - User Information -->
 					<li class="nav-item dropdown no-arrow">
 						<a class="nav-link dropdown-toggle" href="#" id="userDropdown"
 							role="button" data-toggle="dropdown" aria-haspopup="true"
 							aria-expanded="false"> 
-							<span class="mr-2 d-none d-lg-inline text-gray-600 small">홍길동 부장</span>
+							<span class="mr-2 d-none d-lg-inline text-gray-600 small">
+								<sec:authentication property="principal.name"/> 
+								<sec:authentication property="principal.positionCase"/> 
+							</span>
 							<img class="img-profile rounded-circle" src="${pageContext.request.contextPath}/resources/img/undraw_profile.svg">
 						</a> 
 						<!-- Dropdown - User Information -->
 						<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
 							aria-labelledby="userDropdown">
-							<a class="dropdown-item" href="#"> 
-								<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Profile
-							</a> 
-							<a class="dropdown-item" href="#"> 
-								<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i> Settings
-							</a> 
-							<a class="dropdown-item" href="#"> 
-								<i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i> Activity Log
+							<a class="dropdown-item" href="${pageContext.request.contextPath}/user/main.do"> 
+								<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> 내 정보
 							</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"> 
@@ -223,8 +197,75 @@
 							</a>
 						</div>
 					</li>
+					</sec:authorize>
 	
 				</ul>
 	
 			</nav>
+			
+			<c:forEach items="${msgList}" var="vo">
+				<div class="modal fade" id="messageModalNav${vo.msgNo}" tabindex="-1" role="dialog"
+					aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header bg-primary text-white">
+								<h5 class="modal-title" id="exampleModalLabel">쪽지 읽기</h5>
+								<button class="close" type="button" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true" class="text-white">x</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div class="row m-2">
+									<div class="col-2 pr-0">
+										<img class="img-profile rounded-circle"
+											src="${pageContext.request.contextPath}/resources/img/undraw_profile.svg" width="50px">
+									</div>
+									<div class="col-5 pl-0">
+										<span class="card border-primary px-2 d-inline text-primary">${vo.dept}</span><br>
+										<span class="text-dark font-weight-bold">${vo.name}</span> <span
+											class="text-xs font-weight-bold">${vo.position}</span>
+									</div>
+									<div class="col-5">${vo.sendDate}</div>
+								</div>
+								<div class="row m-3">
+									<div
+										class="col-12 card bg-gray-200 p-3 text-dark font-weight-bold messageContent" style="height:300px;">
+										${vo.content}</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-secondary" type="button"
+									data-dismiss="modal">닫기</button>
+								<form action="${pageContext.request.contextPath}/message/reply.do" method="post">
+									<input type="hidden" name="sendUserId" value="${vo.userId}">
+									<button type="submit" class="btn btn-primary">답장</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+			
+			<script>
+			function msgReadNavFn(msgRNo, obj){
+				
+				$.ajax({
+					url:"${pageContext.request.contextPath}/message/msgRead.do",
+					data:{msgRNo:msgRNo},
+					success:function(){
+						let attr = $(obj).children().eq(1).attr('class');
+						if(!attr == ""){
+							$('#msg'+msgRNo).attr('class', 'text-gray-700');
+							$('#msg'+msgRNo).next().remove();
+							$(obj).children().eq(1).attr('class', '');
+							$('#msgBadge').html($('#msgBadge').html()-1);
+							if($('#msgBadge').html() == 0){
+								$('#msgBadge').remove();
+							}
+						}
+					}
+				});
+			}
+			</script>
 			<!-- End of Topbar -->

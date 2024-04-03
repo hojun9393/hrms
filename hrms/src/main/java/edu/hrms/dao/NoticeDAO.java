@@ -16,19 +16,19 @@ public class NoticeDAO {
 	SqlSession sqlSession;
 	
 	private final String namespace = "edu.hrms.mapper.noticeMapper";
-	
+	//테이블전체 row 리스트로 가져오기
 	public List<NoticeVO> selectNotice(){
 		return sqlSession.selectList(namespace+".selectNotice");
 	}
-	
-	public int insert(NoticeVO noticeVO) {
-		return sqlSession.insert(namespace+".insert", noticeVO);
+	//익스큐트된 쿼리 갯수
+	public int insertNotice(NoticeVO noticeVO) {
+		return sqlSession.insert(namespace+".insertNotice", noticeVO);
 	}
 	
-	public int update(NoticeVO noticeVO) {
-		return sqlSession.update(namespace+".update", noticeVO);
+	public int updateNotice(NoticeVO noticeVO) {
+		return sqlSession.update(namespace+".updateNotice", noticeVO);
 	}
-	
+	//하나만 선택
 	public NoticeVO selectNoticeOne(int noticeNo) {
 		return sqlSession.selectOne(namespace+".selectNoticeOne", noticeNo);
 	}

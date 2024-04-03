@@ -7,6 +7,7 @@
 		SELECT * FROM notice
 			WHERE delyn = 'N'
 	</select>
+	
 	<select id="selectNoticeOne" resultType="noticeVO" parameterType="int">
 		SELECT * FROM notice WHERE noticeNo = #{noticeNo}
 	</select>
@@ -22,13 +23,12 @@
 		               , #{time})
 	</insert>
 	
-	<update id="update" parameterType="noticeVO">
+	<update id="updateNotice" parameterType="noticeVO">
 		UPDATE notice 
 		SET title = #{title},
-			content = #{content},
-			delyn = #{delyn}
+			content = #{content}
 		WHERE noticeNo = #{noticeNo}
-	</update>	
+	</update>
 </mapper>
 
 

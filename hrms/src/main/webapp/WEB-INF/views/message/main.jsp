@@ -79,7 +79,7 @@
 									<c:choose>
 										<c:when test="${vo.state eq '0'}">
 											<td>
-												<a class="text-dark font-weight-bold" data-toggle="modal" data-target="#messageModal${vo.msgNo}" href="#" onclick="msgReadFn(${vo.msgRNo},this)">
+												<a class="text-dark font-weight-bold" data-toggle="modal" data-target="#messageModal${vo.msgNo}" id="msg${vo.msgRNo}" href="#" onclick="msgReadFn(${vo.msgRNo},this)">
 												${vo.content}</a> 
 												<span class="d-inline rounded-circle text-white text-center px-1 bg-danger text-xs">N</span>
 											</td>
@@ -257,6 +257,14 @@
 			success:function(){
 				$(obj).attr('class', 'text-gray-700');
 				$(obj).next().remove();
+				let attr = $('#msgNav'+msgRNo).children().eq(1).attr('class');
+				if(!attr == ""){
+					$('#msgNav'+msgRNo).children().eq(1).attr('class', '');
+					$('#msgBadge').html($('#msgBadge').html()-1);
+					if($('#msgBadge').html() == 0){
+						$('#msgBadge').remove();
+					}
+				}
 			}
 		});
 	}
