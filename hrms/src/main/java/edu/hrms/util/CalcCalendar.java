@@ -206,8 +206,8 @@ public class CalcCalendar {
 		}
 		
 		System.out.println("-----------------------------------------");
-		System.out.println("userid: "+vo.getUserId());
-		System.out.println("총 사용연차 시간: "+totalHours);
+		System.out.println("userid: " + vo.getUserId());
+		System.out.println("총 사용연차 시간: " + totalHours);
 		System.out.println("-----------------------------------------");
 		
 		return totalHours;
