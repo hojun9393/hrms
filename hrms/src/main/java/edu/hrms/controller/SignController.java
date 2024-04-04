@@ -139,7 +139,7 @@ public class SignController {
 					if(vacaVO.get(i).getMySignState().equals("0")) {
 						vacaSignCount++;
 					}
-				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
+				}else if(vacaVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
 					vacaVOList.add(vacaVO.get(i));
 					if(vacaVO.get(i).getMySignState().equals("0")) {
 						vacaSignCount++;

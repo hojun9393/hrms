@@ -2,6 +2,7 @@ package edu.hrms.vo;
 
 public class EmployeeVO {
 	private String userid;
+	private String password;
 	private String name;
 	private String authority;
 	private String email;
@@ -18,6 +19,12 @@ public class EmployeeVO {
 	private String deptCase;
 	private String positionCase;
 	
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
@@ -114,4 +121,14 @@ public class EmployeeVO {
 	public void setPositionCase(String positionCase) {
 		this.positionCase = positionCase;
 	}
+	
+	@Override
+	public String toString() {
+		return "EmployeeVO [userid=" + userid + ", password=" + password + ", name=" + name + ", authority=" + authority
+				+ ", email=" + email + ", dept=" + dept + ", position=" + position + ", joinDate=" + joinDate
+				+ ", retireDate=" + retireDate + ", state=" + state + ", phone=" + phone + ", phoneNumber="
+				+ phoneNumber + ", addr=" + addr + ", keepVaca=" + keepVaca + ", useVaca=" + useVaca + ", deptCase="
+				+ deptCase + ", positionCase=" + positionCase + "]";
+	}
+	
 }

@@ -24,5 +24,10 @@ public class UserServiceImpl implements UserService {
 	public List<EmployeeVO> selectUserAll() {
 		return userDAO.selectUserAll();
 	}
+
+	@Override
+	public int updateUser(EmployeeVO employee) {
+		return userDAO.updateUser(employee);
+	}
 	
 }

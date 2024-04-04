@@ -23,6 +23,7 @@ public class UserVO extends User {
 	private int useVaca;
 	private String deptCase;
 	private String positionCase;
+	private String password;
 	
 	public UserVO(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,
@@ -60,8 +61,17 @@ public class UserVO extends User {
 		this.deptCase = deptCase;
 		this.positionCase = positionCase;
 		this.phoneNumber = phoneNumber;
+		this.password = password;
 	}
 	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}

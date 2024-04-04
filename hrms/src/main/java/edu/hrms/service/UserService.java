@@ -10,4 +10,6 @@ public interface UserService {
 	public Map<String, Object> selectLogin(String username);
 
 	public List<EmployeeVO> selectUserAll();
+
+	public int updateUser(EmployeeVO employee);
 }
