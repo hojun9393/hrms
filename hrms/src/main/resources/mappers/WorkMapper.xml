@@ -309,9 +309,14 @@
 							<if test='startDate != null'>
 								AND w.date BETWEEN #{startDate} AND #{endDate}
 				 			</if>
- 			
-				 			<if test='searchInput != null'>
-								AND u.name LIKE CONCAT('%', #{searchInput}, '%')
+				 			<if test='category_dept!=null and !category_dept.equals("")'>
+						 		AND u.dept = #{category_dept}
+				 			</if>
+				 			<if test='category_position!=null and !category_position.equals("")'>
+						 		AND u.position = #{category_position}
+				 			</if>
+				 			<if test='searchVal != null'>
+								AND u.name LIKE CONCAT('%', #{searchVal}, '%')
 				 			</if>
  				) temp
  		GROUP BY date, wno
@@ -336,7 +341,22 @@
  			<if test='searchInput != null'>
 				AND u.name LIKE CONCAT('%', #{searchInput}, '%')
  			</if>
+ 			<if test='category_dept!=null and !category_dept.equals("")'>
+		 		AND u.dept = #{category_dept}
+ 			</if>
+ 			<if test='category_position!=null and !category_position.equals("")'>
+		 		AND u.position = #{category_position}
+ 			</if>
+ 			<if test='searchVal != null'>
+				AND u.name LIKE CONCAT('%', #{searchVal}, '%')
+ 			</if>
 	</select>
+	
+	<update id="updateWork_admin" parameterType="Map">
+		UPDATE work
+			SET end = #{end}
+			WHERE wno = #{wNo}
+	</update>
 	
 </mapper>
 

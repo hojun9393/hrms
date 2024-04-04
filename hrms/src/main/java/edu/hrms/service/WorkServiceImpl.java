@@ -218,4 +218,10 @@ public class WorkServiceImpl implements WorkService {
 		return map;
 	}
 	
+	
+	@Override
+	public int updateWork_admin(Map<String, String> map) {
+		return workDAO.updateWork_admin(map);
+	}
+	
 }

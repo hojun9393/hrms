@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="../include/navigator.jsp"%>
 <!DOCTYPE html>
@@ -258,7 +257,7 @@
 								<input type="text" name="" value="${today }" id="endDate3" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(3,1)"> 
 								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate3)" style="cursor: pointer;"></i>
 								<div id="searchDiv" class="float-right">
-									<input type="text" id="searchInput">
+									<input type="text" id="searchVal">
 									<button type="button" onclick="reloadListFn(3,1)">검색</button>
 								</div>
 							</div>
@@ -403,7 +402,7 @@
 	function reloadListFn(obj, pNum){
 		let startDate;
 		let endDate;
-		let searchInput;
+		let searchVal;
 		if(obj==1){
 			startDate = $("#startDate1").val();
 			endDate = $("#endDate1").val();
@@ -413,12 +412,12 @@
 		}else if(obj==3){
 			startDate = $("#startDate3").val();
 			endDate = $("#endDate3").val();
-			searchInput = $("#searchInput").val();
+			searchVal = $("#searchVal").val();
 		}
 		
 		$.ajax({
 			url:"reloadList.do",
-			data: {startDate : startDate, endDate : endDate, obj : obj, searchInput : searchInput, pNum : pNum},
+			data: {startDate : startDate, endDate : endDate, obj : obj, searchVal : searchVal, pNum : pNum},
 			success:function(data){
 				if(obj==1){
 					let html = "";

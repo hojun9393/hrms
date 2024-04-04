@@ -93,4 +93,24 @@
 	background-color: #e74a3b;
 	border-radius: 50%;
 	content: '';
+} 
+
+.selectDate {
+	position: relative;
+	color: #FFFFFF;
+	z-index: 0;
+}
+
+.selectDate::before {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: -1;
+	width: 30px;
+	height: 30px;
+	display: block;
+	background-color: #8cc6ff;
+	border-radius: 50%;
+	content: '';
 }

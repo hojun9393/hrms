@@ -9,7 +9,22 @@ public class SearchVO {
 	private String searchVal;
 	private String dept;
 	
+	private String category_dept;
+	private String category_position;
 	
+	
+	public String getCategory_dept() {
+		return category_dept;
+	}
+	public void setCategory_dept(String category_dept) {
+		this.category_dept = category_dept;
+	}
+	public String getCategory_position() {
+		return category_position;
+	}
+	public void setCategory_position(String category_position) {
+		this.category_position = category_position;
+	}
 	public String getDept() {
 		return dept;
 	}
@@ -51,7 +66,8 @@ public class SearchVO {
 	@Override
 	public String toString() {
 		return "SearchVO [startDate=" + startDate + ", endDate=" + endDate + ", listType=" + listType + ", position="
-				+ position + ", searchVal=" + searchVal + ", dept=" + dept + "]";
+				+ position + ", searchVal=" + searchVal + ", dept=" + dept + ", category_dept=" + category_dept
+				+ ", category_position=" + category_position + "]";
 	}
 	
 	

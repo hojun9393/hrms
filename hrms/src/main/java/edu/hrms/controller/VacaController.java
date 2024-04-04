@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,10 +40,31 @@ public class VacaController {
 	@Autowired
 	CalcCalendar calcCalendar;
 	
+	@Secured("ROLE_ADMIN")
+	@RequestMapping(value = "/main_admin.do", method = RequestMethod.GET)
+	public String main_admin(Model model) {
+		
+		List<Map<String, Object>> list = vacaService.selectAllRemainVacaList();
+		model.addAttribute("list", list);
+		
+		return "/vacation/main_admin";
+	}
+	
+	
 	@RequestMapping(value = "/main.do")
-	public String main(Model model, Authentication authentication) {
+	public String main(Model model, Authentication authentication, HttpServletResponse response) {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
+		
+		// 로그인 한 계정이 관리자일 경우 관리자 연차 페이지로 이동
+		if(login.getAuthority().equals("ROLE_ADMIN")) {
+			try {
+				response.sendRedirect("main_admin.do");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		String userid = login.getUserid();
 		
 		Map<String, String> myVacaListMap = new HashMap<>();
@@ -92,7 +114,7 @@ public class VacaController {
 		}else {
 			vacaService.insertVaca(map);
 			int vacaNo = vacaService.getMaxNoByUserId(userid);
-			List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition(), "O");
+			List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition(), "V");
 			List<VacaSignVO> vacaSignList = vacaService.getVacaSignList(signLineList, vacaNo);
 			
 			vacaService.insertVacaSign(vacaSignList);

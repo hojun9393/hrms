@@ -39,7 +39,9 @@ public interface VacaService {
 	
 	int updateVacaStateToUse(List<VacaVO> list);
 	
-	public List<VacaVO> selectApprovedVacaList_all();
+	public List<VacaVO> selectAllVacaList(int[] stateArr);
+	
+	public List<Map<String, Object>> selectAllRemainVacaList();
 	
 	
 }

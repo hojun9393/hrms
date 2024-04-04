@@ -1,6 +1,8 @@
 package edu.hrms.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,11 +67,21 @@ public class HomeController {
 		// 로그인 한 회원
 		Map<String, Integer> user = vacaService.myRemainVaca(userid);
 		model.addAttribute("user", user);
-		// 달력에 연차 표시
-		List<VacaVO> list = vacaService.selectApprovedVacaList_all();
+		
+		// 달력에 표시할 연차자 리스트
+		List<VacaVO> list = vacaService.selectAllVacaList(new int[] {2,7});
+		
+		// 오늘 연차자 리스트
+		List<VacaVO> todayList = new ArrayList<>();
+		for(VacaVO data : list) {
+			boolean b = calcCalendar.isParam1BetweenParam2AndParam3_date
+						(today, data.getStartDate(), data.getEndDate());
+			if(b) {
+				todayList.add(data);
+			}
+		}
 		model.addAttribute("list", list);
-		
-		
+		model.addAttribute("todayList", todayList);
 		
 		return "home";
 	}

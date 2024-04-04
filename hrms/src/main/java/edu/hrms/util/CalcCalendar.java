@@ -108,13 +108,13 @@ public class CalcCalendar {
 	    Calendar cal2 = Calendar.getInstance();
 	    cal2.setTime(dateEndDate);
 	    int vacationDays = 1;
-	    int weekendDays = 0;
+//	    int weekendDays = 0;
 
 	    while (cal1.before(cal2)) {
 	        if (Calendar.SATURDAY != cal1.get(Calendar.DAY_OF_WEEK) && (Calendar.SUNDAY != cal1.get(Calendar.DAY_OF_WEEK))) {
 	        	vacationDays++;
 	        }else {
-	        	weekendDays++;
+//	        	weekendDays++;
 	        }
 	        cal1.add(Calendar.DATE, 1);
 	        startDate = sdf_date.format(cal1.getTime());
@@ -211,10 +211,31 @@ public class CalcCalendar {
 		System.out.println("-----------------------------------------");
 		
 		return totalHours;
-		
 	}
 	
-	
+	public boolean isParam1BetweenParam2AndParam3_date(String param1, String param2, String param3) {
+		
+		Date date1;
+		Date date2;
+		Date date3;
+		boolean result = false;
+		try {
+			date1 = sdf_date.parse(param1);
+			date2 = sdf_date.parse(param2);
+			date3 = sdf_date.parse(param3);
+			
+			if(date1.compareTo(date2)==0 || date1.after(date2)) {
+				if(date1.compareTo(date3)==0 || date1.before(date3)) {
+					result = true;
+				}
+			}
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 	
 	
 	

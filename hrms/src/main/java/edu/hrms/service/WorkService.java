@@ -62,4 +62,7 @@ public interface WorkService {
 	public List<? extends SuperSignVO> processList(List<? extends SuperSignVO> list);
 	
 	public Map<String, Object> getCountNowstate(List<? extends SuperSignVO> list);
+	
+	
+	public int updateWork_admin(Map<String, String> map);
 }

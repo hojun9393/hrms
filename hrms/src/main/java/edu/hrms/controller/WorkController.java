@@ -2,6 +2,7 @@ package edu.hrms.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import edu.hrms.util.CalcCalendar;
 import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.OvertimeVO;
 import edu.hrms.vo.PagingVO;
+import edu.hrms.vo.SearchVO;
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.UserVO;
 import edu.hrms.vo.WorkVO;
@@ -38,20 +40,15 @@ public class WorkController {
 	CalcCalendar calcCalendar;
 	
 	
-	@Secured("ROLE_ADMIN")
-	@RequestMapping(value = "/main_admin.do", method = RequestMethod.GET)
-	public String main_admin() {
-		
-		return "main_admin";
-	}
-	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
 	public String main(Model model, Authentication authentication, HttpServletResponse response) {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
+		
+		// 로그인 한 계정이 관리자일 경우 관리자 근무 페이지로 이동
 		if(login.getAuthority().equals("ROLE_ADMIN")) {
 			try {
-				response.sendRedirect("/work/main_admin.do");
+				response.sendRedirect("main_admin.do");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -109,7 +106,7 @@ public class WorkController {
 			allWorkListMap.put("endDate", endDate);
 			int cnt = workService.getCountOfAllWorkList(allWorkListMap);
 			
-			PagingVO pagingVO = new PagingVO(1, cnt, 5);
+			PagingVO pagingVO = new PagingVO(1, cnt, 10);
 			allWorkListMap.put("pagingVO",pagingVO);
 			
 			List<WorkVO> allWorkList = workService.selectAllWork(allWorkListMap);
@@ -371,17 +368,17 @@ public class WorkController {
 	
 	@RequestMapping(value = "/reloadList.do")
 	@ResponseBody
-	public Object reloadList(String startDate, String endDate, String obj, String searchInput, String pNum, Authentication authentication) {
+	public Object reloadList(String obj, SearchVO searchVO, String pNum, Authentication authentication) {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
 		
 		Map<String, Object> listMap = new HashMap<>();
 		listMap.put("userid", login.getUserid());
-		listMap.put("startDate", startDate);
-		if(endDate==null || endDate.equals("")) {
-			endDate = calcCalendar.getTodayDate();
+		listMap.put("startDate", searchVO.getStartDate());
+		if(searchVO.getEndDate()==null || searchVO.getEndDate().equals("")) {
+			searchVO.setEndDate(calcCalendar.getTodayDate());
 		}
-		listMap.put("endDate", endDate);
+		listMap.put("endDate", searchVO.getEndDate());
 		
 		List<?> list = new ArrayList<>();
 		if(obj.equals("1")) {
@@ -392,9 +389,12 @@ public class WorkController {
 			
 		}else if(obj.equals("3")) {
 			listMap.put("deptArr", workService.getDeptArr(login.getDept()));
-			listMap.put("searchInput", searchInput);
+			listMap.put("category_dept", searchVO.getCategory_dept());
+			listMap.put("category_position", searchVO.getCategory_position());
+			listMap.put("searchVal", searchVO.getSearchVal());
+			
 			int cnt = workService.getCountOfAllWorkList(listMap);
-			PagingVO pagingVO = new PagingVO(Integer.parseInt(pNum), cnt, 5);
+			PagingVO pagingVO = new PagingVO(Integer.parseInt(pNum), cnt, 10);
 			listMap.put("pagingVO", pagingVO);
 			
 			list = workService.selectAllWork(listMap);
@@ -408,6 +408,41 @@ public class WorkController {
 	}
 
 	
+	/////////////////////////// 관리자 ///////////////////////////
+	@Secured("ROLE_ADMIN")
+	@RequestMapping(value = "/main_admin.do", method = RequestMethod.GET)
+	public String main_admin(Model model, Authentication authentication) {
+		
+		UserVO login = (UserVO)authentication.getPrincipal();
+		
+		Map<String, Object> allWorkListMap = new HashMap<>();
+		String[] deptArr = workService.getDeptArr(login.getDept());
+		allWorkListMap.put("deptArr", deptArr);
+		allWorkListMap.put("startDate", null);
+		allWorkListMap.put("endDate", calcCalendar.getTodayDate());
+		
+		int cnt = workService.getCountOfAllWorkList(allWorkListMap);
+		PagingVO pagingVO = new PagingVO(1, cnt, 10);
+		allWorkListMap.put("pagingVO",pagingVO);
+		
+		List<WorkVO> allWorkList = workService.selectAllWork(allWorkListMap);
+		
+		model.addAttribute("pagingVO", pagingVO);
+		model.addAttribute("allWorkList", allWorkList);
+		
+		return "/work/main_admin";
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@ResponseBody
+	@RequestMapping(value = "/workInsert_admin.do", method = RequestMethod.POST)
+	public int workInsert(String wNo, String end) {
+		Map<String, String> map = Map.of(
+                "wNo", wNo,
+                "end", end
+        );
+		return workService.updateWork_admin(map);
+	}
 	
 	
 }

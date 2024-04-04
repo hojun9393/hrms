@@ -117,11 +117,9 @@
 			<div class="col-xl-12 col-lg-12">
 				<div class="card shadow mb-4">
 					<!-- Card Header - Dropdown -->
-					<div
-						class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 						<h6 class="m-0 font-weight-bold text-primary">
-							<span class="menubar" id="menubar1" onclick="displayFn(1)">내 연차</span> 
-							<span class="menubar" id="menubar2" onclick="displayFn(2)">연차 조회</span> 
+							<span class="menubar" id="menubar1">내 연차</span> 
 						</h6>
 					</div>
 					<!-- Card Body -->
@@ -130,10 +128,10 @@
 						<!-- 내 연차 -->
 						<div id="menu1">
 							<div class="mb-3 col">
-								<input type="text" name="" id="startDate1" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()">
-								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate1)" style="cursor: pointer;"></i> ~ 
-								<input type="text" name="" id="endDate1" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()"> 
-								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate1)" style="cursor: pointer;"></i>
+								<input type="text" name="" id="startDate" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()">
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)" style="cursor: pointer;"></i> ~ 
+								<input type="text" name="" id="endDate" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()"> 
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate)" style="cursor: pointer;"></i>
 								<div class="float-right">
 									<a href="application.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
 										<i class="fas fa-fw fa-plane"></i> 연차 신청
@@ -154,7 +152,7 @@
 										<th>내역</th>
 									</tr>
 								</thead>
-								<tbody class="outputBody1">
+								<tbody class="outputBody">
 									<c:forEach var="i" items="${myVacaList }">
 										<tr>
 											<td>${i.startDate } ${i.startDate_dayOfWeek} ~ ${i.endDate } ${i.endDate_dayOfWeek}</td>
@@ -195,94 +193,24 @@
 							</table>
 						</div>
 						
-						<!-- 연차 조회(관리자) -->
-						<div id="menu2" class="display-none">
-							<div>
-								2024-03-02 ~ 2024-03-13
-								<i class="fas fa-calendar fa-2x text-gray-300" onclick="openModal()"></i>
-								<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
-									<i class="fas fa-fw fa-plane"></i> 연차 부여
-								</a>
-							</div>
-							<table>
-								<thead>
-									<tr>
-										<th>부서</th>
-										<th>직급</th>
-										<th>이름</th>
-										<th>총 연차</th>
-										<th>사용 연차</th>
-										<th>잔여 연차</th>
-										<th>내역</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>개발부</td>
-										<td>사원</td>
-										<td>김사원</td>
-										<td>14일</td>
-										<td>7일</td>
-										<td>7일</td>
-										<td><img id="modal-open" class="icon-box" src="${pageContext.request.contextPath}/resources/img/document_icon.png"></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	
-
-	<!--========================= 모달창 ======================-->
-	<div class="popup-wrap" id="popup">
-		<div class="popup">
-			<div class="popup-head">
-				<span class="head-title">??님의 연차 내역</span>
-			</div>
-			<div class="popup-body">
-				<div class="body-content">
-					<div class="body-contentbox">
-						<div class="popup-content-box">
-							<span class="text-head">2023-03-02~2023-03-03 </span>
-							<span class="text-content">휴가</span>
-							<span class="text-content-small">2일</span>
-						</div>
-						<div class="popup-content-box">
-							<span class="text-head">2023-03-02~2023-03-03 </span>
-							<span class="text-content">휴가</span>
-							<span class="text-content-small">2일</span>
-						</div>
-						<div class="popup-content-box">
-							<span class="text-head">2023-03-02~2023-03-03 </span>
-							<span class="text-content">휴가</span>
-							<span class="text-content-small">2일</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="popup-foot">
-				<span class="pop-btn close float-right close-custom" id="close">창 닫기</span>
-			</div>
-		</div>
-	</div>
-	<!--========================= 모달창 ======================-->
-							
 <!-- End of Main Content -->
 
 <script>
 	function reloadListFn(obj){
-		let startDate = $("#startDate1").val();
-		let endDate = $("#endDate1").val();
+		let startDate = $("#startDate").val();
+		let endDate = $("#endDate").val();
 		$.ajax({
 			url:"reloadList.do",
 			data: {startDate : startDate, endDate : endDate},
 			success:function(data){
 				let html = "";
-				let outputBody = $(".outputBody1");
+				let outputBody = $(".outputBody");
 				for(let i=0; i<data.length; i++){
 					html += "<tr>";
 					html += `<td>\${data[i].startDate} ~ \${data[i].endDate}</td>`;

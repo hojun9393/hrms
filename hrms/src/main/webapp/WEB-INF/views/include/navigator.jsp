@@ -44,12 +44,14 @@
 				<span>기안</span>
 			</a>
 		</li>
+		<sec:authorize access="!hasRole('ROLE_EMPLOYEE')">
 		<li class="nav-item ${ navSelected.equals('sign') ? 'active' : '' }">
 			<a class="nav-link" href="${pageContext.request.contextPath}/sign/main.do"> 
 				<i class="fas fa-fw fa-file-signature"></i> 
 				<span>결재</span>
 			</a>
 		</li>
+		</sec:authorize>
 		<li class="nav-item ${ navSelected.equals('user') ? 'active' : '' }">
 			<a class="nav-link" href="${pageContext.request.contextPath}/user/main.do"> 
 				<i class="fas fa-fw fa-users"></i> 

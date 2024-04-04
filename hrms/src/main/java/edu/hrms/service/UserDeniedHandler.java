@@ -15,7 +15,7 @@ public class UserDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-		System.out.println("권한 없음");
+		System.out.println("UserDeniedHandler 들어옴");
 		
 		response.setContentType("text/html; charset=utf-8");
 		response.setCharacterEncoding("UTF-8");
@@ -23,7 +23,5 @@ public class UserDeniedHandler implements AccessDeniedHandler {
 		response.getWriter().flush();
 		
 	}
-
-	
 	
 }

@@ -105,4 +105,9 @@ public class WorkDAO {
 		return sqlSession.selectOne(namespace+".getCountOfAllWorkList", map);
 	}
 	
+	
+	public int updateWork_admin(Map<String, String> map) {
+		return sqlSession.update(namespace+".updateWork_admin", map);
+	}
+	
 }

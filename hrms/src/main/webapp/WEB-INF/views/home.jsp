@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="include/navigator.jsp"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <head>
 	<link href="${pageContext.request.contextPath}/resources/css/etc.css" rel="stylesheet">
@@ -14,6 +13,7 @@
 		<h1 class="h3 mb-0 text-gray-800">홈</h1>
 	</div>
 
+	<sec:authorize access="!hasRole('ROLE_ADMIN')">
 	<!-- Content Row -->
 	<div class="row">
 
@@ -108,9 +108,9 @@
 			</div>
 		</div>
 	</div>
+	</sec:authorize>
 
 	<!-- Content Row -->
-
 	<div class="row">
 
 		<!-- Area Chart -->
@@ -159,26 +159,28 @@
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 					<h6 class="m-0 font-weight-bold text-primary">연차 사원</h6>
 				</div>
+				
 				<!-- Card Body -->
-				<div class="card-body">
-					<div class="h4 mb-3 ml-2 font-weight-bold text-gray-800 today-date">03월 12일</div>
-					<div class="card mt-3 bg-light text-black">
-						<div class="card-body">
-							<div class="d-inline card bg-info text-white text-center px-2">사원</div>
-							홍길동
-							<div class="d-inline ml-5">연차 신청</div>
-						</div>
-					</div>
-					<div class="card mt-3 bg-light text-black">
-						<div class="card-body">
-							<div class="d-inline card bg-info text-white text-center px-2">사원</div>
-							홍길동
-							<div class="d-inline ml-5">연차 신청</div>
-						</div>
-					</div>
+				<!-- 연차자 명단 출력 div -->
+				<div id="vaca-list" class="card-body">
+					<div id="vaca-date" class="h4 mb-3 ml-2 font-weight-bold text-gray-800 today-date">${today}</div>
+					<c:if test="${!empty todayList }">
+						<c:forEach var="i" items="${todayList }">
+							<div class="card mt-3 bg-light text-black">
+								<div class="card-body">
+									<div id="vaca-dept" class="d-inline card bg-info text-white text-center px-2">${i.dept}</div>
+										<span id="vaca-name">${i.name}</span>
+										<span class="text-xs font-weight-bold text-primary text-uppercase mb-1" id="vaca-position">${i.position}</span>
+									<!-- <div id="vaca-state" class="d-inline ml-5">${i.state}</div> -->
+								</div>
+							</div>
+						</c:forEach>
+					</c:if>
+					<c:if test="${empty todayList }">
+						<div class="h4 mb-3 ml-2 font-weight-bold text-lightgray">연차자 없음 <i class="fas fa-user-alt-slash"></i></div>
+					</c:if>
 				</div>
 			</div>
-			<button onclick="getDatesStartToLast('2024-01-01','2024-02-03')">테스트버튼</button>
 			<div class="card shadow mb-4">
 				<!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -209,6 +211,31 @@
 </div>
 <!-- <script src="resources/js/calendar_home.js"></script> -->
 <script src="${pageContext.request.contextPath}/resources/js/jquery-3.7.1.min.js"></script>
+
+<!-- 날짜 계산 -->
+<script>
+	function isDateBetweenStartToEnd(startDate, endDate, paramDate) {
+		var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
+		if(!(regex.test(startDate) && regex.test(endDate))) return "Not Date Format";
+		
+		var curDate = new Date(paramDate);
+		var text;
+		if(curDate>=new Date(startDate)){
+			if(curDate<=new Date(endDate)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	function getDayOfWeek(yyyyMMdd){
+		
+	    const dayOfWeek = new Date(yyyyMMdd).getDay(); 
+	    
+	    //0:일, 1:월, 2:화, 3:수, 4:목, 5:금, 6:토
+	    return dayOfWeek;
+	}
+</script>
 
 <!-- 달력 스크립트 -->
 <script>
@@ -253,27 +280,50 @@
 		
 		dates.forEach((date, i) => {
 			
-			var startDate;
-			var endDate;
-			if(i<listArr.length){
-				startDate = listArr[i].match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/g)[1];
-				endDate = listArr[i].match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/g)[2];
+			const condition = i >= firstDateIndex && i < lastDateIndex + 1 ? 'this' : 'other';
+			
+			var formatDate = viewYear+"-";
+			if(condition==='this'){
+				formatDate += (("00"+(viewMonth+1).toString()).slice(-2))+"-";
+			}else{
+				if(i < lastDateIndex + 1){
+					formatDate += (("00"+(viewMonth).toString()).slice(-2))+"-";
+				}else{
+					formatDate += (("00"+(viewMonth+2).toString()).slice(-2))+"-";
+				}
+			}
+			formatDate += (("00"+date.toString()).slice(-2));
+			
+			// 출력할 연차자 담을 배열
+			var view = [];
+			// formatDate 가 listArr 돌면서 포함되는 날 있는지 찾고 배열에 담는다
+			for(let j=0; j<listArr.length; j++){
+				var startDate = listArr[j].match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/g)[1];
+				var endDate = listArr[j].match(/[0-9]{4}-[0-9]{2}-[0-9]{2}/g)[2];
+				
+				var dept = listArr[j].match(/dept=.*/)[0].split(',')[0].substring(5);
+				var name = listArr[j].match(/name=.*/)[0].split(',')[0].substring(5);
+				var position = listArr[j].match(/position=.*/)[0].split(',')[0].substring(9);
+				
+				var obj = {dept, name, position, formatDate};
+				
+				var flag = isDateBetweenStartToEnd(startDate, endDate, formatDate);
+				if(flag==true){
+					view.push(obj);
+				}
 			}
 			
-			var format = viewYear+"-"+(("00"+(viewMonth+1).toString()).slice(-2))+"-"+(("00"+date.toString()).slice(-2));
+			let viewJSON = JSON.stringify(view);
 			
-			
-			
-			const condition = i >= firstDateIndex && i < lastDateIndex + 1
-				? 'this'
-				: 'other';
+			let dayOfWeek = getDayOfWeek(formatDate);
 	
 			dates[i] = '<div class="date">'
-				+ '<span class="' + condition + '">' + date + '</span>'
-				+ '<div onclick="clickFn()" class="card bg-info text-white text-center shadow cursor-pointer">'
-				+ '연차 1건'
-				+ '</div>'
-				+ '</div>';
+						+ '<span class="' + condition + '">' + date + '</span>';
+			if(view.length>0 && (dayOfWeek!=0 && dayOfWeek !=6)) {
+				dates[i] += "<div onclick='clickFn("+viewJSON+", this)' class='card bg-info text-white text-center shadow cursor-pointer'>"
+							+ '연차 ' + view.length + '건' + '</div>';
+			}
+			dates[i]	+= '</div>';
 	
 		});
 	
@@ -284,6 +334,11 @@
 			for (let date of document.querySelectorAll('.this')) {
 				if (+date.innerText === today.getDate()) {
 					date.classList.add('today');
+					let sibling = date.nextElementSibling;
+					if(sibling==null){
+						date.setAttribute("style","cursor:pointer");
+						date.setAttribute("onclick","todayVacaFn()");
+					}
 					break;
 				}
 			}
@@ -306,35 +361,47 @@
 		date = new Date();
 		renderCalender();
 	};
-</script>
-
-<!-- 테스트 -->
-<script>
-	function getDatesStartToLast(startDate, lastDate) {
-		var regex = RegExp(/^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/);
-		if(!(regex.test(startDate) && regex.test(lastDate))) return "Not Date Format";
-		
-		var result = [];
-		var curDate = new Date(startDate);
-		while(curDate <= new Date(lastDate)) {
-			result.push(curDate.toISOString().split("T")[0]);
-			curDate.setDate(curDate.getDate() + 1);
-		}
-		console.log(result);
-		return result;
-	}
+	
 	
 </script>
 
-
 <!-- 달력 클릭 함수 (연차자 표시) -->
 <script>
-	function clickFn(){
-		console.log("ㅇㅇ");
+	function clickFn(obj, t){
+		const vacaDiv = $("#vaca-list");
+		let html = "";
+		html += `<div id="vaca-date" class="h4 mb-3 ml-2 font-weight-bold text-gray-800 today-date">\${obj[0].formatDate}</div>`;
+		for(let i=0; i<obj.length; i++){
+			html += `<div class="card mt-3 bg-light text-black">`;
+			html += `<div class="card-body">`;
+			html += `<div id="vaca-dept" class="d-inline card bg-info text-white text-center px-2">\${obj[i].dept}</div>`;
+			html += `<span id="vaca-name">\ \${obj[i].name}\ </span>`;
+			html += `<span class="text-xs font-weight-bold text-primary text-uppercase mb-1" id="vaca-position">\${obj[i].position}</span>`;
+//			html += `<div id="vaca-state" class="d-inline ml-5">\${obj[i].state}</div>`;
+			html += `</div>`;
+			html += `</div>`;
+		}
+		vacaDiv.html(html);
+		
+		const sAll = $(".calendar.col").find("span");
+		sAll.removeClass("selectDate");
+		const s = $(t).prev();
+		s.addClass("selectDate");
+	}
+	
+	function todayVacaFn(){
+		const vacaDiv = $("#vaca-list");
+		const list = `${todayList}`;
+		if(list=="[]"){
+			let html = `<div id="vaca-date" class="h4 mb-3 ml-2 font-weight-bold text-gray-800 today-date">${today}</div>`;
+			html += `<div class="h4 mb-3 ml-2 font-weight-bold text-lightgray">연차자 없음 <i class="fas fa-user-alt-slash"></i></div>`;
+			vacaDiv.html(html);
+		}
 	}
 
 </script>
 
+<sec:authorize access="!hasRole('ROLE_ADMIN')">
 <!-- 온로드 함수 -->
 <script>
 	window.onload = function(){
@@ -457,5 +524,6 @@
 	   
 	}
 </script>
+</sec:authorize>
 <!-- /.container-fluid -->
 <%@ include file="include/footer.jsp" %>

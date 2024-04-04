@@ -33,9 +33,9 @@ tbody > tr > td:nth-child(2){
   background: #fff;
 }
 
-a {
+/* a {
   color: #73685d;
-}
+} */
   
  @media all and (max-width: 768px) {
     

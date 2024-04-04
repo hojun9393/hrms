@@ -76,8 +76,12 @@ public class VacaDAO {
 	}
 	
 	
-	public List<VacaVO> selectApprovedVacaList_all(){
-		return sqlSession.selectList(namespace+".selectApprovedVacaList_all");
+	public List<VacaVO> selectAllVacaList(int[] stateArr){
+		return sqlSession.selectList(namespace+".selectAllVacaList", stateArr);
+	}
+	
+	public List<Map<String, Object>> selectAllRemainVacaList(){
+		return sqlSession.selectList(namespace+".selectAllRemainVacaList");
 	}
 	
 }

@@ -112,7 +112,13 @@ public class VacaServiceImpl implements VacaService {
 	}
 	
 	@Override
-	public List<VacaVO> selectApprovedVacaList_all() {
-		return vacaDAO.selectApprovedVacaList_all();
+	public List<VacaVO> selectAllVacaList(int[] stateArr) {
+		return vacaDAO.selectAllVacaList(stateArr);
 	}
+	
+	@Override
+	public List<Map<String, Object>> selectAllRemainVacaList() {
+		return vacaDAO.selectAllRemainVacaList();
+	}
+	
 }
