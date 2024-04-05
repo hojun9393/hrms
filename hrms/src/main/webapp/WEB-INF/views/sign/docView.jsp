@@ -36,6 +36,15 @@
 							<span class="d-block font-weight-bold text-gray-800 mb-3">기안내용</span>
 							${vo.content}
 						</div>
+						<div class="py-2">
+							<span class="d-block font-weight-bold text-gray-800 mb-3">첨부파일</span>
+							<c:forEach items="${vo.docFileVO}" var="file">
+								<a href="#" onclick="downloadFn('${file.fileNo}', '${file.docNo}', '${file.realNm}', '${file.originNm}')" 
+									class="border-primary text-primary btn btn-sm btn-light shadow-sm my-1">
+									<i class="fas fa-download fa-sm text-primary"></i> ${file.originNm} 
+								</a><br>
+							</c:forEach>
+						</div>
 					</div>
 				</div>
 				<div class="col-3">
@@ -120,7 +129,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col p-5 mt-5">
+				<div class="col p-5">
 					<div class="mb-4 text-center">
 						<hr>
 						<a href="main.do" class="btn btn-secondary btn-user"> 목록으로 </a>
@@ -141,6 +150,27 @@
 	<input type="hidden" name="docNo" value="${vo.docNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
+
+<script>
+	function downloadFn(fileNo, docNo, realNm, originNm){
+		let f = document.createElement('form');
+		let nameArr = ["fileNo", "docNo", "realNm", "originNm"];
+		let valueArr = [fileNo, docNo, realNm, originNm];
+		let inputArr = [];
+		for(let i=0; i<valueArr.length; i++){
+			let input = document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('name', nameArr[i]);
+			input.setAttribute('value', valueArr[i]);
+			inputArr[i] = input;
+			f.appendChild(inputArr[i]);
+		}
+		f.setAttribute('method', 'post');
+		f.setAttribute('action', 'download.do');
+		document.body.appendChild(f);
+		f.submit();
+	}
+</script>
 
 <!-- /.container-fluid -->
 <%@ include file="../include/footer.jsp"%>

@@ -1,6 +1,10 @@
 package edu.hrms.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.hrms.service.SignService;
+import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocVO;
 import edu.hrms.vo.OverVO;
 import edu.hrms.vo.SignLineVO;
@@ -228,6 +234,7 @@ public class SignController {
 		map.put("docNo", docNo);
 		map.put("userId", userId);
 		DocVO docVO = signService.selectDocFromDocNo(map);
+		List<DocFileVO> fileList = signService.selectDocFile(docNo);
 		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.getDocNo());
 		
 		int count = signLineVO.size();
@@ -241,6 +248,7 @@ public class SignController {
 		}
 		docVO.setStateCount(count);
 		docVO.setSignLineVO(signLineVO);
+		docVO.setDocFileVO(fileList);
 		
 		model.addAttribute("vo", docVO);
 		
@@ -577,7 +585,7 @@ public class SignController {
 					if(vacaVO.get(i).getMySignState().equals("0")) {
 						vacaSignCount++;
 					}
-				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
+				}else if(vacaVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
 					vacaVOList.add(vacaVO.get(i));
 					if(vacaVO.get(i).getMySignState().equals("0")) {
 						vacaSignCount++;
@@ -661,6 +669,26 @@ public class SignController {
 		resultMap.put("overSignCount", overSignCount);
 		
 		return resultMap;
+	}
+	
+	@RequestMapping(value = "/download.do", method = RequestMethod.POST)
+	public void download(HttpServletResponse response, HttpServletRequest request, DocFileVO vo) throws IOException {
+		
+		File f = new File(request.getSession().getServletContext().getRealPath("/resources/upload"), vo.getRealNm());
+        // file 다운로드 설정
+        response.setContentType("application/download");
+        response.setContentLength((int)f.length());
+        String filename = URLEncoder.encode(vo.getOriginNm(),"UTF-8");
+        filename = filename.replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment; filename=\"" + filename + "\"");
+        // response 객체를 통해서 서버로부터 파일 다운로드
+        OutputStream os = response.getOutputStream();
+        // 파일 입력 객체 생성
+        FileInputStream fis = new FileInputStream(f);
+        FileCopyUtils.copy(fis, os);
+        fis.close();
+        os.close();
+		
 	}
 	
 }

@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocVO;
 import edu.hrms.vo.OverVO;
 import edu.hrms.vo.SignLineVO;
@@ -103,5 +104,9 @@ public class SignDAO {
 	
 	public List<OverVO> selectOverSearch(HashMap<String, String> map){
 		return sqlSession.selectList(namespace+".selectOverSearch", map);
+	}
+
+	public List<DocFileVO> selectDocFile(int docNo) {
+		return sqlSession.selectList(namespace+".selectDocFile", docNo);
 	}
 }

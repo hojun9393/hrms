@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.hrms.dao.SignDAO;
+import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocVO;
 import edu.hrms.vo.OverVO;
 import edu.hrms.vo.SignLineVO;
@@ -122,5 +123,10 @@ public class SignServiceImpl implements SignService{
 	@Override
 	public List<OverVO> selectOverSearch(HashMap<String, String> map) {
 		return signDAO.selectOverSearch(map);
+	}
+
+	@Override
+	public List<DocFileVO> selectDocFile(int docNo) {
+		return signDAO.selectDocFile(docNo);
 	}
 }

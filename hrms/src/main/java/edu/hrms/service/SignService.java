@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocVO;
 import edu.hrms.vo.OverVO;
 import edu.hrms.vo.SignLineVO;
@@ -39,4 +40,6 @@ public interface SignService {
 	List<DocVO> selectDocSearch(HashMap<String, String> map);
 	List<VacaVO> selectVacaSearch(HashMap<String, String> map);
 	List<OverVO> selectOverSearch(HashMap<String, String> map);
+	
+	List<DocFileVO> selectDocFile(int docNo);
 }
