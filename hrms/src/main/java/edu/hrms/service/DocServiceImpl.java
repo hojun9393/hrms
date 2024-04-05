@@ -123,5 +123,10 @@ public class DocServiceImpl implements DocService {
 		return docDAO.selectDocFileByDocNo(docNo);
 	}
 	
+	@Override
+	public int withdrawl(int docNo) {
+		return docDAO.withdrawl(docNo);
+	}
+	
 	
 }

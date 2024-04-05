@@ -112,13 +112,23 @@ public class VacaServiceImpl implements VacaService {
 	}
 	
 	@Override
-	public List<VacaVO> selectAllVacaList(int[] stateArr) {
-		return vacaDAO.selectAllVacaList(stateArr);
+	public List<VacaVO> selectAllVacaList(Map<String, Object> map) {
+		return vacaDAO.selectAllVacaList(map);
 	}
 	
 	@Override
-	public List<Map<String, Object>> selectAllRemainVacaList() {
-		return vacaDAO.selectAllRemainVacaList();
+	public List<Map<String, Object>> selectAllUserList(Map<String, Object> map) {
+		return vacaDAO.selectAllUserList(map);
+	}
+	
+	@Override
+	public int getCountOfAllUserList(Map<String, Object> map) {
+		return vacaDAO.getCountOfAllUserList(map);
+	}
+	
+	@Override
+	public int giveVaca(Map<String, Object> map) {
+		return vacaDAO.giveVaca(map);
 	}
 	
 }

@@ -52,5 +52,9 @@ public class DocDAO {
 		return sqlSession.selectList(namespace+".selectDocFileByDocNo", docNo);
 	}
 	
+	public int withdrawl(int docNo) {
+		return sqlSession.update(namespace+".withdrawl", docNo);
+	}
+	
 	
 }

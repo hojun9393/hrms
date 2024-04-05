@@ -155,12 +155,8 @@ public class DocController {
 		model.addAttribute("list", list);
 		
 		// 3. 1에서 얻은 리스트로 결재 현황 카운트, 진행상황  구한다
-		Map<String, Object> map = workService.getCountNowstate(list);
-		if(vo.getState().equals("9")) {
-			map.put("nowState", "철회");
-		}else if(vo.getState().equals("2")) {
-			map.put("nowState", "승인");
-		}
+		Map<String, Object> map = workService.getCountNowstate(list, vo.getState());
+		
 		model.addAttribute("count", map.get("count"));
 		model.addAttribute("nowState", map.get("nowState"));
 		
@@ -170,6 +166,17 @@ public class DocController {
 		return "document/view";
 	}
 	
+	@RequestMapping(value = "/withdrawal.do", method = RequestMethod.POST)
+	public void withdrawal(HttpServletResponse response, int docNo) throws IOException {
+		int result = docService.withdrawl(docNo);
+		if(result>0) {
+			response.getWriter().append("<script>alert('기안이 철회되었습니다.');location.href='../docu/main.do';</script>");
+		}else {
+			response.getWriter().append("<script>alert('오류가 발생했습니다.');location.href='../docu/main.do';</script>");
+		}
+		response.getWriter().flush();
+	}
+	
 	@RequestMapping(value = "/download.do", method = RequestMethod.POST)
 	public void download(HttpServletResponse response, HttpServletRequest request, DocFileVO vo) throws IOException {
 		
@@ -177,7 +184,9 @@ public class DocController {
         // file 다운로드 설정
         response.setContentType("application/download");
         response.setContentLength((int)f.length());
-        response.setHeader("Content-disposition", "attachment; filename=\"" + URLEncoder.encode(vo.getOriginNm(),"UTF-8") + "\"");
+        String fileName = URLEncoder.encode(vo.getOriginNm(), "UTF-8");
+        fileName = fileName.replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
         // response 객체를 통해서 서버로부터 파일 다운로드
         OutputStream os = response.getOutputStream();
         // 파일 입력 객체 생성

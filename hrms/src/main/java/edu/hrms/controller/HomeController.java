@@ -2,7 +2,6 @@ package edu.hrms.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +68,8 @@ public class HomeController {
 		model.addAttribute("user", user);
 		
 		// 달력에 표시할 연차자 리스트
-		List<VacaVO> list = vacaService.selectAllVacaList(new int[] {2,7});
+		Map<String, Object> listMap = Map.of("array", new int[] {2,7});
+		List<VacaVO> list = vacaService.selectAllVacaList(listMap);
 		
 		// 오늘 연차자 리스트
 		List<VacaVO> todayList = new ArrayList<>();

@@ -197,15 +197,12 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public Map<String, Object> getCountNowstate(List<? extends SuperSignVO> list){
+	public Map<String, Object> getCountNowstate(List<? extends SuperSignVO> list, String state){
 		Map<String, Object> map = new HashMap<>();
 		int count = 0;
 		String nowState = "대기";
 		for(SuperSignVO vo : list) {
-			if(vo.getState()==1) {
-				count++;
-				nowState = "진행";
-			}else if(vo.getState()==2) {
+			if(vo.getState()==2) {
 				count++;
 				nowState = "진행";
 			}else if(vo.getState()==3) {
@@ -213,6 +210,12 @@ public class WorkServiceImpl implements WorkService {
 				break;
 			}
 		}
+		if(state.equals("9")) {
+			nowState = "철회";
+		}else if(state.equals("2")) {
+			nowState = "승인";
+		}
+		
 		map.put("count", count);
 		map.put("nowState", nowState);
 		return map;

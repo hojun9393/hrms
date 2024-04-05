@@ -3,6 +3,8 @@ package edu.hrms.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.access.annotation.Secured;
+
 import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.OvertimeVO;
 import edu.hrms.vo.SignLineVO;
@@ -59,10 +61,10 @@ public interface WorkService {
 	
 	int getCountOfAllWorkList(Map<String, Object> map);
 	
-	public List<? extends SuperSignVO> processList(List<? extends SuperSignVO> list);
+	List<? extends SuperSignVO> processList(List<? extends SuperSignVO> list);
 	
-	public Map<String, Object> getCountNowstate(List<? extends SuperSignVO> list);
+	Map<String, Object> getCountNowstate(List<? extends SuperSignVO> list, String state);
 	
-	
-	public int updateWork_admin(Map<String, String> map);
+	@Secured("ROLE_ADMIN")
+	int updateWork_admin(Map<String, String> map);
 }

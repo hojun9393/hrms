@@ -337,12 +337,8 @@ public class WorkController {
 		model.addAttribute("osList", osList);
 		
 		// 3. 1에서 얻은 리스트로 결재 현황 카운트, 진행상황  구한다
-		Map<String, Object> map = workService.getCountNowstate(osList);
-		if(ovo.getState().equals("9")) {
-			map.put("nowState", "철회");
-		}else if(ovo.getState().equals("2")) {
-			map.put("nowState", "승인");
-		}
+		Map<String, Object> map = workService.getCountNowstate(osList, ovo.getState());
+		
 		model.addAttribute("count", map.get("count"));
 		model.addAttribute("nowState", map.get("nowState"));
 		

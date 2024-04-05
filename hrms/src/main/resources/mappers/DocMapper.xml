@@ -131,6 +131,12 @@
 				ON d.docNo = df.docNo
 			WHERE df.docNo = #{docNo};
 	</select>
+	
+	<update id="withdrawl" parameterType="int">
+		UPDATE doc
+			SET state = 9
+			WHERE docNo = #{docNo}
+	</update>
 
 	
 </mapper>

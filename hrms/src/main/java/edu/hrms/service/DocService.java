@@ -34,6 +34,7 @@ public interface DocService {
 	
 	DocVO selectDocByDocNo(int docNo);
 	
-	public List<DocFileVO> selectDocFileByDocNo(int docNo);
+	List<DocFileVO> selectDocFileByDocNo(int docNo);
 	
+	int withdrawl(int docNo);
 }

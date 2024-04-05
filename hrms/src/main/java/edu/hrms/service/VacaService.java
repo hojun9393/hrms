@@ -3,6 +3,8 @@ package edu.hrms.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.access.annotation.Secured;
+
 import edu.hrms.vo.SignLineVO;
 import edu.hrms.vo.VacaSignVO;
 import edu.hrms.vo.VacaVO;
@@ -39,9 +41,15 @@ public interface VacaService {
 	
 	int updateVacaStateToUse(List<VacaVO> list);
 	
-	public List<VacaVO> selectAllVacaList(int[] stateArr);
 	
-	public List<Map<String, Object>> selectAllRemainVacaList();
+	List<VacaVO> selectAllVacaList(Map<String, Object> map);
+	
+	List<Map<String, Object>> selectAllUserList(Map<String, Object> map);
+	
+	int getCountOfAllUserList(Map<String, Object> map);
+	
+	@Secured("ROLE_ADMIN")
+	int giveVaca(Map<String, Object> map);
 	
 	
 }

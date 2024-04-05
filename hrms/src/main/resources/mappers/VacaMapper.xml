@@ -174,7 +174,7 @@
 	</update>
 
 
-	<select id="selectAllVacaList" resultType="vacaVO">
+	<select id="selectAllVacaList" parameterType="Map" resultType="vacaVO">
 		SELECT v.*, u.name,
 				(CASE 
 					WHEN u.position = 'C' THEN '대표'
@@ -192,23 +192,44 @@
 			FROM vacation v
 		   INNER JOIN user u
 				ON v.userid = u.userid
-			<if test="array != null">
-				WHERE v.state IN
-				<foreach item="item" collection="array" open="(" separator="," close=")">
-		  			#{item}
-			  	</foreach>
-		  	</if>
+				WHERE 1=1
+				<if test="array != null">
+					AND v.state IN
+					<foreach item="item" collection="array" open="(" separator="," close=")">
+			  			#{item}
+				  	</foreach>
+			  	</if>
+			  	<if test="userid != null">
+			  		AND v.userid = #{userid}
+			  	</if>
+		  		ORDER BY v.startDate DESC
+	</select>
+
+	<select id="getCountOfAllUserList" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+			FROM user u
+			WHERE 1=1
+ 			<if test='category_dept!=null and !category_dept.equals("")'>
+		 		AND u.dept = #{searchVO.category_dept}
+ 			</if>
+ 			<if test='category_position!=null and !category_position.equals("")'>
+		 		AND u.position = #{searchVO.category_position}
+ 			</if>
+ 			<if test='searchVal != null'>
+				AND u.name LIKE CONCAT('%', #{searchVO.searchVal}, '%')
+ 			</if>
 	</select>
 	
-	<select id="selectAllRemainVacaList" resultType="Map">
-		SELECT name, keepVaca, useVaca,
+	<select id="selectAllUserList" parameterType="Map" resultType="Map">
+		SELECT userid, name, keepVaca, useVaca,
 				ROUND(keepVaca/8,0) keepVaca_day,
 				ROUND(useVaca/8,0) useVaca_day,
 				(CASE 
 					WHEN u.position = 'C' THEN '대표'
 	            WHEN u.position = 'D' THEN '부장'
 	            WHEN u.position = 'L' THEN '팀장'
-	            WHEN u.position = 'E' THEN '사원' END
+	            WHEN u.position = 'E' THEN '사원' 
+	            ELSE '관리자' END
 				) AS position,
 				(CASE 
 					WHEN u.dept = 'M' THEN '대표'
@@ -218,7 +239,26 @@
 	            WHEN u.dept = 'H' THEN '인사부' END
 				) AS dept
 			FROM user u
+			WHERE u.position != 'A'
+ 			<if test='category_dept!=null and !category_dept.equals("")'>
+		 		AND u.dept = #{searchVO.category_dept}
+ 			</if>
+ 			<if test='category_position!=null and !category_position.equals("")'>
+		 		AND u.position = #{searchVO.category_position}
+ 			</if>
+ 			<if test='searchVal != null'>
+				AND u.name LIKE CONCAT('%', #{searchVO.searchVal}, '%')
+ 			</if>
+ 			ORDER BY FIELD(dept, 'M', 'D', 'S', 'P', 'H'),
+ 					 	FIELD(position, 'D', 'L', 'E')
+ 			LIMIT #{pagingVO.startLimit}, #{pagingVO.perPage}
 	</select>
+	
+	<update id="giveVaca" parameterType="Map">
+		UPDATE user
+			SET keepVaca = keepVaca + #{hour}
+			WHERE userid = #{userid}
+	</update>
 	
 	
 </mapper>

@@ -37,10 +37,12 @@
 					<div class="card-body">
 					
 						<div class="mb-3 col">
-							<input type="text" name="" value="" id="startDate" class="datepicker inp" placeholder="시작일 선택" readonly="true" onchange="reloadListFn(3,1)">
-							<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)" style="cursor: pointer;"></i> ~ 
-							<input type="text" name="" value="${today }" id="endDate" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(3,1)"> 
-							<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate)" style="cursor: pointer;"></i>
+							<div class="float-left mb-2">
+								<input type="text" name="" value="" id="startDate" class="datepicker inp" placeholder="시작일 선택" readonly="true" onchange="reloadListFn(3,1)">
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)" style="cursor: pointer;"></i> ~ 
+								<input type="text" name="" value="${today }" id="endDate" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(3,1)"> 
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate)" style="cursor: pointer;"></i>
+							</div>
 							<div id="searchDiv" class="float-right">
 								<select name="category_dept">
 									<option value="">전체</option>
@@ -164,10 +166,10 @@
 							console.log(data);
 							if(data>0){
 								alert("퇴근 처리 되었습니다.");
-								location.href = window.location.href;
+								location.reload(true);
 							}else{
 								alert("오류가 발생하였습니다.");
-								location.href = window.location.href;
+								location.reload(true);
 							}
 						}
 						

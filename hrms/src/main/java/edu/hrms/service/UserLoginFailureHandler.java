@@ -19,7 +19,7 @@ public class UserLoginFailureHandler implements AuthenticationFailureHandler {
 		
 		response.setContentType("text/html; charset=utf-8");
 		response.setCharacterEncoding("UTF-8");
-		response.getWriter().append("<script>alert('사원번호와 아이디를 확인해주세요.');location.href='login.do'</script>");
+		response.getWriter().append("<script>alert('사원번호와 아이디를 확인해주세요.'); location.href='login.do';</script>");
 		response.getWriter().flush();
 		
 	}

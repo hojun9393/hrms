@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Repository;
 
 import edu.hrms.vo.SignLineVO;
@@ -76,12 +77,24 @@ public class VacaDAO {
 	}
 	
 	
-	public List<VacaVO> selectAllVacaList(int[] stateArr){
-		return sqlSession.selectList(namespace+".selectAllVacaList", stateArr);
+	//////////// 관리자 기능 ///////////
+	public List<VacaVO> selectAllVacaList(Map<String, Object> map){
+		return sqlSession.selectList(namespace+".selectAllVacaList", map);
 	}
 	
-	public List<Map<String, Object>> selectAllRemainVacaList(){
-		return sqlSession.selectList(namespace+".selectAllRemainVacaList");
+	public int getCountOfAllUserList(Map<String, Object> map) {
+		return sqlSession.selectOne(namespace+".getCountOfAllUserList", map);
 	}
+	
+	public List<Map<String, Object>> selectAllUserList(Map<String, Object> map){
+		return sqlSession.selectList(namespace+".selectAllUserList", map);
+	}
+	
+	@Secured("ROLE_ADMIN")
+	public int giveVaca(Map<String, Object> map) {
+		return sqlSession.update(namespace+".giveVaca", map);
+	}
+	
+	
 	
 }

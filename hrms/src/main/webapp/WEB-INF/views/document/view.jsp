@@ -157,7 +157,7 @@
 			let docNoInput;
 			docNoInput = document.createElement('input');
 			docNoInput.setAttribute('type', 'hidden');
-			docNoInput.setAttribute('name', 'overtimeNo');
+			docNoInput.setAttribute('name', 'docNo');
 			docNoInput.setAttribute('value', '${vo.docNo}');
 			f.appendChild(docNoInput);
 			

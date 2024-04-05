@@ -203,8 +203,8 @@
 
 <script>
 	function reloadListFn(obj){
-		let startDate = $("#startDate").val();
-		let endDate = $("#endDate").val();
+		let startDate = $("#startDate").val() === "" ? null : $("#startDate").val();
+		let endDate = $("#endDate").val() === "" ? null : $("#endDate").val();
 		$.ajax({
 			url:"reloadList.do",
 			data: {startDate : startDate, endDate : endDate},

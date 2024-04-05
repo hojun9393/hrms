@@ -28,10 +28,27 @@
 	height:40px;
 	margin:10px;
 	padding-left:20px;
+	padding-right:20px;
 }
 .text-head{
 	display:inline-block;
 	color:purple;
+	font-size:17px;
+	line-height:40px;
+	min-width:90px;
+	font-weight:bold;
+}
+.text-head2{
+	display:inline-block;
+	color:purple;
+	font-size:17px;
+	line-height:40px;
+	min-width:140px;
+	font-weight:bold;
+}
+.text-head3{
+	display:inline-block;
+	color:#0068d0;
 	font-size:17px;
 	line-height:40px;
 	min-width:90px;
@@ -45,6 +62,27 @@
 	font-size:14px;
 	line-height:40px;
 	text-align:center;
+}
+.text-content2{
+	color:#373737;
+	font-size:15px;
+	line-height:40px;
+	text-align:center;
+	font-weight:bold;
+}
+.text-content-approved{
+	color:green;
+	font-size:12px;
+	line-height:40px;
+	text-align:center;
+	font-weight:bold;
+}
+.text-content-use{
+	color:#0068d0;
+	font-size:12px;
+	line-height:40px;
+	text-align:center;
+	font-weight:bold;
 }
 .close-custom{
 	color:white;
@@ -82,14 +120,6 @@
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     font-size: .8rem;
 }
-.text-head2{
-	display:inline-block;
-	color:purple;
-	font-size:17px;
-	line-height:40px;
-	min-width:140px;
-	font-weight:bold;
-}
 .content-text-small{
 	color:gray;
 	font-size:14px;
@@ -119,8 +149,16 @@
 	font-weight:bold;
 	font-size:30px;
 }
+.text-bold{
+	color:#202020;
+	font-weight:bold;
+}
 .text-red{
 	color:red;
+	font-weight:bold;
+}
+.text-blue{
+	color: #0482ff;
 	font-weight:bold;
 }
 .text-green{
@@ -174,8 +212,15 @@ textarea.resize-none{
 .doc-content {
 	height:20vh;
 }
+.text-sm {
+	font-size: .75rem
+}
 .text-md {
-    font-size: 1.0rem
+	font-size: 1.0rem
+}
+.text-md2 {
+	font-size: .85rem;
+	color: green;
 }
 .cursor-pointer{
 	cursor:pointer;
