@@ -19,6 +19,11 @@ public class UserServiceImpl implements UserService {
 	public Map<String, Object> selectLogin(String username) {
 		return userDAO.selectLogin(username);
 	}
+	
+	@Override
+	public EmployeeVO selectUser(int userid) {
+		return userDAO.selectUser(userid);
+	}
 
 	@Override
 	public List<EmployeeVO> selectUserAll() {
@@ -28,6 +33,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int updateUser(EmployeeVO employee) {
 		return userDAO.updateUser(employee);
+	}
+
+	@Override
+	public int insertUser(EmployeeVO employeeVO) {
+		return userDAO.insertUser(employeeVO);
+	}
+
+	@Override
+	public int selectMaxUserid(String dept) {
+		return userDAO.selectMaxUserid(dept);
+	}
+
+	@Override
+	public int updateFromAdmin(EmployeeVO employeeVO) {
+		return userDAO.updateFromAdmin(employeeVO);
 	}
 	
 }

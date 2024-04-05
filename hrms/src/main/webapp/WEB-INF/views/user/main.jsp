@@ -41,10 +41,18 @@
 			</div>
 			<div class="card-body">
 				<div class="row userInfoHeader">
-					<div class="mb-3 col">
-						<a href="regist.do" class="btn btn-primary btn-icon-split">
-							<span class="text"><i class="fas fa-user-edit"></i> 사원 등록</span>
-						</a>
+					<div class="mb-3 col align-self-center">
+						<sec:authorize access="hasRole('ROLE_ADMIN')">
+							<a href="regist.do" class="btn btn-primary btn-icon-split">
+								<span class="text"><i class="fas fa-user-edit"></i> 사원 등록</span>
+							</a>
+						</sec:authorize>
+						<sec:authorize access="!hasRole('ROLE_ADMIN')">
+							<a href="modify.do" class="btn btn-primary btn-icon-split">
+								<span class="text"><i class="fas fa-user-edit"></i> 내 정보 수정</span>
+							</a>
+						</sec:authorize>
+							
 					</div>
 					<div class="mb-3 col-auto">
 						<select class="inp">
@@ -75,12 +83,21 @@
 						id="dataTable" width="100%" cellspacing="0">
 						<thead>
 							<tr>
-								<th width="20.1%">이름</th>
-								<th width="20%">연락처</th>
-								<th width="20%">이메일</th>
-								<th width="10.3%">쪽지</th>
-								<th width="10.3%">조회</th>
-								<th width="10.3%">수정</th>
+								<sec:authorize access="hasRole('ROLE_ADMIN')">
+									<th width="20.1%">이름</th>
+									<th width="20%">연락처</th>
+									<th width="20%">이메일</th>
+									<th width="10.3%">쪽지</th>
+									<th width="10.3%">조회</th>
+									<th width="10.3%">수정</th>
+								</sec:authorize>
+								<sec:authorize access="!hasRole('ROLE_ADMIN')">
+									<th width="25%">이름</th>
+									<th width="25%">연락처</th>
+									<th width="25%">이메일</th>
+									<th width="12.5%">쪽지</th>
+									<th width="12.5%">조회</th>
+								</sec:authorize>
 							</tr>
 						</thead>
 						<tbody>
@@ -107,9 +124,14 @@
 									<td>
 										<div class="text-dark"><a href="#" data-toggle="modal" data-target="#modal${vo.userid}"><i class="fas fa-address-card fa-lg" style="color:#36b9cc"></i></a></div> 
 									</td>
+									<sec:authorize access="hasRole('ROLE_ADMIN')">
 									<td>
-										<div class="text-dark"><a href="modifyAdmin.do"><i class="fas fa-user-cog" style="color:red"></i></a></div>
+										<form name="frm" action="modifyAdmin.do" method="post">
+											<input type="hidden" name="userid" value="${vo.userid}">
+											<div class="text-dark"><a onclick="adminModifyFn(this)" href="#"><i class="fas fa-user-cog" style="color:red"></i></a></div>
+										</form>
 									</td>
+									</sec:authorize>
 								</tr>								
 							</c:forEach>
 						</tbody>
@@ -236,8 +258,11 @@
 										<c:when test="${vo.state eq 1}">
 											<div class="col-9 text-dark">재직</div>
 										</c:when>
-										<c:when test="${vo.state eq 0}">
-											<div class="col-9 text-dark">퇴사</div>
+										<c:when test="${vo.state eq 2}">
+											<div class="col-9 text-dark">휴직</div>
+										</c:when>
+										<c:when test="${vo.state eq 9}">
+											<div class="col-9 text-dark">퇴직</div>
 										</c:when>
 									</c:choose>
 								</div>
@@ -290,6 +315,13 @@
 	<script src="${pageContext.request.contextPath}/resources/js/user_main.js"></script>
 	
 	<script>
+	$(document).ready(function(){
+		let selected = `${selected}`;
+		if(selected == 'myInfo'){
+			selectFn(document.getElementById('myInfo'));
+		}
+	})
+	
 	function messageFn(obj, userid){
 		if(userid == ${loginUser.userid}){
 			alert("자신에게는 쪽지를 보낼 수 없습니다.");
@@ -298,6 +330,10 @@
 				$(obj).closest('form').submit();
 			}
 		}	
+	}
+	
+	function adminModifyFn(obj){
+		$(obj).closest('form').submit();
 	}
 	</script>
 	

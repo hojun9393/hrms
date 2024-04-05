@@ -38,20 +38,20 @@
 						<div class="col-lg-3 d-none d-lg-block"></div>
 						<div class="col-lg-6">
 							<div class="p-1 text-left">
-								<form>
+								<form method="post" action="regist.do">
 									<div class="row m-3">
 										<div class="col-3 align-self-center">
 										<span class="text-dark font-weight-bold">비밀번호</span>
 										<span class="text-danger font-weight-bold">*</span>
 										</div>
-										<input type="password" class="inp2">
+										<input type="password" class="inp2" name="password">
 									</div>
 									<div class="row m-3">
 										<div class="col-3 align-self-center">
 										<span class="text-dark font-weight-bold">이름</span>
 										<span class="text-danger font-weight-bold">*</span>
 										</div>
-										<input type="password" class="inp2">
+										<input type="text" class="inp2" name="name">
 									</div>
 									<div class="row m-3">
 										<div class="col-6">
@@ -60,12 +60,12 @@
 												<span class="text-dark font-weight-bold">부서</span>
 												<span class="text-danger font-weight-bold">*</span>
 												</div>
-												<select class="inp">
-													<option>기획부</option>
-													<option>인사부</option>
-													<option>영업부</option>
-													<option>개발부</option>
-													<option>관리부</option>
+												<select class="inp" name="dept">
+													<option value="P">기획부</option>
+													<option value="H">인사부</option>
+													<option value="S">영업부</option>
+													<option value="D">개발부</option>
+													<option value="M">관리부</option>
 												</select>
 											</div>
 										</div>
@@ -75,11 +75,12 @@
 												<span class="text-dark font-weight-bold">직급</span>
 												<span class="text-danger font-weight-bold">*</span>
 												</div>
-												<select class="inp">
-													<option>사원</option>
-													<option>팀장</option>
-													<option>부장</option>
-													<option>대표</option>
+												<select class="inp" name="position">
+													<option value="E">사원</option>
+													<option value="L">팀장</option>
+													<option value="D">부장</option>
+													<option value="C">대표</option>
+													<option value="A">관리자</option>
 												</select>
 											</div>
 										</div>
@@ -92,7 +93,7 @@
 												<span class="text-danger font-weight-bold">*</span>
 												</div>
 												<div class="col-6 align-self-center p-0">
-													<input type="text" name="" value="" id="joinDate" class="datepicker joinDate" placeholder="입사일 선택" readonly="true">
+													<input type="text" name="joinDate" value="" id="joinDate" class="datepicker joinDate" placeholder="입사일 선택" readonly="true">
 													<i class="fas fa-lg fa-calendar" onclick="iClickFn(joinDate)" style="cursor: pointer;"></i>
 												</div>
 											</div>
@@ -103,10 +104,10 @@
 												<span class="text-dark font-weight-bold">상태</span>
 												<span class="text-danger font-weight-bold">*</span>
 												</div>
-												<select class="inp">
-													<option>재직</option>
-													<option>퇴사</option>
-													<option>휴직</option>
+												<select class="inp" name="state">
+													<option value="1">재직</option>
+													<option value="2">휴직</option>
+													<option value="9">퇴직</option>
 												</select>
 											</div>
 										</div>
@@ -115,24 +116,24 @@
 										<div class="col-3 align-self-center">
 										<span class="text-dark font-weight-bold">연락처</span>
 										</div>
-										<input type="text" class="inp2" value="${loginUser.phoneNumber}">
+										<input type="text" class="inp2" name="phone">
 									</div>
 									<div class="row m-3">
 										<div class="col-3 align-self-center">
 										<span class="text-dark font-weight-bold">이메일</span>
 										</div>
-										<input type="text" class="inp2" value="${loginUser.email}">
+										<input type="text" class="inp2" name="email">
 									</div>
 									<div class="row m-3">
 										<div class="col-3 align-self-center">
 										<span class="text-dark font-weight-bold">주소</span>
 										</div>
-										<input type="text" class="inp2" value="${loginUser.addr}">
+										<input type="text" class="inp2" name="addr">
 									</div>
 									<div class="row m-5">
 										<div class="col-12 text-center">
 											<a href="main.do" class="btn btn-secondary btn-user">뒤로가기</a> 
-											<a href="regist.do" class="btn btn-primary btn-user">사원등록</a> 
+											<button type="submit" class="btn btn-primary btn-user">사원등록</button> 
 										</div>
 									</div>
 								</form>

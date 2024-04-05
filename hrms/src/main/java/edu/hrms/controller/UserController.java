@@ -33,12 +33,15 @@ public class UserController {
 	
 	
 	@RequestMapping(value = "/main.do" , method = RequestMethod.GET)
-	public String main(Authentication authentication, Model model) {
+	public String main(Authentication authentication, Model model, String selected) {
 		UserVO userVO = (UserVO)authentication.getPrincipal();
 		List<EmployeeVO> list = userService.selectUserAll();
 		String joinDate = userVO.getJoinDate().replace("T", " ");
 		userVO.setJoinDate(joinDate);
 		
+		if(selected != null) {
+			model.addAttribute("selected", selected);
+		}
 		model.addAttribute("list", list);
 		model.addAttribute("loginUser", userVO);
 		return "/user/main";
@@ -56,7 +59,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/modify.do", method = RequestMethod.POST)
 	public void modify(Authentication authentication, EmployeeVO employee, 
-			String newPassword, String newPasswordChk, RedirectAttributes rttr, HttpServletResponse res) throws IOException {
+			String newPassword, HttpServletResponse res) throws IOException {
 		UserVO userVO = (UserVO)authentication.getPrincipal();
 		employee.setUserid(userVO.getUserid());
         String pw = userVO.getPassword();
@@ -94,23 +97,53 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/regist.do", method = RequestMethod.GET)
-	public String regist(Authentication authentication, Model model) {
-		UserVO userVO = (UserVO)authentication.getPrincipal();
-		String joinDate = userVO.getJoinDate().replace("T", " ");
-		userVO.setJoinDate(joinDate);
-		
-		model.addAttribute("loginUser", userVO);
+	public String regist() {
 		return "/user/regist";
 	}
 	
-	@RequestMapping(value = "/modifyAdmin.do", method = RequestMethod.GET)
-	public String modifyAdmin(Authentication authentication, Model model) {
-		UserVO userVO = (UserVO)authentication.getPrincipal();
-		String joinDate = userVO.getJoinDate().replace("T", " ");
-		userVO.setJoinDate(joinDate);
-		
-		model.addAttribute("loginUser", userVO);
+	@RequestMapping(value = "/regist.do", method = RequestMethod.POST)
+	public void regist(EmployeeVO employeeVO, HttpServletResponse res) throws IOException {
+		System.out.println(employeeVO.toString());
+		int userid = 0;
+		String dept = employeeVO.getDept();
+		if(dept.equals("P") || dept.equals("H") || dept.equals("D") || dept.equals("S") || dept.equals("M")) {
+			int result = userService.selectMaxUserid(dept);
+			userid = result + 1;
+			employeeVO.setUserid(Integer.toString(userid));
+			String encodedPassword = encoder.encode(employeeVO.getPassword());
+			employeeVO.setPassword(encodedPassword);
+			String phone = employeeVO.getPhone().replaceAll("-", "");
+			employeeVO.setPhone(phone);
+			int result2 = userService.insertUser(employeeVO);
+			if(result2>0) {
+				res.getWriter().append("<script>alert('사원이 등록 되었습니다.');location.href='main.do'</script>");
+			}
+		}else {
+			res.getWriter().append("<script>alert('사원이 등록 되지 않았습니다.');location.href='main.do'</script>");
+		}
+	}
+	
+	@RequestMapping(value = "/modifyAdmin.do", method = RequestMethod.POST)
+	public String modifyAdmin(Model model, int userid) {
+		EmployeeVO employeeVO = userService.selectUser(userid);
+		model.addAttribute("user", employeeVO);
 		return "/user/modifyAdmin";
+	}
+	
+	@RequestMapping(value = "/modifyAdminOk.do", method = RequestMethod.POST)
+	public void modifyAdminOk(EmployeeVO employeeVO, HttpServletResponse res) throws IOException {
+		String phone = employeeVO.getPhone().replaceAll("-", "");
+		employeeVO.setPhone(phone);
+		String encodedPassword = encoder.encode(employeeVO.getPassword());
+		employeeVO.setPassword(encodedPassword);
+		
+		int result = userService.updateFromAdmin(employeeVO);
+		
+		if(result>0) {
+			res.getWriter().append("<script>alert('사원 정보가 변경 되었습니다.');location.href='main.do'</script>");
+		}else {
+			res.getWriter().append("<script>alert('사원 정보 변경이 실패했습니다.');location.href='main.do'</script>");
+		}
 	}
 	
 }

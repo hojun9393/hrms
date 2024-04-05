@@ -151,6 +151,8 @@ function receiverPlusFn(){
 				receiverList += '<div class="font-weight-bold px-2 py-1 m-1" id="receiverCheckBoxAll">';
 				for(let j=0; j<data.receiverList.length; j++){
 						if(data.receiverList[j].userid == ${userId}){
+							$('#dept'+'${dept}').children('span').html($('#dept'+'${dept}').children('span').html()-1);
+							$('#deptAll').children('span').html($('#deptAll').children('span').html()-1);
 							continue;
 						}
 						receiverList += '<input type="checkbox" id="checkBox'+labelCount+'" value="'+data.receiverList[j].userid+'"> <label for="checkBox'+labelCount+'">';
@@ -160,7 +162,7 @@ function receiverPlusFn(){
 				}
 				receiverList += '</div>';
 				$("#checkBoxList").html($("#checkBoxList").html()+receiverList);
-
+				
 				checkAllFn();
 			}
 		});

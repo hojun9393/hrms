@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,20 +44,27 @@ public class MessageController {
 	}
 	
 	@RequestMapping(value = "/write.do", method = RequestMethod.GET)
-	public String write(Model model) {
+	public String write(Model model, Authentication authentication) {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		model.addAttribute("userId", userId);
+		model.addAttribute("dept", loginUser.getDept());
 		return "/message/write";
 	}
 	
 	@RequestMapping(value = "/reply.do", method = RequestMethod.POST)
-	public String write(Model model, int sendUserId) {
+	public String write(Model model, int sendUserId, Authentication authentication) {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		model.addAttribute("userId", userId);
 		model.addAttribute("sendUserId", sendUserId);
 		return "/message/write";
 	}
    
 	@RequestMapping(value = "/write.do", method = RequestMethod.POST)
-	public void write(@RequestParam List<Integer> receiver, String content, HttpServletResponse res) throws IOException {
+	public void write(@RequestParam List<Integer> receiver, String content, HttpServletResponse res, Authentication authentication) throws IOException {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		if(content == null || content.equals("") || receiver.size() == 0 || userId == 0) {
 			res.getWriter().append("<script>alert('쪽지를 전송하지 못했습니다.');location.href='main.do'</script>");
 			res.getWriter().flush();

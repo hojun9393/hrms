@@ -20,6 +20,10 @@ public class UserDAO {
 	public Map<String, Object> selectLogin(String username){
 		return sqlSession.selectOne(namespace+".selectLogin", username);
 	}
+	
+	public EmployeeVO selectUser(int userid){
+		return sqlSession.selectOne(namespace+".selectUser", userid);
+	}
 
 	public List<EmployeeVO> selectUserAll() {
 		return sqlSession.selectList(namespace+".selectUserAll");
@@ -28,7 +32,18 @@ public class UserDAO {
 	public int updateUser(EmployeeVO employee) {
 		return sqlSession.update(namespace+".updateUser", employee);
 	}
-	
+
+	public int insertUser(EmployeeVO employeeVO) {
+		return sqlSession.insert(namespace+".insertUser", employeeVO);
+	}
+
+	public int selectMaxUserid(String dept) {
+		return sqlSession.selectOne(namespace+".selectMaxUserid", dept);
+	}
+
+	public int updateFromAdmin(EmployeeVO employeeVO) {
+		return sqlSession.update(namespace+".updateFromAdmin", employeeVO);
+	}
 	
 	
 }

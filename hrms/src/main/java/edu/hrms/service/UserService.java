@@ -9,7 +9,15 @@ public interface UserService {
 
 	public Map<String, Object> selectLogin(String username);
 
+	public EmployeeVO selectUser(int userid);
+	
 	public List<EmployeeVO> selectUserAll();
 
 	public int updateUser(EmployeeVO employee);
+
+	public int insertUser(EmployeeVO employeeVO);
+
+	public int selectMaxUserid(String dept);
+
+	public int updateFromAdmin(EmployeeVO employeeVO);
 }

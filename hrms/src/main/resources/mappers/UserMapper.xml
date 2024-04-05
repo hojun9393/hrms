@@ -24,21 +24,66 @@
 	        WHEN position = 'E' THEN '사원'
 	        ELSE '직급미정' END AS positionCase 
 			FROM user
-			WHERE userid = #{userid}
+			WHERE userid = #{userid};
 	</select>
 	
-	<insert id="insert" parameterType="java.util.Map">	
-		insert into user(userid
-		     		   , password
-		     		   , name
-		     		   ,enabled
-		     		   , authority) 
-		          values(#{userid}
-		               , #{password}
-		               ,#{name}
-		               ,1
-		               ,#{authority})
+	<select id="selectUser" parameterType="int" resultType="employeeVO">
+		SELECT userid, password, enabled, authority, name, email
+				, dept, phone, position, joindate, IFNULL(retiredate, '-') AS retiredate
+				, state, addr, keepVaca, useVaca,
+			CASE LENGTH(phone)
+			WHEN 11 THEN CONCAT(LEFT(phone, 3), '-', MID(phone, 4, 4), '-', RIGHT(phone, 4))
+			WHEN 10 THEN CONCAT(LEFT(phone, 3), '-', MID(phone, 4, 3), '-', RIGHT(phone, 4))
+			END AS phoneNumber,
+			CASE WHEN dept = 'M' THEN '관리부'
+	   	 	WHEN dept = 'D' THEN '개발부'
+	        WHEN dept = 'S' THEN '영업부'
+	        WHEN dept = 'P' THEN '기획부'
+	        WHEN dept = 'H' THEN '인사부'
+	        ELSE '부서미정' END AS deptCase,  
+			CASE WHEN position = 'A' THEN '관리자'
+	   	 	WHEN position = 'C' THEN '대표'
+	        WHEN position = 'D' THEN '부장'
+	        WHEN position = 'L' THEN '팀장'
+	        WHEN position = 'E' THEN '사원'
+	        ELSE '직급미정' END AS positionCase 
+			FROM user
+			WHERE userid = #{userid};
+	</select>
+	
+	<insert id="insertUser" parameterType="employeeVO">	
+		INSERT INTO user(userid, password, 
+			name, dept, position, state, 
+			joinDate, phone, email, 
+			addr, enabled, authority, 
+			keepVaca, useVaca)
+		VALUES(#{userid}, #{password}, 
+			#{name}, #{dept}, #{position}, 
+			#{state}, #{joinDate}, #{phone}, 
+			#{email}, #{addr}, 1, 
+			<choose>
+				<when test='position == "E"'>
+					'ROLE_EMPLOYEE', 
+				</when>
+				<when test='position == "L"'>
+					'ROLE_LEADER', 
+				</when>
+				<when test='position == "D"'>
+					'ROLE_DIRECTOR', 
+				</when>
+				<when test='position == "A"'>
+					'ROLE_ADMIN', 
+				</when>
+				<when test='position == "C"'>
+					'ROLE_CEO', 
+				</when>
+			</choose>
+			120, 0);
 	</insert>
+	
+	<select id="selectMaxUserid" parameterType="String" resultType="int">
+		SELECT MAX(userid) FROM user WHERE dept = #{dept};
+	</select>
 	
 	<select id="selectUserAll" resultType="employeeVO">
 		SELECT *,
@@ -67,6 +112,37 @@
 		phone = #{phone}, 
 		email = #{email}, 
 		addr = #{addr} 
+		WHERE userid = #{userid};
+	</update>
+	
+	<update id="updateFromAdmin" parameterType="employeeVO">
+		UPDATE user SET 
+		password = #{password}, 
+		name = #{name}, 
+		dept = #{dept}, 
+		position = #{position}, 
+		state = #{state}, 
+		phone = #{phone}, 
+		email = #{email}, 
+		addr = #{addr}, 
+		authority = 
+		<choose>
+			<when test='position == "E"'>
+				'ROLE_EMPLOYEE' 
+			</when>
+			<when test='position == "L"'>
+				'ROLE_LEADER' 
+			</when>
+			<when test='position == "D"'>
+				'ROLE_DIRECTOR' 
+			</when>
+			<when test='position == "A"'>
+				'ROLE_ADMIN' 
+			</when>
+			<when test='position == "C"'>
+				'ROLE_CEO' 
+			</when>
+		</choose>
 		WHERE userid = #{userid};
 	</update>
 	
