@@ -147,10 +147,12 @@
 </div>
 
 <form action="approvedOver.do" method="post" id="approvedOver">
+	<input type="hidden" name="userId" value="${vo.userId}" >
 	<input type="hidden" name="overTimeNo" value="${vo.overTimeNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
 <form action="rejectedOver.do" method="post" id="rejectedOver">
+	<input type="hidden" name="userId" value="${vo.userId}" >
 	<input type="hidden" name="overTimeNo" value="${vo.overTimeNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>

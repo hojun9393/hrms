@@ -42,4 +42,6 @@ public interface SignService {
 	List<OverVO> selectOverSearch(HashMap<String, String> map);
 	
 	List<DocFileVO> selectDocFile(int docNo);
+	
+	int insertAlarm(Map<String, Object> map);
 }

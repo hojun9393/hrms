@@ -229,7 +229,9 @@ public class SignController {
 	}
 	
 	@RequestMapping(value = "/docView.do", method = RequestMethod.GET)
-	public String docView(int docNo, Model model) {
+	public String docView(int docNo, Model model, Authentication authentication) {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("docNo", docNo);
 		map.put("userId", userId);
@@ -256,7 +258,9 @@ public class SignController {
 	}
 	
 	@RequestMapping(value = "/vacaView.do", method = RequestMethod.GET)
-	public String vacaView(int vacaNo, Model model) {
+	public String vacaView(int vacaNo, Model model, Authentication authentication) {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("vacaNo", vacaNo);
 		map.put("userId", userId);
@@ -281,7 +285,9 @@ public class SignController {
 	}
 	
 	@RequestMapping(value = "/overView.do", method = RequestMethod.GET)
-	public String OverView(int overTimeNo, Model model) {
+	public String OverView(int overTimeNo, Model model, Authentication authentication) {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("overTimeNo", overTimeNo);
 		map.put("userId", userId);
@@ -314,6 +320,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateApprovedDoc(docVO);
 					signService.updateDocState(docVO.getDocNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", docVO.getUserId());
+					map.put("contentType", "D");
+					map.put("contentNo", docVO.getDocNo());
+					map.put("signType", "2");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -340,6 +352,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateRejectedDoc(docVO);
 					signService.updateDocState(docVO.getDocNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", docVO.getUserId());
+					map.put("contentType", "D");
+					map.put("contentNo", docVO.getDocNo());
+					map.put("signType", "3");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -367,6 +385,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateApprovedVaca(vacaVO);
 					signService.updateVacaState(vacaVO.getVacaNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", vacaVO.getUserId());
+					map.put("contentType", "V");
+					map.put("contentNo", vacaVO.getVacaNo());
+					map.put("signType", "2");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -393,6 +417,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateRejectedVaca(vacaVO);
 					signService.updateVacaState(vacaVO.getVacaNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", vacaVO.getUserId());
+					map.put("contentType", "V");
+					map.put("contentNo", vacaVO.getVacaNo());
+					map.put("signType", "3");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -419,6 +449,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateApprovedOver(overVO);
 					signService.updateOverState(overVO.getOverTimeNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", overVO.getUserId());
+					map.put("contentType", "O");
+					map.put("contentNo", overVO.getOverTimeNo());
+					map.put("signType", "2");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -445,6 +481,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateRejectedOver(overVO);
 					signService.updateOverState(overVO.getOverTimeNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", overVO.getUserId());
+					map.put("contentType", "O");
+					map.put("contentNo", overVO.getOverTimeNo());
+					map.put("signType", "3");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -464,7 +506,9 @@ public class SignController {
 	
 	@RequestMapping(value="/search.do")
 	@ResponseBody
-	public HashMap<String, Object> search(String startDate, String endDate, String name, String mySignState){
+	public HashMap<String, Object> search(String startDate, String endDate, String name, String mySignState, Authentication authentication){
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		if(endDate.equals("")) {
 			endDate = null;
 		}

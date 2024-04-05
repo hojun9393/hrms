@@ -109,4 +109,8 @@ public class SignDAO {
 	public List<DocFileVO> selectDocFile(int docNo) {
 		return sqlSession.selectList(namespace+".selectDocFile", docNo);
 	}
+
+	public int insertAlarm(Map<String, Object> map) {
+		return sqlSession.insert(namespace+".insertAlarm", map);
+	}
 }

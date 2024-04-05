@@ -143,10 +143,12 @@
 </div>
 
 <form action="approvedDoc.do" method="post" id="approvedDoc">
+	<input type="hidden" name="userId" value="${vo.userid}" >
 	<input type="hidden" name="docNo" value="${vo.docNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
 <form action="rejectedDoc.do" method="post" id="rejectedDoc">
+	<input type="hidden" name="userId" value="${vo.userid}" >
 	<input type="hidden" name="docNo" value="${vo.docNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>

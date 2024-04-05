@@ -333,4 +333,9 @@
 			   state = CASE WHEN (SELECT count(state) FROM overtimesign WHERE overtimeNo = #{overtimeNo} AND (state IN (3))) > 0 THEN 3 ELSE state END
 		WHERE overtimeNo = #{overtimeNo};
 	</update>
+	
+	<insert id="insertAlarm" parameterType="map">
+		INSERT INTO alarm(userid, contentType, contentNo, signType) 
+			VALUES(#{userId}, #{contentType}, #{contentNo}, #{signType});
+	</insert>
 </mapper>

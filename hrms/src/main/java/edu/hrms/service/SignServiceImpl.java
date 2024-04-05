@@ -129,4 +129,9 @@ public class SignServiceImpl implements SignService{
 	public List<DocFileVO> selectDocFile(int docNo) {
 		return signDAO.selectDocFile(docNo);
 	}
+
+	@Override
+	public int insertAlarm(Map<String, Object> map) {
+		return signDAO.insertAlarm(map);
+	}
 }
