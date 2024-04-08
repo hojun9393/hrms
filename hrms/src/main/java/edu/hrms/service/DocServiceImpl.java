@@ -27,7 +27,7 @@ public class DocServiceImpl implements DocService {
 	DocDAO docDAO;
 	
 	@Override
-	public List<DocVO> selectList(Map<String, String> map) {
+	public List<DocVO> selectList(Map<String, Object> map) {
 		return docDAO.selectList(map);
 	}
 	
@@ -56,14 +56,14 @@ public class DocServiceImpl implements DocService {
 				DocFileVO vo = new DocFileVO();
 				String originNm = data.getOriginalFilename();
 				
-				String[] fileNMArr = originNm.split("\\.");
-				String ext = fileNMArr[fileNMArr.length-1].toLowerCase();
+				String[] fileNmArr = originNm.split("\\.");
+				String ext = fileNmArr[fileNmArr.length-1].toLowerCase();
 				
 				String realNm = null;
 				
 				int i = 1;
 				while(true) {
-					realNm = fileNMArr[0] + "_" + i + "." + ext;
+					realNm = fileNmArr[0] + "_" + i + "." + ext;
 					File file = new File(path, realNm);
 					if(!file.exists()) {
 						break;
@@ -119,8 +119,8 @@ public class DocServiceImpl implements DocService {
 	}
 	
 	@Override
-	public List<DocFileVO> selectDocFileByDocNo(int docNo) {
-		return docDAO.selectDocFileByDocNo(docNo);
+	public List<DocFileVO> selectDocFilesByDocNo(int docNo) {
+		return docDAO.selectDocFilesByDocNo(docNo);
 	}
 	
 	@Override

@@ -20,7 +20,7 @@ public class DocDAO {
 	
 	private final String namespace = "edu.hrms.mappers.docMapper";
 	
-	public List<DocVO> selectList(Map<String, String> map){
+	public List<DocVO> selectList(Map<String, Object> map){
 		return sqlSession.selectList(namespace+".selectList", map);
 	}
 	
@@ -48,8 +48,8 @@ public class DocDAO {
 		return sqlSession.selectList(namespace+".getDocSignList", docNo);
 	}
 	
-	public List<DocFileVO> selectDocFileByDocNo(int docNo){
-		return sqlSession.selectList(namespace+".selectDocFileByDocNo", docNo);
+	public List<DocFileVO> selectDocFilesByDocNo(int docNo){
+		return sqlSession.selectList(namespace+".selectDocFilesByDocNo", docNo);
 	}
 	
 	public int withdrawl(int docNo) {

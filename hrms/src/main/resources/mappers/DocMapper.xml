@@ -33,26 +33,30 @@
 			  			<if test='userid != null'>
 							AND d.userid = #{userid}
 			 			</if>
-			  			<if test='startDate != null and endDate == null'>
-							AND date <![CDATA[>=]]> #{startDate}
-			 			</if>
-			 			<if test='startDate == null and endDate != null'>
-							AND date <![CDATA[<]]> DATE_ADD(#{endDate}, INTERVAL 1 DAY)
-			 			</if>
-						<if test='startDate != null and endDate != null'>
-							AND date BETWEEN #{startDate} AND DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+			 			<if test="searchVO != null">
+				  			<if test='searchVO.startDate != null and searchVO.endDate == null'>
+								AND date <![CDATA[>=]]> #{searchVO.startDate}
+				 			</if>
+				 			<if test='searchVO.startDate == null and searchVO.endDate != null'>
+								AND date <![CDATA[<]]> DATE_ADD(#{searchVO.endDate}, INTERVAL 1 DAY)
+				 			</if>
+							<if test='searchVO.startDate != null and searchVO.endDate != null'>
+								AND date BETWEEN #{searchVO.startDate} AND DATE_ADD(#{searchVO.endDate}, INTERVAL 1 DAY)
+				 			</if>
 			 			</if>
 			 			<if test='state != null'>
-			 				AND d.state = '2'
+			 				AND d.state = #{state}
 			 			</if>
 			 			ORDER BY d.docNo ASC ) sub
 			INNER JOIN user u
 				ON sub.userid = u.userid 
-				<if test='position!=null and !position.equals("")'>
-			 		AND u.position = #{position}
-	 			</if>
-	 			<if test='searchVal!=null and !searchVal.equals("")'>
-			 		AND u.name LIKE CONCAT ('%',#{searchVal},'%')
+	 			<if test="searchVO != null">
+					<if test='searchVO.category_position!=null and !searchVO.category_position.equals("")'>
+				 		AND u.position = #{searchVO.category_position}
+		 			</if>
+		 			<if test='searchVO.searchVal!=null and !searchVO.searchVal.equals("")'>
+				 		AND u.name LIKE CONCAT ('%',#{searchVO.searchVal},'%')
+		 			</if>
 	 			</if>
 				AND u.dept = #{dept}
  			ORDER BY rownum DESC
@@ -60,13 +64,13 @@
 	
 	<insert id="insert" parameterType="docVO">
 		INSERT INTO doc (userid, title, content)
-					values (#{userId}, #{title}, #{content})
+					values (#{userid}, #{title}, #{content})
 	</insert>
 	
 	<select id="getMaxNoByUserId" parameterType="int" resultType="int">
 		SELECT MAX(docNo) docNo
 			FROM doc
-			WHERE userid = #{userId}
+			WHERE userid = #{userid}
 	</select>
 	
 	<insert id="insertDocFile" parameterType="java.util.List">
@@ -125,7 +129,7 @@
 		   ORDER BY signOrder
 	</select>
 	
-	<select id="selectDocFileByDocNo" parameterType="int" resultType="docFileVO">
+	<select id="selectDocFilesByDocNo" parameterType="int" resultType="docFileVO">
 		SELECT df.* FROM docfile df
 			INNER JOIN doc d
 				ON d.docNo = df.docNo

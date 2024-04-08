@@ -14,7 +14,7 @@ import edu.hrms.vo.SignLineVO;
 
 public interface DocService {
 
-	List<DocVO> selectList(Map<String, String> map);
+	List<DocVO> selectList(Map<String, Object> map);
 	
 	int insert(DocVO vo);
 	
@@ -34,7 +34,7 @@ public interface DocService {
 	
 	DocVO selectDocByDocNo(int docNo);
 	
-	List<DocFileVO> selectDocFileByDocNo(int docNo);
+	List<DocFileVO> selectDocFilesByDocNo(int docNo);
 	
 	int withdrawl(int docNo);
 }
