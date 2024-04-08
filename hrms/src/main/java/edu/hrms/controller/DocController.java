@@ -46,13 +46,13 @@ public class DocController {
 	public String main(Model model, Authentication authentication) {
 		UserVO login = (UserVO) authentication.getPrincipal();
 		
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("userid", login.getUserid());
 		map.put("dept", login.getDept());
 		List<DocVO> list_my = docService.selectList(map);
 		
 		map.remove("userid");
-		map.put("state", "state");
+		map.put("state", "2");
 		List<DocVO> list_dept = docService.selectList(map);
 		model.addAttribute("list_my", list_my);
 		model.addAttribute("list_dept", list_dept);
@@ -72,10 +72,11 @@ public class DocController {
 	
 	@RequestMapping(value = "/write.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String write(Authentication authentication, HttpServletRequest request, String title, String content, @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
+	public String write(Authentication authentication, HttpServletRequest request, String title, 
+			String content, @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
 		
 		UserVO login = (UserVO) authentication.getPrincipal();
-		int userId = Integer.parseInt(login.getUserid());
+		int userid = Integer.parseInt(login.getUserid());
 		String path = docService.getPath(request);
 //		String path = request.getSession().getServletContext().getRealPath("/resources/upload"); // 개발
 		File dir = new File(path);
@@ -85,31 +86,33 @@ public class DocController {
 		
 		// 기안 작성 로직 순서
 		// 1. doc 테이블에 insert 한다
-		DocVO vo = new DocVO(userId, title, content);
-		docService.insert(vo);
+		DocVO vo = new DocVO(userid, title, content);
+		int docInsert = docService.insert(vo);
+		int docSignInsert = 0; 
 		
-		// 2. insert된 docNo 얻어온다
-		int docNo = docService.getMaxNoByUserId(userId);
-		
-		if(files.size()>0) {
-			// 3. 파일 생성 및 파일vo리스트 리턴한다.
-			List<DocFileVO> fileList = docService.createFiles(files, path, docNo);
+		if(docInsert>0) {
+			// 2. insert된 docNo 얻어온다
+			int docNo = docService.getMaxNoByUserId(userid);
 			
-			// 4. docfile 테이블에 insert 한다
-			docService.insertDocFile(fileList);
+			if(files.size()>0) {
+				// 3. 파일 생성 및 파일vo리스트 리턴한다.
+				List<DocFileVO> fileList = docService.createFiles(files, path, docNo);
+				
+				// 4. docfile 테이블에 insert 한다
+				docService.insertDocFile(fileList);
+			}
+			
+			// 5. 결재라인 리스트 생성한다.
+			List<SignLineVO> signLineList = workService.getSignLineList(Integer.toString(userid), login.getPosition(), "D");
+			
+			// 6. docSign 리스트 생성한다.
+			List<DocSignVO> docSignList = docService.getDocSignList(signLineList, docNo);
+			
+			// 7. docsign 테이블에 insert 한다.
+			docSignInsert = docService.insertDocSign(docSignList);
 		}
 		
-		// 5. 결재라인 리스트 생성한다.
-		List<SignLineVO> signLineList = workService.getSignLineList(Integer.toString(userId), login.getPosition(), "D");
-		
-		// 6. docSign 리스트 생성한다.
-		List<DocSignVO> docSignList = docService.getDocSignList(signLineList, docNo);
-		
-		// 7. docsign 테이블에 insert 한다.
-		int result = docService.insertDocSign(docSignList);
-		
-		return Integer.toString(result);
-		
+		return Integer.toString(docSignInsert);
 	}
 	
 	@RequestMapping(value = "/reloadList.do")
@@ -117,31 +120,21 @@ public class DocController {
 	public List<DocVO> reloadList(SearchVO searchVO, Authentication authentication){
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
-		if(searchVO.getStartDate()==null || searchVO.getStartDate().equals("")){
-			searchVO.setStartDate(null);
-		}
-		if(searchVO.getEndDate()==null || searchVO.getEndDate().equals("")){
-			searchVO.setEndDate(null);
-		}
-		Map<String, String> map = new HashMap<>();
+		System.out.println(searchVO);
+		Map<String, Object> map = new HashMap<>();
 		map.put("dept", login.getDept());
-		map.put("startDate", searchVO.getStartDate());
-		map.put("endDate", searchVO.getEndDate());
+		map.put("searchVO", searchVO);
 		
 		if(searchVO.getListType().equals("my")) {
 			map.put("userid", login.getUserid());
 		}else {
-			map.put("state", "state");
-			map.put("position", searchVO.getPosition());
-			map.put("searchVal", searchVO.getSearchVal());
+			map.put("state", "2");
 		}
-		System.out.println(searchVO.toString());
-		List<DocVO> list = docService.selectList(map);
-
-		return list;
+	
+		return docService.selectList(map);
 	}
 	
-	@RequestMapping(value = "/view.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/view.do", method = RequestMethod.GET)
 	public String view(Model model, int docNo) {
 		
 		DocVO vo = docService.selectDocByDocNo(docNo);
@@ -159,9 +152,7 @@ public class DocController {
 		
 		model.addAttribute("count", map.get("count"));
 		model.addAttribute("nowState", map.get("nowState"));
-		
-		List<DocFileVO> dfList = docService.selectDocFileByDocNo(docNo);
-		model.addAttribute("dfList", dfList);
+		model.addAttribute("dfList", docService.selectDocFilesByDocNo(docNo));
 		
 		return "document/view";
 	}

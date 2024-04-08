@@ -165,7 +165,7 @@
 		let endDate;
 		let listType;
 		let outputBody;
-		let position = $("select[name=category] option:selected").val();
+		let category_position = $("select[name=category] option:selected").val();
 		let searchVal = $("input[name=searchVal]").val();
 		if(obj==1){
 			startDate = $("#startDate1").val();
@@ -181,7 +181,7 @@
 		
 		$.ajax({
 			url:"reloadList.do",
-			data: {startDate : startDate, endDate : endDate, listType : listType, position : position, searchVal : searchVal},
+			data: {startDate : startDate, endDate : endDate, listType : listType, category_position : category_position, searchVal : searchVal},
 			success:function(data){
 				let html = "";
 				if(obj==1){
@@ -241,7 +241,7 @@
 		i.setAttribute('name', 'docNo');
 		i.setAttribute('value', obj);
 		f.appendChild(i);
-		f.setAttribute('method', 'post');
+		f.setAttribute('method', 'get');
 		f.setAttribute('action', 'view.do');
 		document.body.appendChild(f);
 		f.submit();
