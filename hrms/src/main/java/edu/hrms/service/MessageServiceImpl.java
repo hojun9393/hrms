@@ -37,13 +37,13 @@ public class MessageServiceImpl implements MessageService{
 	}
 
 	@Override
-	public List<MsgVO> selectMsgAll(int userId) {
-		return messageDAO.selectMsgAll(userId);
+	public List<MsgVO> selectMsgAll(Map<String,Object> map) {
+		return messageDAO.selectMsgAll(map);
 	}
 
 	@Override
-	public List<MsgVO> selectMsgReceiveAll(int userId) {
-		return messageDAO.selectMsgReceiveAll(userId);
+	public List<MsgVO> selectMsgReceiveAll(Map<String,Object> map) {
+		return messageDAO.selectMsgReceiveAll(map);
 	}
 
 	@Override

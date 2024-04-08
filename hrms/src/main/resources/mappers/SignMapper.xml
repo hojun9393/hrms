@@ -334,8 +334,15 @@
 		WHERE overtimeNo = #{overtimeNo};
 	</update>
 	
-	<insert id="insertAlarm" parameterType="map">
-		INSERT INTO alarm(userid, contentType, contentNo, signType) 
-			VALUES(#{userId}, #{contentType}, #{contentNo}, #{signType});
-	</insert>
+	<update id="updateDocAlarm" parameterType="map">
+		UPDATE doc SET alarmNo = #{alarmNo} WHERE docNo = #{docNo};		
+	</update>
+	
+	<update id="updateVacaAlarm" parameterType="map">
+		UPDATE vacation SET alarmNo = #{alarmNo} WHERE vacaNo = #{vacaNo};		
+	</update>
+	
+	<update id="updateOverAlarm" parameterType="map">
+		UPDATE overtime SET alarmNo = #{alarmNo} WHERE overTimeNo = #{overTimeNo};		
+	</update>
 </mapper>

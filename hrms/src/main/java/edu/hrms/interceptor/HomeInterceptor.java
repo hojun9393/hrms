@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import edu.hrms.service.AlarmService;
 import edu.hrms.service.MessageService;
+import edu.hrms.vo.AlarmVO;
 import edu.hrms.vo.MsgVO;
 import edu.hrms.vo.UserVO;
 
@@ -20,6 +22,9 @@ public class HomeInterceptor implements HandlerInterceptor {
 	
 	@Autowired
 	MessageService messageService;
+	
+	@Autowired
+	AlarmService alarmService;
 	/*
 	 * 1. dispatcher servlet과 controller 사이에서 동작한다.
 	 * 2. 때문에 dispatcher servlet의 bean에 모두 접근이 가능하다.
@@ -73,8 +78,9 @@ public class HomeInterceptor implements HandlerInterceptor {
 			if(!uris[0].contains("login")) {
 				UserVO user = (UserVO)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 				List<MsgVO> msgList = messageService.selectMsgAllNav(Integer.parseInt(user.getUserid()));
-				
+				List<AlarmVO> alarmList = alarmService.selectAlarm(Integer.parseInt(user.getUserid()));
 				modelAndView.addObject("msgList", msgList);
+				modelAndView.addObject("alarmList", alarmList);
 			}
 		}
 		

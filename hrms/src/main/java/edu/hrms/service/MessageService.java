@@ -11,8 +11,8 @@ public interface MessageService {
 	List<Map<String, String>> selectDeptCount();
 	int insertMsg(Map<String,Object> map);
 	int insertMsgReceive(Map<String, Object> map);
-	List<MsgVO> selectMsgAll(int userId);
-	List<MsgVO> selectMsgReceiveAll(int userId);
+	List<MsgVO> selectMsgAll(Map<String,Object> map);
+	List<MsgVO> selectMsgReceiveAll(Map<String,Object> map);
 	int updateMsgRead(int msgRNo);
 	int deleteMsgReceive(int msgRNo);
 	List<MsgVO> selectMsgAllNav(int userId);

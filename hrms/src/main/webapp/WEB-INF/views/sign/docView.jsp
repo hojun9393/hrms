@@ -76,17 +76,27 @@
 							</div>
 						</div>
 						
+						<c:set var="rejected" value="false"/>
 						<c:forEach items="${vo.signLineVO}" var="signLineVO">
 						<c:choose>
 							<c:when test="${signLineVO.state eq '0'}">
 								<c:choose>
-									<c:when test="${vo.mySignOrder eq signLineVO.signOrder || (vo.mySignState eq '2' && vo.mySignOrder+1 eq signLineVO.signOrder)}">
+									<c:when test="${signLineVO.prevState eq '2' || signLineVO.prevState eq null}">
 										<div class="card text-danger px-3 py-2 my-2 border-danger font-weight-bold">
 											<div class="row">
 												<span class="d-inline col">${signLineVO.name} ${signLineVO.position}</span>
 												<span class="d-inline col-auto">결재 대기</span>
 											</div>
 										</div>
+									</c:when>
+									<c:when test="${signLineVO.prevState eq '3' || rejected eq 'true'}">
+										<div class="card bg-white px-3 py-2 my-2 font-weight-bold text-gray">
+											<div class="row">
+												<span class="d-inline col">${signLineVO.name} ${signLineVO.position}</span>
+												<span class="d-inline col-auto">-</span>
+											</div>
+										</div>
+										<c:set var="rejected" value="true"/>
 									</c:when>
 									<c:otherwise>
 										<div class="card text-secondary px-3 py-2 my-2 border-secondary font-weight-bold">

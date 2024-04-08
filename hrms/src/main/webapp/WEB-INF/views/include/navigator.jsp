@@ -93,46 +93,78 @@
 						<a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
 							aria-expanded="false"> 
 							<i class="fas fa-bell fa-fw"></i> <!-- Counter - Alerts -->
-							<span class="badge badge-danger badge-counter">3+</span>
+							<c:if test="${fn:length(alarmList) > 0}">
+								<span class="badge badge-danger badge-counter" id="alarmBadge">${fn:length(alarmList)}</span>
+							</c:if>
 						</a> <!-- Dropdown - Alerts -->
 						<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
 							aria-labelledby="alertsDropdown">
 							<h6 class="dropdown-header">Alerts Center</h6>
-							<a class="dropdown-item d-flex align-items-center" href="#">
+							<c:if test="${fn:length(alarmList) eq '0'}">
+								<a class="dropdown-item align-items-center">
+									<div class="font-weight-bold text-gray-500 text-center p-3">
+										새로운 알림이 없습니다.
+									</div>
+								</a> 
+							</c:if>
+							<c:forEach items="${alarmList}" var="vo">
+								<c:choose>
+									<c:when test="${vo.type eq '기안'}">
+										<a class="dropdown-item d-flex align-items-center" href="${pageContext.request.contextPath}/docu/view.do?docNo=${vo.contentNo}" onclick="alarmReadNavFn(${vo.alarmNo},this)">
+									</c:when>
+									<c:when test="${vo.type eq '연차'}">
+										<a class="dropdown-item d-flex align-items-center" href="${pageContext.request.contextPath}/vaca/view.do?no=${vo.contentNo}" onclick="alarmReadNavFn(${vo.alarmNo},this)">
+									</c:when>
+									<c:when test="${vo.type eq '초과근무'}">
+										<a class="dropdown-item d-flex align-items-center" href="${pageContext.request.contextPath}/work/overtime_view.do?no=${vo.contentNo}" onclick="alarmReadNavFn(${vo.alarmNo},this)">
+									</c:when>
+								</c:choose>
+								
 								<div class="mr-3">
-									<div class="icon-circle bg-primary">
-										<i class="fas fa-file-alt text-white"></i>
+									<c:choose>
+										<c:when test="${vo.state eq '2'}">
+											<div class="icon-circle bg-success">
+										</c:when>
+										<c:when test="${vo.state eq '3'}">
+											<div class="icon-circle bg-warning">
+										</c:when>
+										<c:otherwise>
+											<div class="icon-circle bg-primary">
+										</c:otherwise>
+									</c:choose>
+										<c:choose>
+											<c:when test="${vo.type eq '기안'}">
+												<i class="fas fa-file-alt text-white"></i>
+											</c:when>
+											<c:when test="${vo.type eq '연차'}">
+												<i class="fas fa-plane text-white"></i>
+											</c:when>
+											<c:when test="${vo.type eq '초과근무'}">
+												<i class="fas fa-briefcase text-white"></i>
+											</c:when>
+										</c:choose>
 									</div>
 								</div>
 								<div>
-									<div class="small text-gray-500">December 12, 2019</div>
-									<span class="font-weight-bold">A new monthly report is ready to download!</span>
+									<div class="small text-gray-500">${vo.rdate}</div>
+									<c:choose>
+										<c:when test="${vo.state eq '2'}">
+											<span class="font-weight-bold">
+											[${vo.type}]
+											${vo.content}...가 
+											<span class="d-inline text-success text-center font-weight-bold">승인</span>되었습니다.</span>
+										</c:when>
+										<c:when test="${vo.state eq '3'}">
+											<span class="font-weight-bold">
+											[${vo.type}]
+											${vo.content}...가 
+											<span class="d-inline text-warning text-center font-weight-bold">반려</span>되었습니다.</span>
+										</c:when>
+									</c:choose>
 								</div>
-							</a> 
-							<a class="dropdown-item d-flex align-items-center" href="#">
-								<div class="mr-3">
-									<div class="icon-circle bg-success">
-										<i class="fas fa-donate text-white"></i>
-									</div>
-								</div>
-								<div>
-									<div class="small text-gray-500">December 7, 2019</div>
-									$290.29 has been deposited into your account!
-								</div>
-							</a> 
-							<a class="dropdown-item d-flex align-items-center" href="#">
-								<div class="mr-3">
-									<div class="icon-circle bg-warning">
-										<i class="fas fa-exclamation-triangle text-white"></i>
-									</div>
-								</div>
-								<div>
-									<div class="small text-gray-500">December 2, 2019</div>
-									Spending Alert: We've noticed unusually high spending for your
-									account.
-								</div>
-							</a> 
-							<a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+								</a>
+							</c:forEach>
+							<a class="dropdown-item text-center small text-gray-500">알림은 최대 10개까지 표시됩니다.</a>
 						</div>
 					</li>
 	
@@ -163,6 +195,7 @@
 										<div class="status-indicator bg-success"></div>
 									</div>
 									<div class="font-weight-bold">
+										<div class="small text-gray-500">${vo.sendDate}</div>
 										<div class="text-truncate">
 											${vo.content} 
 										</div>
@@ -251,7 +284,6 @@
 			
 			<script>
 			function msgReadNavFn(msgRNo, obj){
-				
 				$.ajax({
 					url:"${pageContext.request.contextPath}/message/msgRead.do",
 					data:{msgRNo:msgRNo},
@@ -265,6 +297,20 @@
 							if($('#msgBadge').html() == 0){
 								$('#msgBadge').remove();
 							}
+						}
+					}
+				});
+			}
+			
+			function alarmReadNavFn(alarmNo, obj){
+				$.ajax({
+					url:"${pageContext.request.contextPath}/sign/alarmRead.do",
+					data:{alarmNo:alarmNo},
+					success:function(){
+						$(obj).remove();
+						$('#alarmBadge').html($('#alarmBadge').html()-1);
+						if($('#alarmBadge').html() == 0){
+							$('#alarmBadge').remove();
 						}
 					}
 				});

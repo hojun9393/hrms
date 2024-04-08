@@ -131,7 +131,17 @@ public class SignServiceImpl implements SignService{
 	}
 
 	@Override
-	public int insertAlarm(Map<String, Object> map) {
-		return signDAO.insertAlarm(map);
+	public int updateDocAlarm(Map<String, Object> map) {
+		return signDAO.updateDocAlarm(map);
+	}
+
+	@Override
+	public int updateVacaAlarm(Map<String, Object> map) {
+		return signDAO.updateVacaAlarm(map);
+	}
+
+	@Override
+	public int updateOverAlarm(Map<String, Object> map) {
+		return signDAO.updateOverAlarm(map);
 	}
 }

@@ -39,15 +39,19 @@
 					<div class="mb-3 col-auto">
 						<select class="inp">
 							<option>전체</option>
+							<option>개발부</option>
 							<option>기획부</option>
 							<option>인사부</option>
 							<option>영업부</option>
-						</select> <select class="inp">
+							<option>관리부</option>
+						</select>
+						<select class="inp">
 							<option>전체</option>
 							<option>사원</option>
 							<option>팀장</option>
 							<option>부장</option>
 							<option>대표</option>
+							<option>관리자</option>
 						</select> <input type="text" name="" value="" id="search" class="inp"
 							placeholder="이름을 입력하세요.">
 						<div class="d-inline px-2 py-2 bg-secondary" onclick=""
@@ -147,6 +151,60 @@
 							</c:forEach>
 						</tbody>
 					</table>
+					
+					<ul class="pagination justify-content-center" id="paging">
+						<c:if test="${pagingVO.startPage > pagingVO.cntPage}">
+							<li class="paginate_button page-item previous" id="dataTable_previous">
+								<a href="main.do?nowPage=${pagingVO.startPage-1}&selected=received&searchType=${searchType}&searchValue=${searchValue}" aria-controls="dataTable" class="page-link">이전</a>
+							</li>
+						</c:if>
+						<c:forEach var="i" begin="${pagingVO.startPage}" end="${pagingVO.endPage}">
+							<c:choose>
+								<c:when test="${pagingVO.nowPage eq i}">
+									<li class="paginate_button page-item active">
+										<a href="main.do?nowPage=${i}&selected=received" aria-controls="dataTable" class="page-link">${i}</a>
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="paginate_button page-item">
+										<a href="main.do?nowPage=${i}&selected=received" aria-controls="dataTable" class="page-link">${i}</a>
+									</li>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+						<c:if test="${pagingVO.endPage < pagingVO.lastPage}">
+							<li class="paginate_button page-item next" id="datatable_next">
+								<a href="main.do?nowPage=${pagingVO.endPage+1}&selected=received" aria-controls="dataTable" class="page-link">다음</a>
+							</li>
+						</c:if>
+					</ul>
+					
+					<ul class="pagination justify-content-center d-none" id="recPaging">
+						<c:if test="${recPagingVO.startPage > recPagingVO.cntPage}">
+							<li class="paginate_button page-item previous" id="dataTable_previous">
+								<a href="main.do?recNowPage=${recPagingVO.startPage-1}&selected=sent&searchType=${searchType}&searchValue=${searchValue}" aria-controls="dataTable" class="page-link">이전</a>
+							</li>
+						</c:if>
+						<c:forEach var="i" begin="${recPagingVO.startPage}" end="${recPagingVO.endPage}">
+							<c:choose>
+								<c:when test="${recPagingVO.nowPage eq i}">
+									<li class="paginate_button page-item active">
+										<a href="main.do?recNowPage=${i}&selected=sent" aria-controls="dataTable" class="page-link">${i}</a>
+									</li>
+								</c:when>
+								<c:otherwise>
+									<li class="paginate_button page-item">
+										<a href="main.do?recNowPage=${i}&selected=sent" aria-controls="dataTable" class="page-link">${i}</a>
+									</li>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+						<c:if test="${recPagingVO.endPage < recPagingVO.lastPage}">
+							<li class="paginate_button page-item next" id="datatable_next">
+								<a href="main.do?recNowPage=${recPagingVO.endPage+1}&selected=sent" aria-controls="dataTable" class="page-link">다음</a>
+							</li>
+						</c:if>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -244,6 +302,11 @@
 	<script src="${pageContext.request.contextPath}/resources/js/message_main.js"></script>
 	
 	<script>
+	$(document).ready(function(){
+		let selected = `${selected}`;
+		selectFn(document.getElementById(selected));
+	})
+	
 	function msgCancelFn(msgRNo){
 		if(confirm("발신 취소하시겠습니까?")){
 			location.href='msgCancel.do?msgRNo='+msgRNo;

@@ -75,7 +75,7 @@
 						<c:choose>
 							<c:when test="${signLineVO.state eq '0'}">
 								<c:choose>
-									<c:when test="${signLineVO.prevState eq '2'}">
+									<c:when test="${signLineVO.prevState eq '2' || signLineVO.prevState eq null}">
 										<div class="card text-danger px-3 py-2 my-2 border-danger font-weight-bold">
 											<div class="row">
 												<span class="d-inline col">${signLineVO.name} ${signLineVO.position}</span>

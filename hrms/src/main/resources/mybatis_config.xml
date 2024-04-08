@@ -16,5 +16,6 @@
 		<typeAlias type="edu.hrms.vo.MsgVO" alias="msgVO"/>
 		<typeAlias type="edu.hrms.vo.MsgReceiveVO" alias="msgReceiveVO"/>
 		<typeAlias type="edu.hrms.vo.EmployeeVO" alias="employeeVO"/>
+		<typeAlias type="edu.hrms.vo.AlarmVO" alias="alarmVO"/>
 	</typeAliases>
 </configuration>

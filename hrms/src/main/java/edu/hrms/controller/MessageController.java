@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.hrms.service.MessageService;
 import edu.hrms.vo.MsgReceiveVO;
 import edu.hrms.vo.MsgVO;
+import edu.hrms.vo.PagingVO;
 import edu.hrms.vo.UserVO;
 
 @Controller
@@ -32,14 +33,35 @@ public class MessageController {
 	MessageService messageService;
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
-	public String main(Authentication authentication, Model model) {
+	public String main(Authentication authentication, Model model, String nowPage, String recNowPage, String selected) {
 		UserVO loginUser = (UserVO)authentication.getPrincipal();
 		userId = Integer.parseInt(loginUser.getUserid());
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		List<MsgVO> list = messageService.selectMsgAll(map);
+		List<MsgVO> recList = messageService.selectMsgReceiveAll(map);
 		
-		List<MsgVO> list = messageService.selectMsgAll(userId);
-		List<MsgVO> recList = messageService.selectMsgReceiveAll(userId);
+		int nowPageInt = 1;
+		if(nowPage != null && !nowPage.equals("")){
+			nowPageInt = Integer.parseInt(nowPage);
+		}
+		int recNowPageInt = 1;
+		if(recNowPage != null && !recNowPage.equals("")){
+			recNowPageInt = Integer.parseInt(recNowPage);
+		}
+		PagingVO pagingVO = new PagingVO(nowPageInt, list.size(), 10);
+		PagingVO recPagingVO = new PagingVO(recNowPageInt, recList.size(), 10);
+		map.put("pagingVO", pagingVO);
+		map.put("recPagingVO", recPagingVO);
+		list = messageService.selectMsgAll(map);
+		recList = messageService.selectMsgReceiveAll(map);
+		
 		model.addAttribute("list", list);
 		model.addAttribute("recList", recList);
+		model.addAttribute("pagingVO", pagingVO);
+		model.addAttribute("recPagingVO", recPagingVO);
+		model.addAttribute("selected", selected);
+		
 		return "/message/main";
 	}
 	

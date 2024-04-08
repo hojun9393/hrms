@@ -10,7 +10,7 @@ public class PagingVO {
 	private int start; //화면에서의 게시글 시작 번호
 	private int startLimit;
 	private int end; //화면에서의 게시글 끝번호
-	private int cntPage = 10; //화면에서 보여주고자 하는 페이징 번호 갯수
+	private int cntPage = 5; //화면에서 보여주고자 하는 페이징 번호 갯수
 	
 	public PagingVO() {}
 	public PagingVO(int nowPage, int total, int perPage) {

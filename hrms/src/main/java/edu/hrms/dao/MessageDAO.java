@@ -34,12 +34,12 @@ public class MessageDAO {
 		return sqlSession.insert(namespace+".insertMsgReceive", map);
 	}
 	
-	public List<MsgVO> selectMsgAll(int userId){
-		return sqlSession.selectList(namespace+".selectMsgAll", userId);
+	public List<MsgVO> selectMsgAll(Map<String,Object> map){
+		return sqlSession.selectList(namespace+".selectMsgAll", map);
 	}
 	
-	public List<MsgVO> selectMsgReceiveAll(int userId){
-		return sqlSession.selectList(namespace+".selectMsgReceiveAll", userId);
+	public List<MsgVO> selectMsgReceiveAll(Map<String,Object> map){
+		return sqlSession.selectList(namespace+".selectMsgReceiveAll", map);
 	}
 
 	public int updateMsgRead(int msgRNo) {

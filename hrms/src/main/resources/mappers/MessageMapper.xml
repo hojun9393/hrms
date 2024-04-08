@@ -42,7 +42,7 @@
 		</foreach>
 	</insert>
 	
-	<select id="selectMsgAll" parameterType="int" resultType="msgVO">
+	<select id="selectMsgAll" parameterType="Map" resultType="msgVO">
 		SELECT u.userid, u.name,
 		CASE WHEN u.dept = 'M' THEN '관리부'
    	 	WHEN u.dept = 'D' THEN '개발부'
@@ -58,7 +58,11 @@
         ELSE '직급미정' END AS position,
         m.msgNo, m.content, m.sendDate, mr.msgRNo,
         mr.state FROM user u INNER JOIN msg m on u.userid = m.userid INNER JOIN msgReceive mr on m.msgNO = mr.msgNo 
-        WHERE mr.userid = #{userId} ORDER BY m.sendDate DESC;
+        WHERE mr.userid = #{userId} ORDER BY m.sendDate DESC 
+        <if test="pagingVO != null">
+        	LIMIT #{pagingVO.startLimit}, #{pagingVO.perPage}
+        </if>
+        ;
 	</select>
 	
 	<select id="selectMsgAllNav" parameterType="int" resultType="msgVO">
@@ -96,7 +100,11 @@
         ELSE '직급미정' END AS position,
 		m.msgNo, m.content, m.sendDate, mr.msgRno,
         mr.state FROM user u INNER JOIN msgReceive mr on u.userid = mr.userid INNER JOIN msg m on mr.msgNo = m.msgNo 
-        WHERE m.userid= #{userId} ORDER BY m.sendDate DESC;
+        WHERE m.userid= #{userId} ORDER BY m.sendDate DESC
+        <if test="pagingVO != null">
+        	LIMIT #{recPagingVO.startLimit}, #{recPagingVO.perPage}
+        </if>
+        ;
 	</select>
 	
 	<update id="updateMsgRead" parameterType="int">

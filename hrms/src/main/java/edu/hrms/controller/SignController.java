@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.hrms.service.AlarmService;
 import edu.hrms.service.SignService;
 import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocVO;
@@ -40,6 +41,9 @@ public class SignController {
 	
 	@Autowired
 	SignService signService;
+	
+	@Autowired
+	AlarmService alarmService;
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
 	public String main(Authentication authentication, Model model, HttpSession session, HttpServletResponse response, HttpServletRequest request) throws IOException {
@@ -321,11 +325,10 @@ public class SignController {
 					result = signService.updateApprovedDoc(docVO);
 					signService.updateDocState(docVO.getDocNo());
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("userId", docVO.getUserId());
-					map.put("contentType", "D");
-					map.put("contentNo", docVO.getDocNo());
-					map.put("signType", "2");
-					signService.insertAlarm(map);
+					alarmService.insertAlarm(map);
+					map.put("docNo",docVO.getDocNo());
+					map.get("alarmNo");
+					signService.updateDocAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -353,11 +356,10 @@ public class SignController {
 					result = signService.updateRejectedDoc(docVO);
 					signService.updateDocState(docVO.getDocNo());
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("userId", docVO.getUserId());
-					map.put("contentType", "D");
-					map.put("contentNo", docVO.getDocNo());
-					map.put("signType", "3");
-					signService.insertAlarm(map);
+					alarmService.insertAlarm(map);
+					map.put("docNo",docVO.getDocNo());
+					map.get("alarmNo");
+					signService.updateDocAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -386,11 +388,10 @@ public class SignController {
 					result = signService.updateApprovedVaca(vacaVO);
 					signService.updateVacaState(vacaVO.getVacaNo());
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("userId", vacaVO.getUserId());
-					map.put("contentType", "V");
-					map.put("contentNo", vacaVO.getVacaNo());
-					map.put("signType", "2");
-					signService.insertAlarm(map);
+					alarmService.insertAlarm(map);
+					map.put("vacaNo",vacaVO.getVacaNo());
+					map.get("alarmNo");
+					signService.updateVacaAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -418,11 +419,10 @@ public class SignController {
 					result = signService.updateRejectedVaca(vacaVO);
 					signService.updateVacaState(vacaVO.getVacaNo());
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("userId", vacaVO.getUserId());
-					map.put("contentType", "V");
-					map.put("contentNo", vacaVO.getVacaNo());
-					map.put("signType", "3");
-					signService.insertAlarm(map);
+					alarmService.insertAlarm(map);
+					map.put("vacaNo",vacaVO.getVacaNo());
+					map.get("alarmNo");
+					signService.updateVacaAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -450,11 +450,10 @@ public class SignController {
 					result = signService.updateApprovedOver(overVO);
 					signService.updateOverState(overVO.getOverTimeNo());
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("userId", overVO.getUserId());
-					map.put("contentType", "O");
-					map.put("contentNo", overVO.getOverTimeNo());
-					map.put("signType", "2");
-					signService.insertAlarm(map);
+					alarmService.insertAlarm(map);
+					map.put("overTimeNo",overVO.getOverTimeNo());
+					map.get("alarmNo");
+					signService.updateOverAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -482,11 +481,10 @@ public class SignController {
 					result = signService.updateRejectedOver(overVO);
 					signService.updateOverState(overVO.getOverTimeNo());
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("userId", overVO.getUserId());
-					map.put("contentType", "O");
-					map.put("contentNo", overVO.getOverTimeNo());
-					map.put("signType", "3");
-					signService.insertAlarm(map);
+					alarmService.insertAlarm(map);
+					map.put("overTimeNo",overVO.getOverTimeNo());
+					map.get("alarmNo");
+					signService.updateOverAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -733,6 +731,13 @@ public class SignController {
         fis.close();
         os.close();
 		
+	}
+		
+	@RequestMapping(value = "/alarmRead.do")
+	@ResponseBody
+	public int alarmRead(int alarmNo) {
+		int result = alarmService.updateAlarmRead(alarmNo);
+		return result;
 	}
 	
 }

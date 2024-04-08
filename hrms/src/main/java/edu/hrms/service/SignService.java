@@ -43,5 +43,7 @@ public interface SignService {
 	
 	List<DocFileVO> selectDocFile(int docNo);
 	
-	int insertAlarm(Map<String, Object> map);
+	int updateDocAlarm(Map<String, Object> map);
+	int updateVacaAlarm(Map<String, Object> map);
+	int updateOverAlarm(Map<String, Object> map);
 }
