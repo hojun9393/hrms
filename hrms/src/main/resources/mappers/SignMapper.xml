@@ -19,7 +19,7 @@
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
 		FROM doc d inner join user u on d.userid = u.userid inner join docsign s on d.docNo = s.docNo 
-		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A'));
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) ORDER BY d.date DESC;
 	</select>
 	
 	<select id="selectAllVaca" resultType="vacaVO" parameterType="int">
@@ -38,7 +38,7 @@
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM vacation v inner join user u on v.userid = u.userid inner join vacasign s on v.vacaNo = s.vacaNo 
-        WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid where u.userid = #{userid} and (type = 'V' or type = 'A'));
+        WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid where u.userid = #{userid} and (type = 'V' or type = 'A')) ORDER BY v.rdate DESC;
 	</select>
 	
 	<select id="selectAllOver" resultType="overVO" parameterType="int">
@@ -57,7 +57,7 @@
         ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM overtime o inner join user u on o.userid = u.userid inner join overtimesign s on o.overtimeNo = s.overtimeNo 
-        WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A'));
+        WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) ORDER BY o.rdate DESC;
 	</select>
 	
 	<select id="selectDocSearch" resultType="docVO" parameterType="java.util.HashMap">
@@ -93,7 +93,8 @@
     	</if>
     	<if test="mySignState != null">
     	and s.state = #{mySignState} 
-    	</if>;
+    	</if>
+    	ORDER BY d.date DESC;
 	</select>
 	
 	<select id="selectVacaSearch" resultType="vacaVO" parameterType="java.util.HashMap">
@@ -129,7 +130,8 @@
     	</if>
     	<if test="mySignState != null">
     	and s.state = #{mySignState} 
-    	</if>;
+    	</if>
+    	ORDER BY v.rdate DESC;
 	</select>
 	
 	<select id="selectOverSearch" resultType="overVO" parameterType="java.util.HashMap">
@@ -165,7 +167,8 @@
     	</if>
     	<if test="mySignState != null">
     	and s.state = #{mySignState} 
-    	</if>;
+    	</if>
+    	ORDER BY o.rdate DESC;
 	</select>
 	
 	<select id="selectSignLineFromDocNo" parameterType="int" resultType="signLineVO">
@@ -201,7 +204,7 @@
         WHEN u.position = 'D' THEN '부장'
         WHEN u.position = 'L' THEN '팀장'
         WHEN u.position = 'E' THEN '사원'
-        ELSE '직급미정' END AS position, s.state as mySignState, s.signLineNo as mySignLineNo
+        ELSE '직급미정' END AS position, s.state as mySignState, s.signLineNo as mySignLineNo 
 		FROM doc d inner join user u on d.userid = u.userid inner join docsign s on d.docNo = s.docNo 
 		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userId} and (type = 'D' or type = 'A')) and d.docNo = #{docNo};
 	</select>
@@ -282,6 +285,10 @@
         WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userId} and (type = 'O' or type = 'A')) and o.overtimeNo = #{overTimeNo};
 	</select>
 	
+	<select id="selectDocFile" parameterType="int" resultType="docFileVO">
+		SELECT fileNo, docNo, originNm, realNm FROM docfile WHERE docNo = #{docNo};
+	</select>
+	
 	<update id="updateApprovedDoc" parameterType="docVO">
 		UPDATE docSign set state = 2 where signLineNo = #{mySignLineNo} and docNo = #{docNo};
 	</update>
@@ -326,4 +333,9 @@
 			   state = CASE WHEN (SELECT count(state) FROM overtimesign WHERE overtimeNo = #{overtimeNo} AND (state IN (3))) > 0 THEN 3 ELSE state END
 		WHERE overtimeNo = #{overtimeNo};
 	</update>
+	
+	<insert id="insertAlarm" parameterType="map">
+		INSERT INTO alarm(userid, contentType, contentNo, signType) 
+			VALUES(#{userId}, #{contentType}, #{contentNo}, #{signType});
+	</insert>
 </mapper>

@@ -1,6 +1,10 @@
 package edu.hrms.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.hrms.service.SignService;
+import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocVO;
 import edu.hrms.vo.OverVO;
 import edu.hrms.vo.SignLineVO;
@@ -223,11 +229,14 @@ public class SignController {
 	}
 	
 	@RequestMapping(value = "/docView.do", method = RequestMethod.GET)
-	public String docView(int docNo, Model model) {
+	public String docView(int docNo, Model model, Authentication authentication) {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("docNo", docNo);
 		map.put("userId", userId);
 		DocVO docVO = signService.selectDocFromDocNo(map);
+		List<DocFileVO> fileList = signService.selectDocFile(docNo);
 		List<SignLineVO> signLineVO = signService.selectSignLineFromDocNo(docVO.getDocNo());
 		
 		int count = signLineVO.size();
@@ -241,6 +250,7 @@ public class SignController {
 		}
 		docVO.setStateCount(count);
 		docVO.setSignLineVO(signLineVO);
+		docVO.setDocFileVO(fileList);
 		
 		model.addAttribute("vo", docVO);
 		
@@ -248,7 +258,9 @@ public class SignController {
 	}
 	
 	@RequestMapping(value = "/vacaView.do", method = RequestMethod.GET)
-	public String vacaView(int vacaNo, Model model) {
+	public String vacaView(int vacaNo, Model model, Authentication authentication) {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("vacaNo", vacaNo);
 		map.put("userId", userId);
@@ -273,7 +285,9 @@ public class SignController {
 	}
 	
 	@RequestMapping(value = "/overView.do", method = RequestMethod.GET)
-	public String OverView(int overTimeNo, Model model) {
+	public String OverView(int overTimeNo, Model model, Authentication authentication) {
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		map.put("overTimeNo", overTimeNo);
 		map.put("userId", userId);
@@ -306,6 +320,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateApprovedDoc(docVO);
 					signService.updateDocState(docVO.getDocNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", docVO.getUserId());
+					map.put("contentType", "D");
+					map.put("contentNo", docVO.getDocNo());
+					map.put("signType", "2");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -332,6 +352,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateRejectedDoc(docVO);
 					signService.updateDocState(docVO.getDocNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", docVO.getUserId());
+					map.put("contentType", "D");
+					map.put("contentNo", docVO.getDocNo());
+					map.put("signType", "3");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -359,6 +385,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateApprovedVaca(vacaVO);
 					signService.updateVacaState(vacaVO.getVacaNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", vacaVO.getUserId());
+					map.put("contentType", "V");
+					map.put("contentNo", vacaVO.getVacaNo());
+					map.put("signType", "2");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -385,6 +417,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateRejectedVaca(vacaVO);
 					signService.updateVacaState(vacaVO.getVacaNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", vacaVO.getUserId());
+					map.put("contentType", "V");
+					map.put("contentNo", vacaVO.getVacaNo());
+					map.put("signType", "3");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -411,6 +449,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateApprovedOver(overVO);
 					signService.updateOverState(overVO.getOverTimeNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", overVO.getUserId());
+					map.put("contentType", "O");
+					map.put("contentNo", overVO.getOverTimeNo());
+					map.put("signType", "2");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -437,6 +481,12 @@ public class SignController {
 				if(signLineVO.get(i).getNextState() == null || signLineVO.get(i).getNextState().equals("0")) {
 					result = signService.updateRejectedOver(overVO);
 					signService.updateOverState(overVO.getOverTimeNo());
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("userId", overVO.getUserId());
+					map.put("contentType", "O");
+					map.put("contentNo", overVO.getOverTimeNo());
+					map.put("signType", "3");
+					signService.insertAlarm(map);
 				}else {
 					result = -1;
 				}
@@ -456,7 +506,9 @@ public class SignController {
 	
 	@RequestMapping(value="/search.do")
 	@ResponseBody
-	public HashMap<String, Object> search(String startDate, String endDate, String name, String mySignState){
+	public HashMap<String, Object> search(String startDate, String endDate, String name, String mySignState, Authentication authentication){
+		UserVO loginUser = (UserVO)authentication.getPrincipal();
+		userId = Integer.parseInt(loginUser.getUserid());
 		if(endDate.equals("")) {
 			endDate = null;
 		}
@@ -577,7 +629,7 @@ public class SignController {
 					if(vacaVO.get(i).getMySignState().equals("0")) {
 						vacaSignCount++;
 					}
-				}else if(overVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
+				}else if(vacaVO.get(i).getMySignOrder()==3 && signLineVO.get(0).getState().equals("2")){
 					vacaVOList.add(vacaVO.get(i));
 					if(vacaVO.get(i).getMySignState().equals("0")) {
 						vacaSignCount++;
@@ -661,6 +713,26 @@ public class SignController {
 		resultMap.put("overSignCount", overSignCount);
 		
 		return resultMap;
+	}
+	
+	@RequestMapping(value = "/download.do", method = RequestMethod.POST)
+	public void download(HttpServletResponse response, HttpServletRequest request, DocFileVO vo) throws IOException {
+		
+		File f = new File(request.getSession().getServletContext().getRealPath("/resources/upload"), vo.getRealNm());
+        // file 다운로드 설정
+        response.setContentType("application/download");
+        response.setContentLength((int)f.length());
+        String filename = URLEncoder.encode(vo.getOriginNm(),"UTF-8");
+        filename = filename.replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment; filename=\"" + filename + "\"");
+        // response 객체를 통해서 서버로부터 파일 다운로드
+        OutputStream os = response.getOutputStream();
+        // 파일 입력 객체 생성
+        FileInputStream fis = new FileInputStream(f);
+        FileCopyUtils.copy(fis, os);
+        fis.close();
+        os.close();
+		
 	}
 	
 }

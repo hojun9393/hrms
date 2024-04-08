@@ -36,8 +36,6 @@ public class UserController {
 	public String main(Authentication authentication, Model model, String selected) {
 		UserVO userVO = (UserVO)authentication.getPrincipal();
 		List<EmployeeVO> list = userService.selectUserAll();
-		String joinDate = userVO.getJoinDate().replace("T", " ");
-		userVO.setJoinDate(joinDate);
 		
 		if(selected != null) {
 			model.addAttribute("selected", selected);
@@ -50,9 +48,6 @@ public class UserController {
 	@RequestMapping(value = "/modify.do", method = RequestMethod.GET)
 	public String modify(Authentication authentication, Model model) {
 		UserVO userVO = (UserVO)authentication.getPrincipal();
-		String joinDate = userVO.getJoinDate().replace("T", " ");
-		userVO.setJoinDate(joinDate);
-		
 		model.addAttribute("loginUser", userVO);
 		return "/user/modify";
 	}
@@ -116,7 +111,7 @@ public class UserController {
 			employeeVO.setPhone(phone);
 			int result2 = userService.insertUser(employeeVO);
 			if(result2>0) {
-				res.getWriter().append("<script>alert('사원이 등록 되었습니다.');location.href='main.do'</script>");
+				res.getWriter().append("<script>alert('사원이 등록 되었습니다. \\n사원번호는 "+employeeVO.getUserid()+" 입니다.');location.href='main.do'</script>");
 			}
 		}else {
 			res.getWriter().append("<script>alert('사원이 등록 되지 않았습니다.');location.href='main.do'</script>");

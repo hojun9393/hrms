@@ -22,7 +22,7 @@ public class DocVO {
 	private String mySignLineNo;
 	
 	private List<SignLineVO> signLineVO;
-
+	private List<DocFileVO> docFileVO;
 	
 	public DocVO() {}
 	
@@ -33,7 +33,12 @@ public class DocVO {
 		this.content = content;
 	}
 	
-	
+	public List<DocFileVO> getDocFileVO() {
+		return docFileVO;
+	}
+	public void setDocFileVO(List<DocFileVO> docFileVO) {
+		this.docFileVO = docFileVO;
+	}
 	public String getUserid() {
 		return userid;
 	}
