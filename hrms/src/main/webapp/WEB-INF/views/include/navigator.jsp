@@ -151,13 +151,13 @@
 										<c:when test="${vo.state eq '2'}">
 											<span class="font-weight-bold">
 											[${vo.type}]
-											${vo.content}...가 
+											${vo.content}...가 <br>
 											<span class="d-inline text-success text-center font-weight-bold">승인</span>되었습니다.</span>
 										</c:when>
 										<c:when test="${vo.state eq '3'}">
 											<span class="font-weight-bold">
 											[${vo.type}]
-											${vo.content}...가 
+											${vo.content}...가 <br>
 											<span class="d-inline text-warning text-center font-weight-bold">반려</span>되었습니다.</span>
 										</c:when>
 									</c:choose>

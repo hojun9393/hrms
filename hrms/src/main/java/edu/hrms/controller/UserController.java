@@ -89,6 +89,7 @@ public class UserController {
 	        	System.out.println("현재 비밀번호 검증 실패");
 	        	res.getWriter().append("<script>alert('현재 비밀번호를 다시 확인해 주세요.');location.href='modify.do'</script>");
 	        }
+	        res.getWriter().flush();
 	}
 	
 	@RequestMapping(value = "/regist.do", method = RequestMethod.GET)
@@ -116,6 +117,7 @@ public class UserController {
 		}else {
 			res.getWriter().append("<script>alert('사원이 등록 되지 않았습니다.');location.href='main.do'</script>");
 		}
+		res.getWriter().flush();
 	}
 	
 	@RequestMapping(value = "/modifyAdmin.do", method = RequestMethod.POST)
@@ -139,6 +141,7 @@ public class UserController {
 		}else {
 			res.getWriter().append("<script>alert('사원 정보 변경이 실패했습니다.');location.href='main.do'</script>");
 		}
+		res.getWriter().flush();
 	}
 	
 }

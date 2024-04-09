@@ -53,7 +53,9 @@
 							<div class="text-lg font-weight-bold text-success text-uppercase mb-1">
 								결재 문서
 							</div>
-							<div class="h5 mb-0 font-weight-bold text-gray-800">5건</div>
+							<div class="h5 mb-0 font-weight-bold text-gray-800">
+								${docSignCount+vacaSignCount+overSignCount}건
+							</div>
 						</div>
 						<div class="col-auto">
 							<i class="fas fa-file-signature fa-2x text-gray-300"></i>

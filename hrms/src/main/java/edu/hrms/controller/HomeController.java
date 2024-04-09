@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.hrms.service.SignService;
 import edu.hrms.service.VacaService;
 import edu.hrms.service.WorkService;
 import edu.hrms.util.CalcCalendar;
@@ -33,6 +34,9 @@ public class HomeController {
 	
 	@Autowired
 	CalcCalendar calcCalendar;
+	
+	@Autowired
+	SignService signService;
 	
 	@RequestMapping(value = "/login.do", method = RequestMethod.GET)
 	public String login(Model model) {
@@ -80,8 +84,18 @@ public class HomeController {
 				todayList.add(data);
 			}
 		}
+		
+		//결재 대기 중인 문서 개수
+		int userId = Integer.parseInt(userid);
+		int docSignCount = signService.selectDocSignCount(userId);
+		int vacaSignCount = signService.selectVacaSignCount(userId);
+		int overSignCount = signService.selectOverSignCount(userId);
+		
 		model.addAttribute("list", list);
 		model.addAttribute("todayList", todayList);
+		model.addAttribute("docSignCount", docSignCount);
+		model.addAttribute("vacaSignCount", vacaSignCount);
+		model.addAttribute("overSignCount", overSignCount);
 		
 		return "home";
 	}
