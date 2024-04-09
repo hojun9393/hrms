@@ -121,4 +121,16 @@ public class SignDAO {
 	public int updateOverAlarm(Map<String, Object> map) {
 		return sqlSession.update(namespace+".updateOverAlarm", map);
 	}
+
+	public int selectDocSignCount(int userId) {
+		return sqlSession.selectOne(namespace+".selectDocSignCount", userId);
+	}
+	
+	public int selectVacaSignCount(int userId) {
+		return sqlSession.selectOne(namespace+".selectVacaSignCount", userId);
+	}
+	
+	public int selectOverSignCount(int userId) {
+		return sqlSession.selectOne(namespace+".selectOverSignCount", userId);
+	}
 }

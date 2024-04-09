@@ -144,4 +144,19 @@ public class SignServiceImpl implements SignService{
 	public int updateOverAlarm(Map<String, Object> map) {
 		return signDAO.updateOverAlarm(map);
 	}
+
+	@Override
+	public int selectDocSignCount(int userId) {
+		return signDAO.selectDocSignCount(userId);
+	}
+
+	@Override
+	public int selectVacaSignCount(int userId) {
+		return signDAO.selectVacaSignCount(userId);
+	}
+
+	@Override
+	public int selectOverSignCount(int userId) {
+		return signDAO.selectOverSignCount(userId);
+	}
 }

@@ -46,4 +46,8 @@ public interface SignService {
 	int updateDocAlarm(Map<String, Object> map);
 	int updateVacaAlarm(Map<String, Object> map);
 	int updateOverAlarm(Map<String, Object> map);
+
+	int selectDocSignCount(int userId);
+	int selectVacaSignCount(int userId);
+	int selectOverSignCount(int userId);
 }

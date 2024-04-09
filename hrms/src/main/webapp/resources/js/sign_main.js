@@ -120,7 +120,7 @@ function searchFn(){
 					docResult += '					<div class="d-inline card text-white text-center px-2 mr-1 bg-danger">오류</div>';
 											}
 
-					docResult += '			<a href="docView.do?docNo='+data.list.docVO[i].docNo+'">'+data.list.docVO[i].content+'</a>';
+					docResult += '			<a href="docView.do?docNo='+data.list.docVO[i].docNo+'">'+data.list.docVO[i].title+'</a>';
 					docResult += '		</td>';
 					docResult += '		<td>';
 					docResult += '			<div class="text-dark">'+data.list.docVO[i].date+'</div>';

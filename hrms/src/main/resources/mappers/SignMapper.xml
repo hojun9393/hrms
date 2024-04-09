@@ -4,7 +4,7 @@
 <mapper namespace="edu.hrms.mapper.signMapper">
 	
 	<select id="selectAllDoc" resultType="docVO" parameterType="int">
-		SELECT d.*, u.name, 
+		SELECT d.*, u.name, prevState, 
 		CASE WHEN u.dept = 'M' THEN '관리부'
    	 	WHEN u.dept = 'D' THEN '개발부'
         WHEN u.dept = 'S' THEN '영업부'
@@ -18,12 +18,33 @@
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
-		FROM doc d inner join user u on d.userid = u.userid inner join docsign s on d.docNo = s.docNo 
-		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) ORDER BY d.date DESC;
+		FROM doc d inner join user u on d.userid = u.userid inner join (SELECT d.*, s.signOrder, LAG(d.state) OVER(partition by d.docNo order by s.signOrder) as prevState FROM docsign d inner join signLine s on d.signLineNo = s.signLineNo) s on d.docNo = s.docNo 
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) and prevState in (null, 2) ORDER BY d.date DESC;
+	</select>
+	
+	<select id="selectDocSignCount" resultType="int" parameterType="int">
+		select count(*) from (
+		SELECT d.*, u.name, prevState,
+		CASE WHEN u.dept = 'M' THEN '관리부'
+   	 	WHEN u.dept = 'D' THEN '개발부'
+        WHEN u.dept = 'S' THEN '영업부'
+        WHEN u.dept = 'P' THEN '기획부'
+        WHEN u.dept = 'H' THEN '인사부'
+        ELSE '부서미정' END AS dept,  
+		CASE WHEN u.position = 'A' THEN '관리자'
+   	 	WHEN u.position = 'C' THEN '대표'
+        WHEN u.position = 'D' THEN '부장'
+        WHEN u.position = 'L' THEN '팀장'
+        WHEN u.position = 'E' THEN '사원'
+        ELSE '직급미정' END AS position, 
+        s.state as mySignState, s.signLineNo as mySignLineNo 
+		FROM doc d inner join user u on d.userid = u.userid inner join (select d.*, s.signOrder, lag(d.state) over(partition by d.docNo order by s.signOrder) as prevState from docsign d inner join signLine s on d.signLineNo = s.signLineNo) s on d.docNo = s.docNo 
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) and prevState in (null, 2) and s.state = 0 ORDER BY d.date DESC
+		) as myDocSign;
 	</select>
 	
 	<select id="selectAllVaca" resultType="vacaVO" parameterType="int">
-		SELECT v.*, u.name, 
+		SELECT v.*, u.name, prevState,
 		CASE WHEN u.dept = 'M' THEN '관리부'
    	 	WHEN u.dept = 'D' THEN '개발부'
         WHEN u.dept = 'S' THEN '영업부'
@@ -37,12 +58,33 @@
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
-        FROM vacation v inner join user u on v.userid = u.userid inner join vacasign s on v.vacaNo = s.vacaNo 
-        WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid where u.userid = #{userid} and (type = 'V' or type = 'A')) ORDER BY v.rdate DESC;
+        FROM vacation v inner join user u on v.userid = u.userid inner join (SELECT v.*, s.signOrder, LAG(v.state) OVER(partition by v.vacaNo order by s.signOrder) as prevState FROM vacasign v inner join signLine s on v.signLineNo = s.signLineNo) s on v.vacaNo = s.vacaNo 
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'V' or type = 'A')) and prevState in (null, 2) ORDER BY v.rdate DESC;
+	</select>
+	
+	<select id="selectVacaSignCount" resultType="int" parameterType="int">
+		select count(*) from (
+		SELECT v.*, u.name, prevState,
+		CASE WHEN u.dept = 'M' THEN '관리부'
+   	 	WHEN u.dept = 'D' THEN '개발부'
+        WHEN u.dept = 'S' THEN '영업부'
+        WHEN u.dept = 'P' THEN '기획부'
+        WHEN u.dept = 'H' THEN '인사부'
+        ELSE '부서미정' END AS dept, 
+		CASE WHEN u.position = 'A' THEN '관리자'
+   	 	WHEN u.position = 'C' THEN '대표'
+        WHEN u.position = 'D' THEN '부장'
+        WHEN u.position = 'L' THEN '팀장'
+        WHEN u.position = 'E' THEN '사원'
+        ELSE '직급미정' END AS position, 
+        s.state as mySignState, s.signLineNo as mySignLineNo 
+        FROM vacation v inner join user u on v.userid = u.userid inner join (SELECT v.*, s.signOrder, LAG(v.state) OVER(partition by v.vacaNo order by s.signOrder) as prevState FROM vacasign v inner join signLine s on v.signLineNo = s.signLineNo) s on v.vacaNo = s.vacaNo 
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'V' or type = 'A')) and prevState in (null, 2) and s.state = 0 ORDER BY v.rdate DESC
+        ) as myVacaSign;
 	</select>
 	
 	<select id="selectAllOver" resultType="overVO" parameterType="int">
-		SELECT o.*, u.name, 
+		SELECT o.*, u.name, prevState,
 		CASE WHEN u.dept = 'M' THEN '관리부'
    	 	WHEN u.dept = 'D' THEN '개발부'
         WHEN u.dept = 'S' THEN '영업부'
@@ -56,12 +98,33 @@
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
-        FROM overtime o inner join user u on o.userid = u.userid inner join overtimesign s on o.overtimeNo = s.overtimeNo 
-        WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) ORDER BY o.rdate DESC;
+        FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overTimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and prevState in (null, 2) ORDER BY o.rdate DESC;
+	</select>
+	
+	<select id="selectOverSignCount" resultType="int" parameterType="int">
+		select count(*) from (
+		SELECT o.*, u.name, prevState,
+		CASE WHEN u.dept = 'M' THEN '관리부'
+   	 	WHEN u.dept = 'D' THEN '개발부'
+        WHEN u.dept = 'S' THEN '영업부'
+        WHEN u.dept = 'P' THEN '기획부'
+        WHEN u.dept = 'H' THEN '인사부'
+        ELSE '부서미정' END AS dept,
+        CASE WHEN u.position = 'A' THEN '관리자'
+		WHEN u.position = 'C' THEN '대표'
+        WHEN u.position = 'D' THEN '부장'
+        WHEN u.position = 'L' THEN '팀장'
+        WHEN u.position = 'E' THEN '사원'
+        ELSE '직급미정' END AS position,
+        s.state as mySignState, s.signLineNo as mySignLineNo 
+        FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overTimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and prevState in (null, 2) and s.state = 0 ORDER BY o.rdate DESC
+        ) as myOverSign;
 	</select>
 	
 	<select id="selectDocSearch" resultType="docVO" parameterType="java.util.HashMap">
-		SELECT d.*, u.name, 
+		SELECT d.*, u.name, prevState, 
 		CASE WHEN u.dept = 'M' THEN '관리부'
    	 	WHEN u.dept = 'D' THEN '개발부'
         WHEN u.dept = 'S' THEN '영업부'
@@ -75,8 +138,8 @@
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
-		FROM doc d inner join user u on d.userid = u.userid inner join docsign s on d.docNo = s.docNo 
-		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) 
+		FROM doc d inner join user u on d.userid = u.userid inner join (SELECT d.*, s.signOrder, LAG(d.state) OVER(partition by d.docNo order by s.signOrder) as prevState FROM docsign d inner join signLine s on d.signLineNo = s.signLineNo) s on d.docNo = s.docNo 
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) and prevState in (null, 2) 
 		<choose>
 			<when test="startDate != null and endDate != null">
 			and d.date BETWEEN CONCAT(#{startDate}, ' 00:00:00') AND CONCAT(#{endDate}, ' 23:59:59') 
@@ -98,7 +161,7 @@
 	</select>
 	
 	<select id="selectVacaSearch" resultType="vacaVO" parameterType="java.util.HashMap">
-		SELECT v.*, u.name, 
+		SELECT v.*, u.name, prevState,
 		CASE WHEN u.dept = 'M' THEN '관리부'
    	 	WHEN u.dept = 'D' THEN '개발부'
         WHEN u.dept = 'S' THEN '영업부'
@@ -112,8 +175,8 @@
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
-        FROM vacation v inner join user u on v.userid = u.userid inner join vacasign s on v.vacaNo = s.vacaNo 
-        WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid where u.userid = #{userid} and (type = 'V' or type = 'A')) 
+        FROM vacation v inner join user u on v.userid = u.userid inner join (SELECT v.*, s.signOrder, LAG(v.state) OVER(partition by v.vacaNo order by s.signOrder) as prevState FROM vacasign v inner join signLine s on v.signLineNo = s.signLineNo) s on v.vacaNo = s.vacaNo 
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'V' or type = 'A')) and prevState in (null, 2) 
 		<choose>
 			<when test="startDate != null and endDate != null">
 			and v.rdate BETWEEN CONCAT(#{startDate}, ' 00:00:00') AND CONCAT(#{endDate}, ' 23:59:59') 
@@ -135,7 +198,7 @@
 	</select>
 	
 	<select id="selectOverSearch" resultType="overVO" parameterType="java.util.HashMap">
-		SELECT o.*, u.name, 
+		SELECT o.*, u.name, prevState,
 		CASE WHEN u.dept = 'M' THEN '관리부'
    	 	WHEN u.dept = 'D' THEN '개발부'
         WHEN u.dept = 'S' THEN '영업부'
@@ -149,8 +212,8 @@
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
-        FROM overtime o inner join user u on o.userid = u.userid inner join overtimesign s on o.overtimeNo = s.overtimeNo 
-        WHERE s.signLineNo = (select s.signLineNo from signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) 
+        FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overTimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and prevState in (null, 2) 
 		<choose>
 			<when test="startDate != null and endDate != null">
 			and o.rdate BETWEEN CONCAT(#{startDate}, ' 00:00:00') AND CONCAT(#{endDate}, ' 23:59:59') 
