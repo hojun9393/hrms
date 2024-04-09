@@ -3,6 +3,7 @@ package edu.hrms.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +22,7 @@ public class CalcCalendar {
 	SimpleDateFormat sdf_datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
 	Calendar calendar = Calendar.getInstance();
 	LocalDate todayDate = LocalDate.now();
+	LocalDateTime todayDateTime = LocalDateTime.now();
 	
 	public Map<String, String> getFirstLastDays(String date) {
 		String[] dates = date.split("-");    
@@ -44,33 +46,7 @@ public class CalcCalendar {
 	}
 	
 	public String getNowTime() {
-		return todayDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-	}
-	
-	public boolean compareDatetime(String timeParam){
-		Date time;
-		Date now = new Date();
-		boolean result = false;
-		try {
-			time = sdf_datetime.parse(timeParam);
-			result = now.after(time);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-	
-	public boolean isParamBeforeNow(String timeParam){
-		Date startTime;
-		Date now = new Date();
-		boolean result = false;
-		try {
-			startTime = sdf_datetime.parse(timeParam);
-			result = now.before(startTime);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return result;
+		return todayDateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 	}
 	
 	public boolean isParam1_beforeOrAfter_param2(String param1, String param2, String before_or_after) {

@@ -10,20 +10,21 @@
 	</select>
 	
 	<select id="selectMyThisWeekWorkTime" parameterType="java.util.Map" resultType="String">
+	<![CDATA[
 		SELECT IFNULL(
 							SEC_TO_TIME(SUM(TIME_TO_SEC(
-																IF(start<![CDATA[<=]]>'12:00:00' AND end<![CDATA[>=]]>'13:00:00'
+																IF(start<='12:00:00' AND end>='13:00:00'
 																	, SUBTIME(subtime_nolunchtime,'01:00:00')
 																	, subtime_nolunchtime))))
             		,'00:00:00')
              	AS total
 			FROM (SELECT *, SUBTIME(
-											IF(end<![CDATA[>]]>'18:00:00',IF(start<![CDATA[>=]]>'18:00:00',end,'18:00:00'),IF(end BETWEEN '12:00:01' AND '12:59:59','13:00:00',end)), 
-											IF(start<![CDATA[<]]>'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:59','12:00:00',start))
+											IF(end>'18:00:00',IF(start>='18:00:00',end,'18:00:00'),IF(end BETWEEN '12:00:01' AND '12:59:59','13:00:00',end)), 
+											IF(start<'09:00:00','09:00:00',IF(start BETWEEN '12:00:00' AND '12:59:59','12:00:00',start))
 											) AS subtime_nolunchtime
 					FROM work
             	WHERE userid = #{userid} AND	
-							date BETWEEN #{startDay} AND #{endDay}) work_temp
+							date BETWEEN #{startDay} AND #{endDay}) work_temp]]>
 	</select>
 	
 	<select id="selectMyThisWeekOvertimeTime" parameterType="java.util.Map" resultType="String">
@@ -314,7 +315,7 @@
 	
 	<select id="getCountOfAllWorkList" parameterType="Map" resultType="int">
 		SELECT COUNT(*)
-			FROM WORK w
+			FROM work w
 			INNER JOIN user u
 				ON w.userid = u.userid
 			WHERE u.dept IN
@@ -326,9 +327,6 @@
  			</if>
 			<if test='startDate != null'>
 				AND w.date BETWEEN #{startDate} AND #{endDate}
- 			</if>
- 			<if test='searchInput != null'>
-				AND u.name LIKE CONCAT('%', #{searchInput}, '%')
  			</if>
  			<if test='category_dept!=null and !category_dept.equals("")'>
 		 		AND u.dept = #{category_dept}

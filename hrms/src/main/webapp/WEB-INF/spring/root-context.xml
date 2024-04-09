@@ -7,6 +7,9 @@
 		
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+		<!-- <property name="url" value="jdbc:mysql://54.180.119.2/hrms?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;allowMultiQueries=true" />
+		<property name="username" value="awsuser"/>
+		<property name="password" value="@rootAWS3db" /> -->
 		<property name="url" value="jdbc:mysql://192.168.0.123/hrms?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;allowMultiQueries=true" />
 		<property name="username" value="ezen"/>
 		<property name="password" value="aws3rd" />

@@ -128,10 +128,10 @@
 						<!-- 내 연차 -->
 						<div id="menu1">
 							<div class="mb-3 col">
-								<input type="text" name="" id="startDate" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()">
-								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate)" style="cursor: pointer;"></i> ~ 
-								<input type="text" name="" id="endDate" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()"> 
-								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate)" style="cursor: pointer;"></i>
+								<input type="text" name="" id="startDate1" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()">
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(startDate1)" style="cursor: pointer;"></i> ~ 
+								<input type="text" name="" id="endDate1" class="datepicker inp" placeholder="연차 시작일" readonly="true" onchange="reloadListFn()"> 
+								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate1)" style="cursor: pointer;"></i>
 								<div class="float-right">
 									<a href="application.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
 										<i class="fas fa-fw fa-plane"></i> 연차 신청
@@ -203,8 +203,8 @@
 
 <script>
 	function reloadListFn(obj){
-		let startDate = $("#startDate").val() === "" ? null : $("#startDate").val();
-		let endDate = $("#endDate").val() === "" ? null : $("#endDate").val();
+		let startDate = $("#startDate1").val() === "" ? null : $("#startDate1").val();
+		let endDate = $("#endDate1").val() === "" ? null : $("#endDate1").val();
 		$.ajax({
 			url:"reloadList.do",
 			data: {startDate : startDate, endDate : endDate},
@@ -253,6 +253,41 @@
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/menu.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/modal.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/calendar_noMin_noMax_Const.js"></script>
+<script>
+	let selDate_start1;
+	let selDate_end1 = $("#endDate1").val();
+	$("#startDate1").datepicker({
+		dateFormat: 'yy-mm-dd',
+		maxDate: new Date(selDate_end1),
+		onClose: function(selectedDate) {
+			let minDDate = new Date(selectedDate);
+			selDate_start1 = minDDate;
+			let endDateDate = new Date($("#endDate1").val());
+			let year = minDDate.getFullYear().toString();
+			let month = ('0' + (minDDate.getMonth() + 1)).slice(-2).toString();
+			let day = ('0' + minDDate.getDate()).slice(-2).toString();
+			let minDString = year + "-" + month + "-" + day;
+			$('#endDate1').datepicker('destroy'); 
+			if(minDDate>endDateDate){
+				$("#endDate1").val(minDString);
+			}
+			$("#endDate1").datepicker({
+				dateFormat: 'yy-mm-dd',
+				minDate: minDDate,
+				onClose: function(selectedDate){
+					selDate_end1 = selectedDate;
+				}
+			});
+		}
+	});
+	$("#endDate1").datepicker({
+		dateFormat: 'yy-mm-dd',
+		minDate: selDate_start1,
+		onClose: function(selectedDate){
+			selDate_end1 = selectedDate;
+		}
+	});
+</script>
 <%-- <script src="${pageContext.request.contextPath}/resources/js/sign_main.js"></script> --%>
 <%@ include file="../include/footer.jsp"%>

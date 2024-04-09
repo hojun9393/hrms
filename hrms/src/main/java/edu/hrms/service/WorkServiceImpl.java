@@ -151,7 +151,7 @@ public class WorkServiceImpl implements WorkService {
 	public OvertimeVO[] overtimeApplicationToday(Map<String, String> map) {
 		List<OvertimeVO> ovoAppList = workDAO.overtimeApplicationToday(map);
 		OvertimeVO[] arr = null;
-		if(ovoAppList != null) {
+		if(ovoAppList.size()!=0) {
 			arr = new OvertimeVO[2];
 			for(OvertimeVO data : ovoAppList) {
 				if(data.getStart().equals("12:00:00")) {
