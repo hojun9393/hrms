@@ -27,10 +27,10 @@
 							<span class="d-inline font-weight-bold text-gray-800">작성자</span>
 							|&nbsp; 
 							<c:choose>
-								<c:when test="${vo.userId eq '99000'}">
+								<c:when test="${vo.userid eq '99000'}">
 									대표<br>
 								</c:when>
-								<c:when test="${vo.userId eq '99001'}">
+								<c:when test="${vo.userid eq '99001'}">
 									관리자<br>
 								</c:when>
 								<c:otherwise>
@@ -53,14 +53,37 @@
 				<div class="col p-5 mt-5">
 					<div class="mb-4 text-center">
 						<hr>
-						<a href="main.do/" class="btn btn-secondary btn-user">목록으로</a> 
-						<a href="modify.do?noticeNo=${vo.noticeNo}" class="btn btn-primary btn-user">수정하기</a> 
-						<a href="login.html" class="btn btn-dark btn-user">삭제하기</a> 
+						<a href="main.do" class="btn btn-secondary btn-user">목록으로</a> 
+						<a href="modify.do?noticeNo=${vo.noticeNo}" class="btn btn-primary btn-user">수정하기</a>
+						<c:if test="${vo.delyn ne 'y' }">
+							<a onclick="delynFn()" class="btn btn-dark btn-user">삭제하기</a>
+						</c:if> 
+						 
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<script>
+	function delynFn(){
+		let select = confirm("공지사항을 삭제 하시겠습니까?");
+		if(select===true){
+			let f = document.createElement('form');
+	    
+			let noticeNoInput;
+			noticeNoInput = document.createElement('input');
+			noticeNoInput.setAttribute('type', 'hidden');
+			noticeNoInput.setAttribute('name', 'noticeNo');
+			noticeNoInput.setAttribute('value', '${vo.noticeNo}');
+			f.appendChild(noticeNoInput);
+			
+			f.setAttribute('method', 'post');
+			f.setAttribute('action', 'delyn.do');
+			document.body.appendChild(f);
+			f.submit();
+		}
+	}
+</script>
 <!-- /.container-fluid -->
 <%@ include file="../include/footer.jsp"%>

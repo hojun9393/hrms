@@ -1,22 +1,45 @@
 package edu.hrms.vo;
 
+import java.util.List;
+
 public class NoticeVO {
 	private int noticeNo;
-	private int userId;
+	private int userid;
 	private String title;
 	private String content;
 	private String rdate;
 	private String delyn;
 	
+	private String userId;
+	
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	private List<NoticeFileVO> noticeFileVO;
+	
 	public NoticeVO() {}
 
-	public NoticeVO(int noticeNo, int userId, String title, String content, String rdate, String delyn) {
-		this.noticeNo = noticeNo;
-		this.userId = userId;
+	public NoticeVO(int userid, String title, String content ) {
+		super();
+		
+		this.userid = userid;
 		this.title = title;
 		this.content = content;
-		this.rdate = rdate;
-		this.delyn = delyn;
+	
+		
+	}
+
+	public List<NoticeFileVO> getNoticeFileVO() {
+		return noticeFileVO;
+	}
+
+	public void setNoticeFileVO(List<NoticeFileVO> noticeFileVO) {
+		this.noticeFileVO = noticeFileVO;
 	}
 
 	public int getNoticeNo() {
@@ -27,12 +50,12 @@ public class NoticeVO {
 		this.noticeNo = noticeNo;
 	}
 
-	public int getUserId() {
-		return userId;
+	public int getUserid() {
+		return userid;
 	}
 
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUserid(int userid) {
+		this.userid = userid;
 	}
 
 	public String getTitle() {
@@ -65,6 +88,12 @@ public class NoticeVO {
 
 	public void setDelyn(String delyn) {
 		this.delyn = delyn;
+	}
+
+	@Override
+	public String toString() {
+		return "NoticeVO [noticeNo=" + noticeNo + ", userid=" + userid + ", title=" + title + ", content=" + content
+				+ ", rdate=" + rdate + ", delyn=" + delyn + ", noticeFileVO=" + noticeFileVO + "]";
 	}
 
 }

@@ -5,23 +5,32 @@
 	
 	<select id="selectNotice" resultType="noticeVO">
 		SELECT * FROM notice
-			WHERE delyn = 'N'
+			WHERE delyn = 'n' ORDER BY rdate DESC;
 	</select>
 	
-	<select id="selectNoticeOne" resultType="noticeVO" parameterType="int">
+	<select id="selectNoticeByNoticeNo" resultType="noticeVO" parameterType="int">
 		SELECT * FROM notice WHERE noticeNo = #{noticeNo}
 	</select>
 	
-	<insert id="insert" parameterType="noticeVO">	
+	<insert id="insertNotice" parameterType="noticeVO">	
 		INSERT INTO notice(userid
 		     		   , title
 		     		   , content
-		     		   , rdate) 
+		     		   , rdate)
 		          VALUES (#{userid}
 		               , #{title}
 		               , #{content}
-		               , #{time})
+		               , now())
+		<selectKey order="AFTER" keyProperty="noticeNo" resultType="int">
+		 	SELECT MAX(noticeNo) FROM notice
+		</selectKey>          
 	</insert>
+	
+	<select id="getMaxNoByUserId" parameterType="int" resultType="int">
+		SELECT MAX(noticeNo) noticeNo
+			FROM notice
+			WHERE userid = #{userid}
+	</select>
 	
 	<update id="updateNotice" parameterType="noticeVO">
 		UPDATE notice 
@@ -29,6 +38,28 @@
 			content = #{content}
 		WHERE noticeNo = #{noticeNo}
 	</update>
+	
+	<insert id="insertNoticeFile" parameterType="java.util.List">
+		INSERT INTO noticeFile (noticeNo, realNm, originNm)
+			VALUES 
+			<foreach collection="list" index="index" item="item" separator=",">
+				(#{item.noticeNo}, #{item.realNm}, #{item.originNm})
+			</foreach>
+	</insert>
+	
+	<select id="selectNoticeFileByNoticeNo" parameterType="int" resultType="noticeFileVO">
+			SELECT nf.* FROM noticefile nf
+			INNER JOIN notice n
+			ON n.noticeNo = nf.noticeNo
+			WHERE nf.noticeNo =#{noticeNo};
+	</select>
+	
+	<update id="delyn" parameterType="int">
+		UPDATE notice
+		SET delyn = 'y'
+		WHERE noticeNo = #{noticeNo}
+	</update>
+	
 </mapper>
 
 

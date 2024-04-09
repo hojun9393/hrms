@@ -41,7 +41,7 @@
 									<hr>
 									<div class="row">
 										<div class="col-lg-6">
-											<a type="reset" href="view.do/" class="btn btn-secondary btn-user btn-block">취소</a> 
+											<a type="reset" href="main.do/" class="btn btn-secondary btn-user btn-block">취소</a> 
 										</div>
 										<div class="col-lg-6">
 											<input type="submit" class="btn btn-primary btn-user btn-block" value="수정완료">
