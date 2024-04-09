@@ -19,7 +19,7 @@
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
 		FROM doc d inner join user u on d.userid = u.userid inner join (SELECT d.*, s.signOrder, LAG(d.state) OVER(partition by d.docNo order by s.signOrder) as prevState FROM docsign d inner join signLine s on d.signLineNo = s.signLineNo) s on d.docNo = s.docNo 
-		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) and prevState in (null, 2) ORDER BY d.date DESC;
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) and (prevState is null or prevState = 2) ORDER BY d.date DESC;
 	</select>
 	
 	<select id="selectDocSignCount" resultType="int" parameterType="int">
@@ -39,7 +39,7 @@
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
 		FROM doc d inner join user u on d.userid = u.userid inner join (select d.*, s.signOrder, lag(d.state) over(partition by d.docNo order by s.signOrder) as prevState from docsign d inner join signLine s on d.signLineNo = s.signLineNo) s on d.docNo = s.docNo 
-		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) and prevState in (null, 2) and s.state = 0 ORDER BY d.date DESC
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) and (prevState is null or prevState = 2) and s.state = 0 ORDER BY d.date DESC
 		) as myDocSign;
 	</select>
 	
@@ -59,7 +59,7 @@
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM vacation v inner join user u on v.userid = u.userid inner join (SELECT v.*, s.signOrder, LAG(v.state) OVER(partition by v.vacaNo order by s.signOrder) as prevState FROM vacasign v inner join signLine s on v.signLineNo = s.signLineNo) s on v.vacaNo = s.vacaNo 
-        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'V' or type = 'A')) and prevState in (null, 2) ORDER BY v.rdate DESC;
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'V' or type = 'A')) and (prevState is null or prevState = 2) ORDER BY v.rdate DESC;
 	</select>
 	
 	<select id="selectVacaSignCount" resultType="int" parameterType="int">
@@ -79,7 +79,7 @@
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM vacation v inner join user u on v.userid = u.userid inner join (SELECT v.*, s.signOrder, LAG(v.state) OVER(partition by v.vacaNo order by s.signOrder) as prevState FROM vacasign v inner join signLine s on v.signLineNo = s.signLineNo) s on v.vacaNo = s.vacaNo 
-        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'V' or type = 'A')) and prevState in (null, 2) and s.state = 0 ORDER BY v.rdate DESC
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'V' or type = 'A')) and (prevState is null or prevState = 2) and s.state = 0 ORDER BY v.rdate DESC
         ) as myVacaSign;
 	</select>
 	
@@ -99,7 +99,7 @@
         ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overTimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
-        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and prevState in (null, 2) ORDER BY o.rdate DESC;
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and (prevState is null or prevState = 2) ORDER BY o.rdate DESC;
 	</select>
 	
 	<select id="selectOverSignCount" resultType="int" parameterType="int">
@@ -119,7 +119,7 @@
         ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overTimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
-        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and prevState in (null, 2) and s.state = 0 ORDER BY o.rdate DESC
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and (prevState is null or prevState = 2) and s.state = 0 ORDER BY o.rdate DESC
         ) as myOverSign;
 	</select>
 	
@@ -139,7 +139,7 @@
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
 		FROM doc d inner join user u on d.userid = u.userid inner join (SELECT d.*, s.signOrder, LAG(d.state) OVER(partition by d.docNo order by s.signOrder) as prevState FROM docsign d inner join signLine s on d.signLineNo = s.signLineNo) s on d.docNo = s.docNo 
-		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) and prevState in (null, 2) 
+		WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'D' or type = 'A')) and (prevState is null or prevState = 2) 
 		<choose>
 			<when test="startDate != null and endDate != null">
 			and d.date BETWEEN CONCAT(#{startDate}, ' 00:00:00') AND CONCAT(#{endDate}, ' 23:59:59') 
@@ -176,7 +176,7 @@
         ELSE '직급미정' END AS position, 
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM vacation v inner join user u on v.userid = u.userid inner join (SELECT v.*, s.signOrder, LAG(v.state) OVER(partition by v.vacaNo order by s.signOrder) as prevState FROM vacasign v inner join signLine s on v.signLineNo = s.signLineNo) s on v.vacaNo = s.vacaNo 
-        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'V' or type = 'A')) and prevState in (null, 2) 
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'V' or type = 'A')) and (prevState is null or prevState = 2) 
 		<choose>
 			<when test="startDate != null and endDate != null">
 			and v.rdate BETWEEN CONCAT(#{startDate}, ' 00:00:00') AND CONCAT(#{endDate}, ' 23:59:59') 
@@ -213,7 +213,7 @@
         ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
         FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overTimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
-        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and prevState in (null, 2) 
+        WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and (prevState is null or prevState = 2) 
 		<choose>
 			<when test="startDate != null and endDate != null">
 			and o.rdate BETWEEN CONCAT(#{startDate}, ' 00:00:00') AND CONCAT(#{endDate}, ' 23:59:59') 
