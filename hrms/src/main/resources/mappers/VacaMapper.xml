@@ -209,14 +209,16 @@
 		SELECT COUNT(*)
 			FROM user u
 			WHERE 1=1
- 			<if test='category_dept!=null and !category_dept.equals("")'>
-		 		AND u.dept = #{searchVO.category_dept}
- 			</if>
- 			<if test='category_position!=null and !category_position.equals("")'>
-		 		AND u.position = #{searchVO.category_position}
- 			</if>
- 			<if test='searchVal != null'>
-				AND u.name LIKE CONCAT('%', #{searchVO.searchVal}, '%')
+ 			<if test='searchVO != null'>
+	 			<if test='searchVO.category_dept != null and !searchVO.category_dept.equals("")'>
+			 		AND u.dept = #{searchVO.category_dept}
+	 			</if>
+	 			<if test='searchVO.category_position != null and !searchVO.category_position.equals("")'>
+			 		AND u.position = #{searchVO.category_position}
+	 			</if>
+	 			<if test='searchVO.searchVal != null and !searchVO.searchVal.equals("")'>
+					AND u.name LIKE CONCAT('%', #{searchVO.searchVal}, '%')
+				</if>
  			</if>
 	</select>
 	
@@ -240,14 +242,16 @@
 				) AS dept
 			FROM user u
 			WHERE u.position != 'A'
- 			<if test='category_dept!=null and !category_dept.equals("")'>
-		 		AND u.dept = #{searchVO.category_dept}
- 			</if>
- 			<if test='category_position!=null and !category_position.equals("")'>
-		 		AND u.position = #{searchVO.category_position}
- 			</if>
- 			<if test='searchVal != null'>
-				AND u.name LIKE CONCAT('%', #{searchVO.searchVal}, '%')
+			<if test='searchVO != null'>
+	 			<if test='searchVO.category_dept != null and !searchVO.category_dept.equals("")'>
+			 		AND u.dept = #{searchVO.category_dept}
+	 			</if>
+	 			<if test='searchVO.category_position != null and !searchVO.category_position.equals("")'>
+			 		AND u.position = #{searchVO.category_position}
+	 			</if>
+	 			<if test='searchVO.searchVal != null and !searchVO.searchVal.equals("")'>
+					AND u.name LIKE CONCAT('%', #{searchVO.searchVal}, '%')
+				</if>
  			</if>
  			ORDER BY FIELD(dept, 'M', 'D', 'S', 'P', 'H'),
  					 	FIELD(position, 'D', 'L', 'E')

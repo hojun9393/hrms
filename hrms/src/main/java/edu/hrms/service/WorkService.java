@@ -17,17 +17,17 @@ public interface WorkService {
 	
 	public Map<String, String> getWorkTimeMap(String userid);
 	
-	String selectMyThisWeekTotalWorkTime(Map<String, String> map);
+	String selectMyThisWeekWorkTime(Map<String, String> map);
 	
-	String selectMyThisWeekTotalOvertimeTime(Map<String, String> map);
+	String selectMyThisWeekOvertimeTime(Map<String, String> map);
 	
-	String selectMyThisWeekTotalWorkTimePlusMyTotalOvertimeTime(String myThisWeekTotalWorkTime, String myThisWeekTotalOvertimeTime);
+	String selectMyThisWeekTotalWorkTime(String myThisWeekWorkTime, String myThisWeekOvertimeTime);
 	
 	int insert(Map<String, String> map);
 
 	int update(Map<String, String> map);
 	
-	int updateOvertime(Map<String, String> map);
+	int updateOvertime(Map<String, Object> map);
 	
 	int insertOvertime(Map<String, String> map);
 	
@@ -41,10 +41,8 @@ public interface WorkService {
 	
 	int overtimesignDelete(int overtimeNo);
 	
-	OvertimeVO overtimeApplicationTodayAfternoon(Map<String, String> map);
+	OvertimeVO[] overtimeApplicationToday(Map<String, String> map);
 
-	OvertimeVO overtimeApplicationTodayEvening(Map<String, String> map);
-	
 	List<WorkVO> selectAllMyWork(Map<String, Object> map);
 	
 	List<OvertimeVO> selectAllMyOvertime(Map<String, Object> map);

@@ -38,22 +38,22 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public String selectMyThisWeekTotalWorkTime(Map<String, String> map) {
-		return workDAO.selectMyThisWeekTotalWorkTime(map);
+	public String selectMyThisWeekWorkTime(Map<String, String> map) {
+		return workDAO.selectMyThisWeekWorkTime(map);
 	}
 	
 	@Override
-	public String selectMyThisWeekTotalOvertimeTime(Map<String, String> map) {
-		return workDAO.selectMyThisWeekTotalOvertimeTime(map);
+	public String selectMyThisWeekOvertimeTime(Map<String, String> map) {
+		return workDAO.selectMyThisWeekOvertimeTime(map);
 	}
 	
 	@Override
-	public String selectMyThisWeekTotalWorkTimePlusMyTotalOvertimeTime(String myThisWeekTotalWorkTime, String myThisWeekTotalOvertimeTime) {
+	public String selectMyThisWeekTotalWorkTime(String myThisWeekWorkTime, String myThisWeekOvertimeTime) {
 		Map<String, String> myTotalWorkTimeMap = new HashMap<>();
-		myTotalWorkTimeMap.put("workTime", myThisWeekTotalWorkTime);
-		myTotalWorkTimeMap.put("overtimeTime", myThisWeekTotalOvertimeTime);
+		myTotalWorkTimeMap.put("workTime", myThisWeekWorkTime);
+		myTotalWorkTimeMap.put("overtimeTime", myThisWeekOvertimeTime);
 		
-		return workDAO.myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(myTotalWorkTimeMap);
+		return workDAO.selectMyThisWeekTotalWorkTime(myTotalWorkTimeMap);
 	}
 	
 	@Override
@@ -67,7 +67,7 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public int updateOvertime(Map<String, String> map) {
+	public int updateOvertime(Map<String, Object> map) {
 		return workDAO.updateOvertime(map);
 	}
 	
@@ -148,14 +148,22 @@ public class WorkServiceImpl implements WorkService {
 	}
 	
 	@Override
-	public OvertimeVO overtimeApplicationTodayAfternoon(Map<String, String> map) {
-		return workDAO.overtimeApplicationTodayAfternoon(map);
+	public OvertimeVO[] overtimeApplicationToday(Map<String, String> map) {
+		List<OvertimeVO> ovoAppList = workDAO.overtimeApplicationToday(map);
+		OvertimeVO[] arr = null;
+		if(ovoAppList != null) {
+			arr = new OvertimeVO[2];
+			for(OvertimeVO data : ovoAppList) {
+				if(data.getStart().equals("12:00:00")) {
+					arr[0] = data;
+				}else {
+					arr[1] = data;
+				}
+			}
+		}
+		return arr;
 	}
 	
-	@Override
-	public OvertimeVO overtimeApplicationTodayEvening(Map<String, String> map) {
-		return workDAO.overtimeApplicationTodayEvening(map);
-	}
 	
 	@Override
 	public String[] getDeptArr(String dept) {

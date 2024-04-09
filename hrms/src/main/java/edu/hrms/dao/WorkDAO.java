@@ -24,16 +24,16 @@ public class WorkDAO {
 		return sqlSession.selectOne(namespace+".selectMyWork", map);
 	}
 	
+	public String selectMyThisWeekWorkTime(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".selectMyThisWeekWorkTime", map);
+	}
+	
+	public String selectMyThisWeekOvertimeTime(Map<String, String> map) {
+		return sqlSession.selectOne(namespace+".selectMyThisWeekOvertimeTime", map);
+	}
+	
 	public String selectMyThisWeekTotalWorkTime(Map<String, String> map) {
 		return sqlSession.selectOne(namespace+".selectMyThisWeekTotalWorkTime", map);
-	}
-	
-	public String selectMyThisWeekTotalOvertimeTime(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".selectMyThisWeekTotalOvertimeTime", map);
-	}
-	
-	public String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".myThisWeekTotalWorkTimePlusMyTotalOvertimeTime", map);
 	}
 	
 	public int insert(Map<String, String> map) {
@@ -44,7 +44,7 @@ public class WorkDAO {
 		return sqlSession.update(namespace+".update", map);
 	}
 	
-	public int updateOvertime(Map<String, String> map) {
+	public int updateOvertime(Map<String, Object> map) {
 		return sqlSession.update(namespace+".updateOvertime", map);
 	}
 	
@@ -80,12 +80,8 @@ public class WorkDAO {
 		return sqlSession.delete(namespace+".overtimesignDelete", overtimeNo);
 	}
 	
-	public OvertimeVO overtimeApplicationTodayAfternoon(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".overtimeApplicationTodayAfternoon", map);
-	}
-	
-	public OvertimeVO overtimeApplicationTodayEvening(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".overtimeApplicationTodayEvening", map);
+	public List<OvertimeVO> overtimeApplicationToday(Map<String, String> map) {
+		return sqlSession.selectList(namespace+".overtimeApplicationToday", map);
 	}
 	
 	

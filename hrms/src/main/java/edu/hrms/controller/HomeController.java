@@ -56,13 +56,13 @@ public class HomeController {
 			model.addAttribute("end", vo.getEnd());
 		}
 		Map<String, String> workTimeMap = workService.getWorkTimeMap(userid);
-		String myThisWeekTotalWorkTimePlusMyTotalOvertimeTime 
-			= workService.selectMyThisWeekTotalWorkTimePlusMyTotalOvertimeTime(workService.selectMyThisWeekTotalWorkTime(workTimeMap)
-																		, workService.selectMyThisWeekTotalOvertimeTime(workTimeMap));
+		String myThisWeekTotalWorkTime
+			= workService.selectMyThisWeekTotalWorkTime(workService.selectMyThisWeekWorkTime(workTimeMap)
+														, workService.selectMyThisWeekOvertimeTime(workTimeMap));
 		model.addAttribute("today", today);
-		model.addAttribute("myThisWeekTotalWorkTimePlusMyTotalOvertimeTime", myThisWeekTotalWorkTimePlusMyTotalOvertimeTime);
+		model.addAttribute("myThisWeekTotalWorkTime", myThisWeekTotalWorkTime);
 		
-		// 연차 //////////////////////////////////////////////
+		/////////////////// 연차 ///////////////////
 		// 로그인 한 회원
 		Map<String, Integer> user = vacaService.myRemainVaca(userid);
 		model.addAttribute("user", user);

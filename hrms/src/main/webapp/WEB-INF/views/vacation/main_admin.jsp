@@ -43,7 +43,7 @@
 						<!-- 연차 조회(관리자) -->
 						<div id="menu1">
 							<div class="mb-3 col">
-								<div id="searchDiv" class="float-left">
+								<div id="searchDiv" class="float-left mb-3">
 									<select name="category_dept">
 										<option value="">전체</option>
 										<option value="D">개발부</option>
@@ -54,17 +54,13 @@
 									<select name="category_position">
 										<option value="">전체</option>
 										<option value="D">부장</option>
-										<option value="L">대표</option>
+										<option value="L">팀장</option>
 										<option value="E">사원</option>
 									</select>
 									<input type="text" id="searchVal">
 									<button type="button" onclick="reloadListFn(1)">검색</button>
 								</div>
-								<div class="float-right mb-2">
-									<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
-										<i class="fas fa-fw fa-plane"></i> 연차 부여
-									</a>
-								</div>
+								<div class="float-right mb-2"></div>
 							</div>
 							<table>
 								<thead>
@@ -174,7 +170,7 @@
 					html += `<td>\${data.list[i].name }</td>`;
 					html += `<td>`;
 					html += `<span class="text-bold">`;
-					html += ((data.list[i].keepVaca + data.list[i].useVaca) / 8) + '일';
+					html += Math.round((data.list[i].keepVaca + data.list[i].useVaca) / 8) + '일';
 					html += `</span>`;
 					html += '<span class="text-sm text-blue"> ('+(data.list[i].keepVaca + data.list[i].useVaca)+'시간)</span>';
 					html += `</td>`;

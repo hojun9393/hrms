@@ -42,6 +42,7 @@ public interface VacaService {
 	int updateVacaStateToUse(List<VacaVO> list);
 	
 	
+	// °ü¸®ÀÚ
 	List<VacaVO> selectAllVacaList(Map<String, Object> map);
 	
 	List<Map<String, Object>> selectAllUserList(Map<String, Object> map);

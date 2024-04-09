@@ -40,7 +40,6 @@ public class VacaController {
 	@Autowired
 	CalcCalendar calcCalendar;
 	
-	
 	@RequestMapping(value = "/main.do")
 	public String main(Model model, Authentication authentication, HttpServletResponse response) throws IOException {
 		
@@ -49,17 +48,13 @@ public class VacaController {
 		// 로그인 한 계정이 관리자일 경우 관리자 연차 페이지로 이동
 		if(login.getAuthority().equals("ROLE_ADMIN")) {
 			response.sendRedirect("main_admin.do");
+			
+		}else {
+			String userid = login.getUserid();
+			model.addAttribute("myVacaList", vacaService.selectMyVacaList(Map.of("userid",userid)));
+			model.addAttribute("myRecentVacaApplication", vacaService.myRecentVacaApplication(userid));
+			model.addAttribute("user", vacaService.myRemainVaca(userid));
 		}
-		String userid = login.getUserid();
-		
-		Map<String, String> myVacaListMap = new HashMap<>();
-		myVacaListMap.put("userid", userid);
-		List<VacaVO> myVacaList = vacaService.selectMyVacaList(myVacaListMap);
-		
-		model.addAttribute("myVacaList", myVacaList);
-		model.addAttribute("myRecentVacaApplication", vacaService.myRecentVacaApplication(userid));
-		model.addAttribute("user", vacaService.myRemainVaca(userid));
-		
 		return "/vacation/main";
 	}
 	
@@ -89,7 +84,7 @@ public class VacaController {
 		
 		// 해당 날짜 연차 신청 여부 확인
 		int cnt = vacaService.checkVacaAppCnt(map);
-		System.out.println("cnt: "+cnt);
+		
 		if(cnt>0) {
 			response.getWriter().append("<script>alert('해당 날짜에 이미 신청한 결재 대기\\(혹은 진행\\)중인 연차 내역이 있습니다.');location.href='main.do';</script>");
 		}else {
@@ -97,7 +92,6 @@ public class VacaController {
 			int vacaNo = vacaService.getMaxNoByUserId(userid);
 			List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition(), "V");
 			List<VacaSignVO> vacaSignList = vacaService.getVacaSignList(signLineList, vacaNo);
-			
 			vacaService.insertVacaSign(vacaSignList);
 			response.getWriter().append("<script>alert('연차 신청이 완료되었습니다.');location.href='main.do';</script>");
 		}
@@ -142,6 +136,8 @@ public class VacaController {
 	public List<VacaVO> reloadMyVacaList(String startDate, String endDate, Authentication authentication){
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
+		startDate = (startDate.equals("") ? null : startDate);
+		endDate = (endDate.equals("") ? null : endDate);
 		
 		Map<String, String> myVacaListMap = new HashMap<>();
 		myVacaListMap.put("userid", login.getUserid());
@@ -153,7 +149,7 @@ public class VacaController {
 	}
 	
 	
-	///////////// 관리자 /////////////
+	/////////////// 관리자 ///////////////
 	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/main_admin.do", method = RequestMethod.GET)
 	public String main_admin(Model model) {
@@ -172,11 +168,9 @@ public class VacaController {
 	@RequestMapping(value = "/view_admin.do", method = RequestMethod.POST)
 	public List<VacaVO> view_admin(String userid){
 		
-		List<VacaVO> list = vacaService.selectAllVacaList(new HashMap<String, Object>(){{
+		return vacaService.selectAllVacaList(new HashMap<String, Object>(){{
 			put("array", new int[] {2,7}); put("userid", userid);
 		}});
-		
-		return list;
 	}
 	
 	@Secured("ROLE_ADMIN")
@@ -186,7 +180,7 @@ public class VacaController {
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("searchVO", searchVO);
-		map.put("array", new int[] {2,7});
+		map.put("array", new int[] {2,7}); // 연차 state
 		
 		int cnt = vacaService.getCountOfAllUserList(map);
 		PagingVO pagingVO = new PagingVO(Integer.parseInt(pNum), cnt, 10);
@@ -195,7 +189,8 @@ public class VacaController {
 		List<Map<String, Object>> list = vacaService.selectAllUserList(map);
 		
 		return new HashMap<String, Object>(){{
-			put("pagingVO",pagingVO); put("list", list);}};
+			put("pagingVO",pagingVO); put("list", list);
+		}};
 	}
 	
 	@Secured("ROLE_ADMIN")

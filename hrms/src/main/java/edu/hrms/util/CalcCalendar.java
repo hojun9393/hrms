@@ -73,17 +73,18 @@ public class CalcCalendar {
 		return result;
 	}
 	
-	public boolean isNow_text_param(String timeParam, String before_or_after) {
-		Date now = new Date();
-		Date time;
+	public boolean isParam1_beforeOrAfter_param2(String param1, String param2, String before_or_after) {
+		Date time1;
+		Date time2;
 		boolean result = false;
 		
 		try{
-			time = sdf_datetime.parse(timeParam);
+			time1 = sdf_datetime.parse(param1);
+			time2 = sdf_datetime.parse(param2);
 			if(before_or_after.equals("before")) {
-				result = now.before(time);
+				result = time1.before(time2);
 			}else if(before_or_after.equals("after")) {
-				result = now.after(time);
+				result = time1.after(time2);
 			}
 		}catch (ParseException e) {
 			e.printStackTrace();

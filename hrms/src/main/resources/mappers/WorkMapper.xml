@@ -9,7 +9,7 @@
 				AND DATE = #{today}
 	</select>
 	
-	<select id="selectMyThisWeekTotalWorkTime" parameterType="java.util.Map" resultType="String">
+	<select id="selectMyThisWeekWorkTime" parameterType="java.util.Map" resultType="String">
 		SELECT IFNULL(
 							SEC_TO_TIME(SUM(TIME_TO_SEC(
 																IF(start<![CDATA[<=]]>'12:00:00' AND end<![CDATA[>=]]>'13:00:00'
@@ -26,7 +26,7 @@
 							date BETWEEN #{startDay} AND #{endDay}) work_temp
 	</select>
 	
-	<select id="selectMyThisWeekTotalOvertimeTime" parameterType="java.util.Map" resultType="String">
+	<select id="selectMyThisWeekOvertimeTime" parameterType="java.util.Map" resultType="String">
 		SELECT IFNULL(SEC_TO_TIME(SUM(TIME_TO_SEC(SUBTIME(end, start)))),'00:00:00')
 			FROM overtime
     		WHERE userid = #{userid}
@@ -34,42 +34,55 @@
 				AND state = 2
 	</select>
 	
-	<select id="myThisWeekTotalWorkTimePlusMyTotalOvertimeTime" parameterType="java.util.Map" resultType="String">
+	<select id="selectMyThisWeekTotalWorkTime" parameterType="java.util.Map" resultType="String">
 		SELECT SEC_TO_TIME(TIME_TO_SEC(#{workTime})+IFNULL(TIME_TO_SEC(#{overtimeTime}),TIME_TO_SEC('00:00:00'))) AS result 
 			FROM DUAL;
 	</select>
 	
 	<insert id="insert" parameterType="java.util.Map">	
 		INSERT INTO work (userid, date, start) 
-		          VALUES (#{userid} , #{date} , #{nowTime})
+		          VALUES (#{userid} , #{date} , #{time})
 	</insert>
 	
 	<update id="update" parameterType="java.util.Map">
 		UPDATE work 
-			SET end = #{nowTime}
+			SET end = #{time}
 		   WHERE userid = #{userid}
-		   	AND date = #{date}
+		   	AND date = #{today}
+	</update>
+	
+	<update id="withdrawal" parameterType="int">
+		UPDATE overtime
+			SET state = 9
+			WHERE overtimeNo = #{overtimeNo}
 	</update>
 	
 	<update id="updateOvertime" parameterType="java.util.Map">
 		UPDATE overtime 
-			SET end = #{nowTime}
-		   WHERE userid = #{userid}
-		   	AND date = #{date}
-		   	<if test="afternoonOrEvening.equals('afternoon')">
-		   		AND start = '12:00:00'
-		   	</if>
-		   	<if test="afternoonOrEvening.equals('evening')">
-		   		AND start != '12:00:00'
-		   	</if>
-		   	<if test="afternoonOrEvening != null">
-		   		AND state NOT IN (3,9)
-		   	</if>
+			SET end = #{end}
+		   WHERE overtimeNo = #{overtimeNo}
+		   	AND state NOT IN (3,9)
 	</update>
+	
+	<select id="overtimeApplicationToday" parameterType="Map" resultType="overtimeVO">
+		SELECT *
+			FROM overtime
+			WHERE userid = #{userid}
+				AND date = #{today} 
+				AND start = '12:00:00'
+				AND state NOT IN (3,9)
+		UNION
+		SELECT *
+			FROM overtime
+			WHERE userid = #{userid}
+				AND date = #{today}
+				AND start != '12:00:00' 
+				AND state NOT IN (3,9)
+	</select>
 	
 	<insert id="insertOvertime" parameterType="java.util.Map">	
 		INSERT INTO overtime (userid, date, start, end, content) 
-						VALUES   (#{userid}, #{date}, #{start}, #{end}, #{content})
+						VALUES   (#{userid}, #{today}, #{start}, #{end}, #{content})
 	</insert>
 	
 	<select id="getSignLineList" parameterType="java.util.Map" resultType="edu.hrms.vo.SignLineVO">
@@ -213,34 +226,10 @@
 		   ORDER BY signOrder
 	</select>
 	
-	<update id="withdrawal" parameterType="int">
-		UPDATE overtime
-			SET state = 9
-			WHERE overtimeNo = #{overtimeNo}
-	</update>
-	
 	<delete id="overtimesignDelete" parameterType="int">
 		DELETE FROM overtimesign
 			WHERE overtimeNo = #{overtimeNO}
 	</delete>
-	
-	<select id="overtimeApplicationTodayAfternoon" parameterType="Map" resultType="overtimeVO">
-		SELECT *
-			FROM overtime
-			WHERE userid = #{userid}
-				AND date = #{today} 
-				AND start = '12:00:00'
-				AND state NOT IN (3,9)
-	</select>
-	
-	<select id="overtimeApplicationTodayEvening" parameterType="Map" resultType="overtimeVO">
-		SELECT *
-			FROM overtime
-			WHERE userid = #{userid}
-				AND date = #{today}
-				AND start != '12:00:00' 
-				AND state NOT IN (3,9)
-	</select>
 	
 	<select id="selectAllWork" parameterType="Map" resultType="edu.hrms.vo.WorkVO">
 		SELECT wno, userid, date, start, end, name, dept, position

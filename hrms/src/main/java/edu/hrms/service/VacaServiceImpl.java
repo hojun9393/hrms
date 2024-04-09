@@ -62,9 +62,9 @@ public class VacaServiceImpl implements VacaService {
 		return vacaDAO.selectVacaByVacaNo(vacaNo);
 	}
 	
+	// insert 할 때 사용하는 메소드
 	@Override
 	public List<VacaSignVO> getVacaSignList(List<SignLineVO> signLineList, int vacaNo) {
-		// insert 할 때 사용하는 메소드
 		List<VacaSignVO> vacaSignList = new ArrayList<>();
 		for(SignLineVO vo : signLineList) {
 			VacaSignVO vsvo = new VacaSignVO();
@@ -75,6 +75,7 @@ public class VacaServiceImpl implements VacaService {
 		return vacaSignList;
 	}
 	
+	// db에서 조회할 때 사용하는 메소드
 	@Override
 	public List<VacaSignVO> getVacaSignList(int vacaNo) {
 		return vacaDAO.getVacaSignList(vacaNo);

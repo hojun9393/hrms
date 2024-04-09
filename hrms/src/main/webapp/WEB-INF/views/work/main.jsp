@@ -65,7 +65,7 @@
 								</div>
 								<div class="row no-gutters align-items-center">
 									<div class="col-auto">
-										<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">${myThisWeekTotalWorkTimePlusMyTotalOvertimeTime }</div>
+										<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">${myThisWeekTotalWorkTime }</div>
 									</div>
 									<div class="col">
 										<div class="progress progress-sm mr-2">
@@ -94,7 +94,7 @@
 								<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
 									금주 누적 초과근무
 								</div>
-								<div class="h5 mb-0 font-weight-bold text-gray-800">${myThisWeekTotalOvertimeTime }</div>
+								<div class="h5 mb-0 font-weight-bold text-gray-800">${myThisWeekOvertimeTime }</div>
 							</div>
 							<div class="col-auto">
 								<i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -368,7 +368,7 @@
 		myWork.setAttribute("class","menubar text-decoration");
 		
 		const workBar = $("#workBar");
-		let percent = '${myThisWeekTotalWorkTimePlusMyTotalOvertimeTime}'.substring(0,2)/52*100+"%";
+		let percent = '${myThisWeekTotalWorkTime}'.substring(0,2)/52*100+"%";
 		workBar.attr("style",`width:\${percent}`);
 	}
 	
@@ -621,7 +621,7 @@
 			   $.ajax({
 					url:"workInsert.do",
 					type:"POST",
-					data: {dateStr : dateStr, timeStr : timeStr, goOrLeave : goOrLeave},
+					data: {date : dateStr, time : timeStr, goOrLeave : goOrLeave},
 					success:function(data){
 						alert("출근 처리 되었습니다.");
 						location.href="main.do";
@@ -641,31 +641,25 @@
 			   $.ajax({
 					url:"workInsert.do",
 					type:"POST",
-					data: {dateStr : dateStr, timeStr : timeStr, goOrLeave : goOrLeave},
+					data: {date : dateStr, time : timeStr, goOrLeave : goOrLeave},
 					success:function(data){
-						console.log(data);
-					
 						if(data=="SUCCESS"){
 							alert("퇴근 처리 되었습니다.");
 							location.href="main.do";
-							
 						}else{
 							let message = "금일 \n";
-							if(data.afternoon != null){
-								message += data.afternoon[0]+"시 ~ "+data.afternoon[1]+"시 \n";
+							for(let i=0; i<data.length; i++){
+								if(data[i]!==null){
+									message += data[i].start+"시 ~ "+data[i].end+"시 \n";
+								}							
 							}
-							if(data.evening != null){
-								message += data.evening[0]+"시 ~ "+data.evening[1]+"시 \n";
-							}
-							if(data.afternoon != null || data.evening != null){
-								message += "까지 초과근무를 신청하셨습니다. \n지금 퇴근처리 하시겠습니까?";
-							}
+							message += "까지 초과근무를 신청하셨습니다. \n지금 퇴근처리 하시겠습니까?";
 							let choice = confirm(message);
 							if(choice){
 								$.ajax({
 									url:"updateOvertime.do",
 									type:"POST",
-									data: {dateStr : dateStr},
+									data: {date : dateStr, time : timeStr},
 									success:function(data){
 										alert("퇴근 처리 되었습니다.");
 										location.href="main.do";
@@ -681,10 +675,9 @@
 	}
 	
 	function overtime_aplicationFn(){
-		let isOvertimeApplicationTodayAfternoon = '${isOvertimeApplicationTodayAfternoon}';
-		let isOvertimeApplicationTodayEvening = '${isOvertimeApplicationTodayEvening}';
 		
-		if(isOvertimeApplicationTodayAfternoon!='' && isOvertimeApplicationTodayEvening!=''){
+		let ovoAppArr = '${ovoAppArr}';
+		if(ovoAppArr !== ""){
 			alert("오늘 이미 처리 진행중인 초과근무 건이 있습니다.");
 		}else{
 			location.href="overtime_application.do";
