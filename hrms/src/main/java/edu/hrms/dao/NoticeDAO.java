@@ -1,11 +1,13 @@
 package edu.hrms.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import edu.hrms.vo.NoticeFileVO;
 import edu.hrms.vo.NoticeVO;
 
 
@@ -16,20 +18,43 @@ public class NoticeDAO {
 	SqlSession sqlSession;
 	
 	private final String namespace = "edu.hrms.mapper.noticeMapper";
-	//테이블전체 row 리스트로 가져오기
-	public List<NoticeVO> selectNotice(){
-		return sqlSession.selectList(namespace+".selectNotice");
+	//
+	public int getNoticeCount() {
+		return sqlSession.selectOne(namespace+".getNoticeCount");
 	}
-	//익스큐트된 쿼리 갯수
+	//테이블전체 리스트 가져오기
+	public List<NoticeVO> selectNotice(Map<String,Object> map){
+		return sqlSession.selectList(namespace+".selectNotice", map);
+	}
+	//공지인서트
 	public int insertNotice(NoticeVO noticeVO) {
 		return sqlSession.insert(namespace+".insertNotice", noticeVO);
 	}
-	
+	//최근공지셀렉트
+	public int getMaxNoByUserId(int userId) {
+		return sqlSession.selectOne(namespace+".getMaxNoByUserId", userId);
+	}
+	//파일인서트
+	public int insertNoticeFile(List<NoticeFileVO> list) {
+		return sqlSession.insert(namespace + ".insertNoticeFile", list);
+	}
+	//공지 하나 선택
+	public NoticeVO selectNoticeByNoticeNo(int noticeNo) {
+		return sqlSession.selectOne(namespace+".selectNoticeByNoticeNo", noticeNo);
+	}
+	//첨부파일 셀렉트
+	public List <NoticeFileVO> selectNoticeFileByNoticeNo(int noticeNo) {
+		return sqlSession.selectList(namespace+".selectNoticeFileByNoticeNo", noticeNo);
+	}
+	public List<NoticeVO> selectNoticeFilesByNoticeNo(int noticeNo) {
+		return sqlSession.selectList(namespace+".selectNotiecFilesByNoticeNo", noticeNo);
+	}
+	//수정
 	public int updateNotice(NoticeVO noticeVO) {
 		return sqlSession.update(namespace+".updateNotice", noticeVO);
 	}
-	//하나만 선택
-	public NoticeVO selectNoticeOne(int noticeNo) {
-		return sqlSession.selectOne(namespace+".selectNoticeOne", noticeNo);
+	//delyn 업데이트
+	public int delyn(int noticeNo) {
+		return sqlSession.update(namespace+".delyn", noticeNo);
 	}
 }

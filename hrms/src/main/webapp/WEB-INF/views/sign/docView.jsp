@@ -36,6 +36,7 @@
 							<span class="d-block font-weight-bold text-gray-800 mb-3">기안내용</span>
 							${vo.content}
 						</div>
+						<hr>
 						<div class="py-2">
 							<span class="d-block font-weight-bold text-gray-800 mb-3">첨부파일</span>
 							<c:forEach items="${vo.docFileVO}" var="file">
@@ -164,6 +165,20 @@
 </form>
 
 <script>
+	function socketFn(type, signType){
+		console.debug('socket',socket);
+		if(socket){
+			if(type == "doc"){
+				let socketMsg = type+","+signType+","+`${vo.userid},${login.userid},${vo.docNo},${vo.title}`;
+			}else if(type == "vaca"){
+				let socketMsg = type+","+signType+","+`${vo.userid},${login.userid},${vo.docNo},${vo.title}`;
+			}else if(type == "overtime"){
+				let socketMsg = type+","+signType+","+`${vo.userid},${login.userid},${vo.docNo},${vo.title}`;
+			}
+			socket.send(socketMsg);
+		}
+	}
+
 	function downloadFn(fileNo, docNo, realNm, originNm){
 		let f = document.createElement('form');
 		let nameArr = ["fileNo", "docNo", "realNm", "originNm"];

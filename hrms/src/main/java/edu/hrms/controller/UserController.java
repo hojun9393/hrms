@@ -7,13 +7,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.hrms.service.UserService;
 import edu.hrms.util.RegEx;
@@ -30,7 +30,6 @@ public class UserController {
 	@Autowired
 	@Qualifier("passwordEncoder")
 	private PasswordEncoder encoder;
-	
 	
 	@RequestMapping(value = "/main.do" , method = RequestMethod.GET)
 	public String main(Authentication authentication, Model model, String selected) {
@@ -92,11 +91,13 @@ public class UserController {
 	        res.getWriter().flush();
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/regist.do", method = RequestMethod.GET)
 	public String regist() {
 		return "/user/regist";
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/regist.do", method = RequestMethod.POST)
 	public void regist(EmployeeVO employeeVO, HttpServletResponse res) throws IOException {
 		System.out.println(employeeVO.toString());
@@ -120,6 +121,7 @@ public class UserController {
 		res.getWriter().flush();
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/modifyAdmin.do", method = RequestMethod.POST)
 	public String modifyAdmin(Model model, int userid) {
 		EmployeeVO employeeVO = userService.selectUser(userid);
@@ -127,6 +129,7 @@ public class UserController {
 		return "/user/modifyAdmin";
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/modifyAdminOk.do", method = RequestMethod.POST)
 	public void modifyAdminOk(EmployeeVO employeeVO, HttpServletResponse res) throws IOException {
 		String phone = employeeVO.getPhone().replaceAll("-", "");

@@ -15,10 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.hrms.service.NoticeService;
 import edu.hrms.service.SignService;
 import edu.hrms.service.VacaService;
 import edu.hrms.service.WorkService;
 import edu.hrms.util.CalcCalendar;
+import edu.hrms.vo.NoticeVO;
+import edu.hrms.vo.PagingVO;
 import edu.hrms.vo.UserVO;
 import edu.hrms.vo.VacaVO;
 import edu.hrms.vo.WorkVO;
@@ -37,6 +40,9 @@ public class HomeController {
 	
 	@Autowired
 	SignService signService;
+	
+	@Autowired
+	NoticeService noticeService;
 	
 	@RequestMapping(value = "/login.do", method = RequestMethod.GET)
 	public String login(Model model) {
@@ -91,12 +97,20 @@ public class HomeController {
 		int vacaSignCount = signService.selectVacaSignCount(userId);
 		int overSignCount = signService.selectOverSignCount(userId);
 		
+		//공지사항
+		int count = noticeService.getNoticeCount();
+		PagingVO pagingVO = new PagingVO(1, count, 5);
+		Map<String, Object> noticeMap = new HashMap<>();
+		noticeMap.put("pagingVO", pagingVO);
+		List<NoticeVO> noticeList = noticeService.selectNotice(noticeMap);
+		
 		model.addAttribute("list", list);
 		model.addAttribute("todayList", todayList);
 		model.addAttribute("docSignCount", docSignCount);
 		model.addAttribute("vacaSignCount", vacaSignCount);
 		model.addAttribute("overSignCount", overSignCount);
-		
+		model.addAttribute("noticeList", noticeList);
+
 		return "home";
 	}
 	

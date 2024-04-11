@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="include/navigator.jsp"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <head>
 	<link href="${pageContext.request.contextPath}/resources/css/etc.css" rel="stylesheet">
@@ -159,6 +160,43 @@
 			<div class="card shadow mb-4">
 				<!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<h6 class="m-0 font-weight-bold text-primary">공지사항</h6>
+				</div>
+				<!-- Card Body -->
+				<div class="card-body">
+					<div class="h5 mb-3 ml-2 font-weight-bold text-gray-800 today-date">안내드립니다.</div>
+					<c:forEach items="${noticeList}" var="vo" end="1">
+						<div class="card mt-3 bg-light text-black">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-3 pr-0">
+										<div class="d-inline card bg-danger text-white text-center px-2">공지</div>
+										<c:choose>
+											<c:when test="${vo.userId eq '99000'}">
+												<td>대표</td>
+											</c:when>
+											<c:when test="${vo.userId eq '99001'}">
+												<td>관리자</td>
+											</c:when>
+											<c:otherwise>
+												<td>오류</td>
+											</c:otherwise>
+										</c:choose>
+									</div>
+									<div class="col-6 d-inline-block text-truncate">
+										<a href="${pageContext.request.contextPath}/notice/view.do?noticeNo=${vo.noticeNo}">${vo.title}</a>
+									</div>
+									<div class="col-3 text-right">${fn:substring(vo.rdate,0,10) }</div>
+								</div>
+							</div>
+						</div>
+					</c:forEach>
+				</div>
+			</div>
+			
+			<div class="card shadow mb-4">
+				<!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
 					<h6 class="m-0 font-weight-bold text-primary">연차 사원</h6>
 				</div>
 				
@@ -181,30 +219,6 @@
 					<c:if test="${empty todayList }">
 						<div class="h4 mb-3 ml-2 font-weight-bold text-lightgray">연차자 없음 <i class="fas fa-user-alt-slash"></i></div>
 					</c:if>
-				</div>
-			</div>
-			<div class="card shadow mb-4">
-				<!-- Card Header - Dropdown -->
-				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-					<h6 class="m-0 font-weight-bold text-primary">공지사항</h6>
-				</div>
-				<!-- Card Body -->
-				<div class="card-body">
-					<div class="h5 mb-3 ml-2 font-weight-bold text-gray-800 today-date">안내드립니다.</div>
-					<div class="card mt-3 bg-light text-black">
-						<div class="card-body">
-							<div class="d-inline card bg-danger text-white text-center px-2">공지</div>
-							홍길동
-							<div class="d-inline ml-5">연차 신청</div>
-						</div>
-					</div>
-					<div class="card mt-3 bg-light text-black">
-						<div class="card-body">
-							<div class="d-inline card bg-warning text-white text-center px-2">안내</div>
-							홍길동
-							<div class="d-inline ml-5">연차 신청</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
