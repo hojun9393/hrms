@@ -9,11 +9,11 @@
 	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 	
 		<!-- Sidebar - Brand -->
-		<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.jsp">
+		<a class="sidebar-brand d-flex align-items-center justify-content-center" href="${pageContext.request.contextPath}/">
 			<div class="sidebar-brand-icon">
-				<i class="fas fa-building"></i>
+				<i class="fas fa-user-tie"></i>
 			</div>
-			<div class="sidebar-brand-text mx-3">인사관리시스템</div>
+			<div class="sidebar-brand-text mx-3">인사관리시스템 </div>
 		</a> 
 	  
 		<!-- Divider -->
@@ -56,6 +56,12 @@
 			<a class="nav-link" href="${pageContext.request.contextPath}/user/main.do"> 
 				<i class="fas fa-fw fa-users"></i> 
 				<span>사원</span>
+			</a>
+		</li>
+		<li class="nav-item ${ navSelected.equals('message') ? 'active' : '' }">
+			<a class="nav-link" href="${pageContext.request.contextPath}/message/main.do"> 
+				<i class="fas fa-fw fa-envelope"></i>
+				<span>쪽지</span>
 			</a>
 		</li>
 		<li class="nav-item ${ navSelected.equals('notice') ? 'active' : '' }">
@@ -282,7 +288,38 @@
 				</div>
 			</c:forEach>
 			
+			<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 			<script>
+			var socket = null;
+			$(document).ready(function(){
+				if(${login != null}){
+					connectWs();
+				}
+			})
+			
+			//소켓 연결
+			function connectWs(){
+				var ws = new SockJS(`${pageContext.request.contextPath}/echo`);
+				socket = ws;
+				
+				ws.onopen = function() {
+				 	console.log('open');
+				};
+				
+				ws.onmessage = function(event) {
+					console.log("onmessage"+event.data);
+					alert('onmessage'+event.data);
+					/* setTimeout(function(){
+						$socketAlert.css('display','none');
+						
+					}, 5000); */
+				};
+	
+				ws.onclose = function() {
+					console.log('close');
+				};
+			};
+			
 			function msgReadNavFn(msgRNo, obj){
 				$.ajax({
 					url:"${pageContext.request.contextPath}/message/msgRead.do",

@@ -70,6 +70,8 @@ public class HomeInterceptor implements HandlerInterceptor {
 				navSelected = "work";
 			}else if(uris[0].equals("user")) {
 				navSelected = "user";
+			}else if(uris[0].equals("message")) {
+				navSelected = "message";
 			}else if(uris[0].equals("notice")) {
 				navSelected = "notice";
 			}
@@ -81,6 +83,7 @@ public class HomeInterceptor implements HandlerInterceptor {
 				List<AlarmVO> alarmList = alarmService.selectAlarm(Integer.parseInt(user.getUserid()));
 				modelAndView.addObject("msgList", msgList);
 				modelAndView.addObject("alarmList", alarmList);
+				modelAndView.addObject("login", user);
 			}
 		}
 		

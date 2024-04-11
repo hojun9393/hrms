@@ -173,6 +173,7 @@ public class SignController {
 				}
 			}
 		}
+		
 		res.setContentType("text/html; charset=utf-8");
 		res.setCharacterEncoding("UTF-8");
 		if(result>0) {

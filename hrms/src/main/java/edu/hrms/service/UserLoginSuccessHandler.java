@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -18,7 +19,8 @@ public class UserLoginSuccessHandler implements AuthenticationSuccessHandler {
 			Authentication authentication) throws IOException, ServletException {
 
 		UserVO login = (UserVO) authentication.getPrincipal();
-
+		request.getSession().setAttribute("login", login);
+		
 		String name = login.getName();
 		String dept = login.getDept();
 		switch(dept) {
