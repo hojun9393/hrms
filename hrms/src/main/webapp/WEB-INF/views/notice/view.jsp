@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../include/navigator.jsp"%>
+<% pageContext.setAttribute("nl", "\n"); %>
 <!DOCTYPE html>
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -15,7 +16,7 @@
 			<!-- Nested Row within Card Body -->
 			<div class="row">
 				<div class="col">
-					<div class="p-5">
+					<div class="p-4">
 						<div class="my-4">
 							<span class="d-inline bg-primary card text-white py-1 px-3">공지사항</span>
 							<h1 class="d-inline h4 text-gray-900 font-weight-bold">
@@ -27,10 +28,10 @@
 							<span class="d-inline font-weight-bold text-gray-800">작성자</span>
 							|&nbsp; 
 							<c:choose>
-								<c:when test="${vo.userid eq '99000'}">
+								<c:when test="${vo.userId eq '99000'}">
 									대표<br>
 								</c:when>
-								<c:when test="${vo.userid eq '99001'}">
+								<c:when test="${vo.userId eq '99001'}">
 									관리자<br>
 								</c:when>
 								<c:otherwise>
@@ -43,22 +44,30 @@
 						<hr>
 						<div class="py-2">
 							<span class="d-block font-weight-bold text-gray-800 mb-3">공지사항 내용</span>
-							${vo.content}
+							<c:out value="${fn:replace(vo.content, nl, '<br/>')}" escapeXml="false"/>
 						</div>
-						<a href="#" class="d-none d-sm-inline-block border-primary text-primary btn btn-sm btn-light shadow-sm"><i class="fas fa-download fa-sm text-primary"></i> 파일이름.pdf</a>
+						<div class="col p-5 mt-5 text-right py-2">
+							<span class="d-inline font-weight-bold text-gray-800">첨부파일</span><br>
+							<c:forEach var="i" items="${list }">
+								<a href="javascript:downloadFn('${i.noticeFileNo}', '${i.noticeNo}', '${i.realNm}', '${i.originNm}')"> 
+									${i.originNm}<br>
+								</a>
+							</c:forEach>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col p-5 mt-5">
+				<div class="col p-1">
 					<div class="mb-4 text-center">
 						<hr>
 						<a href="main.do" class="btn btn-secondary btn-user">목록으로</a> 
-						<a href="modify.do?noticeNo=${vo.noticeNo}" class="btn btn-primary btn-user">수정하기</a>
-						<c:if test="${vo.delyn ne 'y' }">
-							<a onclick="delynFn()" class="btn btn-dark btn-user">삭제하기</a>
-						</c:if> 
-						 
+						<sec:authorize access="hasRole('ROLE_ADMIN')">
+							<a href="modify.do?noticeNo=${vo.noticeNo}" class="btn btn-primary btn-user">수정하기</a>
+							<c:if test="${vo.delyn ne 'y' }">
+								<a onclick="delynFn()" class="btn btn-dark btn-user">삭제하기</a>							
+							</c:if> 
+						</sec:authorize> 
 					</div>
 				</div>
 			</div>
@@ -83,6 +92,25 @@
 			document.body.appendChild(f);
 			f.submit();
 		}
+	}
+	
+	function downloadFn(noticeFileNo, noticeNo, realNm, originNm){
+		let f = document.createElement('form');
+		let nameArr = ["noticeFileNo", "noticeNo", "realNm", "originNm"];
+		let valueArr = [noticeFileNo, noticeNo, realNm, originNm];
+		let inputArr = [];
+		for(let i=0; i<valueArr.length; i++){
+			let input = document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('name', nameArr[i]);
+			input.setAttribute('value', valueArr[i]);
+			inputArr[i] = input;
+			f.appendChild(inputArr[i]);
+		}
+		f.setAttribute('method', 'post');
+		f.setAttribute('action', 'download.do');
+		document.body.appendChild(f);
+		f.submit();
 	}
 </script>
 <!-- /.container-fluid -->

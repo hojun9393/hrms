@@ -1,14 +1,14 @@
 package edu.hrms.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import edu.hrms.vo.NoticeVO;
-import edu.hrms.vo.DocVO;
 import edu.hrms.vo.NoticeFileVO;
+import edu.hrms.vo.NoticeVO;
 
 
 @Repository
@@ -18,9 +18,13 @@ public class NoticeDAO {
 	SqlSession sqlSession;
 	
 	private final String namespace = "edu.hrms.mapper.noticeMapper";
+	//
+	public int getNoticeCount() {
+		return sqlSession.selectOne(namespace+".getNoticeCount");
+	}
 	//테이블전체 리스트 가져오기
-	public List<NoticeVO> selectNotice(){
-		return sqlSession.selectList(namespace+".selectNotice");
+	public List<NoticeVO> selectNotice(Map<String,Object> map){
+		return sqlSession.selectList(namespace+".selectNotice", map);
 	}
 	//공지인서트
 	public int insertNotice(NoticeVO noticeVO) {
@@ -37,7 +41,11 @@ public class NoticeDAO {
 	//공지 하나 선택
 	public NoticeVO selectNoticeByNoticeNo(int noticeNo) {
 		return sqlSession.selectOne(namespace+".selectNoticeByNoticeNo", noticeNo);
-	}	
+	}
+	//첨부파일 셀렉트
+	public List <NoticeFileVO> selectNoticeFileByNoticeNo(int noticeNo) {
+		return sqlSession.selectList(namespace+".selectNoticeFileByNoticeNo", noticeNo);
+	}
 	public List<NoticeVO> selectNoticeFilesByNoticeNo(int noticeNo) {
 		return sqlSession.selectList(namespace+".selectNotiecFilesByNoticeNo", noticeNo);
 	}

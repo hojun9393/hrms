@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="include/navigator.jsp"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <head>
 	<link href="${pageContext.request.contextPath}/resources/css/etc.css" rel="stylesheet">
@@ -168,7 +169,7 @@
 						<div class="card mt-3 bg-light text-black">
 							<div class="card-body">
 								<div class="row">
-									<div class="col-3">
+									<div class="col-3 pr-0">
 										<div class="d-inline card bg-danger text-white text-center px-2">공지</div>
 										<c:choose>
 											<c:when test="${vo.userId eq '99000'}">
@@ -182,10 +183,10 @@
 											</c:otherwise>
 										</c:choose>
 									</div>
-									<div class="col-4 d-inline-block text-truncate">
+									<div class="col-6 d-inline-block text-truncate">
 										<a href="${pageContext.request.contextPath}/notice/view.do?noticeNo=${vo.noticeNo}">${vo.title}</a>
 									</div>
-									<div class="col-5 text-right">${vo.rdate}</div>
+									<div class="col-3 text-right">${fn:substring(vo.rdate,0,10) }</div>
 								</div>
 							</div>
 						</div>

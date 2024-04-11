@@ -2,17 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.hrms.mapper.noticeMapper">
+
+	<select id="getNoticeCount" parameterType="Map" resultType="int">
+		SELECT COUNT(*) FROM notice;  
+	</select> 
 	
-	<select id="selectNotice" resultType="noticeVO">
+	<select id="selectNotice" parameterType="Map" resultType="noticeVO">
 		SELECT * FROM notice
-			WHERE delyn = 'n' ORDER BY rdate DESC;
+			WHERE delyn = 'n' ORDER BY rdate DESC
+		<if test="pagingVO != null">
+       		LIMIT #{pagingVO.startLimit}, #{pagingVO.perPage}
+        </if>
 	</select>
 	
 	<select id="selectNoticeByNoticeNo" resultType="noticeVO" parameterType="int">
 		SELECT * FROM notice WHERE noticeNo = #{noticeNo}
 	</select>
 	
-	<insert id="insertNotice" parameterType="noticeVO">	
+	<select id="selectNoticeFileByNoticeNo" resultType="noticeFileVO">
+		SELECT * FROM noticeFile WHERE noticeNo = #{noticeNo}
+	</select>
+	
+	<insert id="insertNotice" parameterType="noticeVO">
 		INSERT INTO notice(userid
 		     		   , title
 		     		   , content
@@ -46,14 +57,7 @@
 				(#{item.noticeNo}, #{item.realNm}, #{item.originNm})
 			</foreach>
 	</insert>
-	
-	<select id="selectNoticeFileByNoticeNo" parameterType="int" resultType="noticeFileVO">
-			SELECT nf.* FROM noticefile nf
-			INNER JOIN notice n
-			ON n.noticeNo = nf.noticeNo
-			WHERE nf.noticeNo =#{noticeNo};
-	</select>
-	
+		
 	<update id="delyn" parameterType="int">
 		UPDATE notice
 		SET delyn = 'y'

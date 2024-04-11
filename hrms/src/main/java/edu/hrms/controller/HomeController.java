@@ -21,6 +21,7 @@ import edu.hrms.service.VacaService;
 import edu.hrms.service.WorkService;
 import edu.hrms.util.CalcCalendar;
 import edu.hrms.vo.NoticeVO;
+import edu.hrms.vo.PagingVO;
 import edu.hrms.vo.UserVO;
 import edu.hrms.vo.VacaVO;
 import edu.hrms.vo.WorkVO;
@@ -97,7 +98,11 @@ public class HomeController {
 		int overSignCount = signService.selectOverSignCount(userId);
 		
 		//공지사항
-		List<NoticeVO> noticeList = noticeService.selectNotice();
+		int count = noticeService.getNoticeCount();
+		PagingVO pagingVO = new PagingVO(1, count, 5);
+		Map<String, Object> noticeMap = new HashMap<>();
+		noticeMap.put("pagingVO", pagingVO);
+		List<NoticeVO> noticeList = noticeService.selectNotice(noticeMap);
 		
 		model.addAttribute("list", list);
 		model.addAttribute("todayList", todayList);

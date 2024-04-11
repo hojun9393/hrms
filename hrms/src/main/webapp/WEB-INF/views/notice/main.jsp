@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="../include/navigator.jsp"%>
-
+<link href="${pageContext.request.contextPath}/resources/css/pagination.css" rel="stylesheet">
 <!DOCTYPE html>
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -20,14 +21,16 @@
 				</div>
 				<!-- Card Body -->
 				<div class="card-body">
-					<a href="write.do" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
-						<i class="fas fa-fw fa-bullhorn"></i> 공지 작성
-					</a>
+					<sec:authorize access="hasRole('ROLE_ADMIN')">
+						<a href="write.do" class="mb-3 d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm small float-right">
+							<i class="fas fa-fw fa-bullhorn"></i> 공지 작성
+						</a>
+					</sec:authorize>
 					<!-- 공지사항 -->
 					<div class="table-responsive">
 						<table class="dataTables_wraper table text-secondary text-center px-3 py-1 border-secondary" >
 							<thead>
-								<tr class="shadow mb-1">
+								<tr class="shadow mb-1 text-gray">
 									<th>작성자</th>
 									<th>제목</th>
 									<th>작성일</th>
@@ -48,44 +51,34 @@
 										</c:otherwise>
 									</c:choose>
 									<td><a href="view.do?noticeNo=${vo.noticeNo}">${vo.title}</a></td>
-									<td class="small">${vo.rdate}</td>
+									<td class="small">${fn:substring(vo.rdate,0,10) }</td>
 								</tr>
 								</c:forEach>
 							</tbody>
 						</table>
-												
-						<ul class="pagination">
-							<li class="paginate_button page-item previous disabled"
-							id="dataTable_previous">
-							<a href="#" aria-controls="dataTable" data-dt-idx="0"
-							tabindex="0" class="page-link">Previous</a>
-							</li> 
-							
-							<li class="paginate_button page-item active">
-							<a href="#" aria-controls="dataTable" data-dt-idx="1"
-							tabindex="0" class="page-link">1</a>
-							</li>
-							<li class="paginate_button page-item">
-							<a href="#" aria-controls="dataTable" data-dt-idx="2"
-							tabindex="0" class="page-link">2</a>
-							</li>
-							<li class="paginate_button page-item">
-							<a href="#" aria-controls="dataTable" data-dt-idx="3"
-							tabindex="0" class="page-link">3</a>
-							</li>
-							<li class="paginate_button page-item">
-							<a href="#" aria-controls="dataTable" data-dt-idx="4"
-							tabindex="0" class="page-link">4</a>
-							</li>
-							<li class="paginate_button page-item">
-							<a href="#" aria-controls="dataTable" data-dt-idx="5"
-							tabindex="0" class="page-link">5</a>
-							</li>							
-							<li class="paginate_button page-item next id="dataTable_next">
-							<a href="#" aria-controls="dataTable" data-dt-idx="6"
-							tabindex="0" class="page-link">next</a>
-							</li>
-						</ul>
+									
+						<!------- 페이징 ------->
+						<div class="page_wrap">
+  							<div class="page_nation">
+  								<c:if test="${pagingVO.startPage > pagingVO.cntPage }">
+									<a class="arrow prev" href="main.do?pnum=${pagingVO.startPage-1}"></a>
+								</c:if>
+								<c:forEach var="p" begin="${pagingVO.startPage }" end="${pagingVO.endPage }">
+									<c:choose>
+										<c:when test="${p eq pagingVO.nowPage }">
+											<a class="active">${p }</a>
+										</c:when>
+										<c:when test="${p ne pagingVO.nowPage }">
+											<a href="main.do?pnum=${p }">${p }</a>
+										</c:when>
+									</c:choose>
+								</c:forEach>
+								<c:if test="${pagingVO.endPage < pagingVO.lastPage }">
+									<a class="arrow next" href="main.do?pnum=${pagingVO.endPage+1}"></a>
+								</c:if>
+							</div>
+						</div>			
+						
 					</div>
 					
 				</div>

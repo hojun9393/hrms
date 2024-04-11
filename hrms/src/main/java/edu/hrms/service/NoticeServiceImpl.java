@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,11 +22,15 @@ public class NoticeServiceImpl implements NoticeService{
 	
 	@Autowired
 	NoticeDAO noticeDAO;
-	// 공지사항 목록 조회 메서드
-	
+	// 공지사항 목록 조회 메서드		
 	@Override
-	public List<NoticeVO> selectNotice() {
-		return noticeDAO.selectNotice();
+	public List<NoticeVO> selectNotice(Map<String,Object>map) {
+		return noticeDAO.selectNotice(map);
+	}
+	//
+	@Override
+	public int getNoticeCount() {
+		return noticeDAO.getNoticeCount();
 	}
 	@Override
 	public NoticeVO selectNoticeByNoticeNo(int noticeNo) {
@@ -41,7 +46,10 @@ public class NoticeServiceImpl implements NoticeService{
 	  public int updateNotice(NoticeVO noticeVO) {
 		  return noticeDAO.updateNotice(noticeVO);
 	}
-	  
+	  @Override
+	public List<NoticeFileVO> selectNoticeFileByNoticeNo(int noticeNo) {
+		return noticeDAO.selectNoticeFileByNoticeNo(noticeNo);
+	}
 	/*
 	 * @Override public int insertNoticeFile(NoticeFileVO noticeFileVO) { return
 	 * noticeDAO.insertNoticeFile(noticeFileVO); }

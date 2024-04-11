@@ -30,7 +30,7 @@
 									<div class="form-group">
 										<div class="row">
 											<div class="form-group">
-												제목 : <input name="title" type="text" class="resize-none form-control" placeholder="제목" required>
+												제목 : <input style="width:35rem" name="title" type="text" class="resize-none form-control" placeholder="제목" required>
 											</div>
 										</div>
 									</div>
@@ -118,7 +118,9 @@
 	function validation(obj) {
 		const fileTypes = [ 'application/pdf', 'image/gif', 'image/jpeg',
 				'image/png', 'image/bmp', 'image/tif', 'text/plain', 'application/msword',
-				'application/haansofthwp', 'application/x-hwp' ];
+				'application/haansofthwp', 'application/x-hwp'
+				, 'application/vnd.ms-excel'
+				, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ];
 		if (obj.name.length > 100) {
 			alert("파일명이 100자 이상인 파일은 제외되었습니다.");
 			return false;

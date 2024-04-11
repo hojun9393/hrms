@@ -1,7 +1,7 @@
 package edu.hrms.vo;
 
 import java.util.List;
-
+//select
 public class NoticeVO {
 	private int noticeNo;
 	private int userid;
@@ -23,15 +23,12 @@ public class NoticeVO {
 	private List<NoticeFileVO> noticeFileVO;
 	
 	public NoticeVO() {}
-
+//input data insert
 	public NoticeVO(int userid, String title, String content ) {
 		super();
-		
 		this.userid = userid;
 		this.title = title;
 		this.content = content;
-	
-		
 	}
 
 	public List<NoticeFileVO> getNoticeFileVO() {
