@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,10 +80,6 @@ public class DocController {
 		int userid = Integer.parseInt(login.getUserid());
 		String path = docService.getPath(request);
 //		String path = request.getSession().getServletContext().getRealPath("/resources/upload"); // 개발
-		File dir = new File(path);
-		if(!dir.exists()) {
-			dir.mkdirs(); // 존재하지 않는 모든 상위 폴더 생성
-		}
 		
 		// 기안 작성 로직 순서
 		// 1. doc 테이블에 insert 한다
@@ -120,7 +117,6 @@ public class DocController {
 	public List<DocVO> reloadList(SearchVO searchVO, Authentication authentication){
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
-		System.out.println(searchVO);
 		Map<String, Object> map = new HashMap<>();
 		map.put("dept", login.getDept());
 		map.put("searchVO", searchVO);
@@ -147,7 +143,7 @@ public class DocController {
 		list = (List<DocSignVO>) workService.processList(list);
 		model.addAttribute("list", list);
 		
-		// 3. 1에서 얻은 리스트로 결재 현황 카운트, 진행상황  구한다
+		// 3. 2에서 얻은 리스트로 결재 현황 카운트, 진행상황  구한다
 		Map<String, Object> map = workService.getCountNowstate(list, vo.getState());
 		
 		model.addAttribute("count", map.get("count"));
@@ -157,9 +153,66 @@ public class DocController {
 		return "document/view";
 	}
 	
+	@RequestMapping(value = "/modify.do", method = RequestMethod.GET)
+	public String modify(Model model, int docNo, Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		UserVO login = (UserVO) authentication.getPrincipal();
+		DocVO vo = docService.selectDocByDocNo(docNo);
+		
+		if(vo.getUserid().equals(login.getUserid())){
+			model.addAttribute("vo", vo);
+			
+			List<SignLineVO> signLineList = workService.getSignLineList(login.getUserid(), login.getPosition(), "D");
+			model.addAttribute("signLineList", signLineList);
+			List<DocFileVO> dfList = docService.selectDocFilesByDocNo(docNo);
+			model.addAttribute("dfList", dfList);
+			
+		}else {
+			response.getWriter().append("<script>alert('잘못된 접근입니다.');location.href='../docu/main.do';</script>");
+			response.getWriter().flush();
+		}
+		
+		return "document/modify";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/modify.do", method = RequestMethod.POST)
+	public int modify(HttpServletRequest request, @RequestParam(value = "files", required = false) List<MultipartFile> files
+			, DocVO vo, String[] deletedFiles) {
+		
+		String path = docService.getPath(request);
+//		String path = request.getSession().getServletContext().getRealPath("/resources/upload"); // 개발
+		
+		int docNo = vo.getDocNo();
+		
+		// 기안 수정 로직
+		// 1. doc update 한다.
+		docService.updateDoc(vo);
+		
+		if(deletedFiles.length>0) {
+			// 2. 삭제시킨 파일 docfile 테이블에서 삭제한다.
+			docService.deleteDocFiles(Map.of("docNo", docNo, "array", deletedFiles));
+		}
+		
+		if(files.size()>0) {
+			// 3. 파일 생성 및 파일 vo리스트 리턴한다.
+			List<DocFileVO> fileList = docService.createFiles(files, path, docNo);
+			
+			// 4. docfile 테이블에 insert 한다.
+			docService.insertDocFile(fileList);
+		} 
+			
+		// 5. docSign update 한다.
+		int docSignUpdate = docService.updateDocSign(docNo);
+		
+		return docSignUpdate;
+	}
+	
 	@RequestMapping(value = "/withdrawal.do", method = RequestMethod.POST)
 	public void withdrawal(HttpServletResponse response, int docNo) throws IOException {
-		int result = docService.withdrawl(docNo);
+		docService.withdrawl(docNo);
+		int result = docService.deleteDocSign(docNo);
+		
 		if(result>0) {
 			response.getWriter().append("<script>alert('기안이 철회되었습니다.');location.href='../docu/main.do';</script>");
 		}else {
@@ -175,8 +228,10 @@ public class DocController {
         // file 다운로드 설정
         response.setContentType("application/download");
         response.setContentLength((int)f.length());
+        
         String fileName = URLEncoder.encode(vo.getOriginNm(), "UTF-8");
         fileName = fileName.replaceAll("\\+", "%20");
+        
         response.setHeader("Content-disposition", "attachment; filename=\"" + fileName + "\"");
         // response 객체를 통해서 서버로부터 파일 다운로드
         OutputStream os = response.getOutputStream();
