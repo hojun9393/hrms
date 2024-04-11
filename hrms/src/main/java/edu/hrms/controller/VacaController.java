@@ -130,7 +130,6 @@ public class VacaController {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
 		vo.setUserid(login.getUserid());
-		System.out.println(vo.toString());
 		
 		List<VacaVO> list = vacaService.selectMyVacaList(vo);
 		return list;
