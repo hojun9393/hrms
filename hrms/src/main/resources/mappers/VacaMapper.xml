@@ -3,7 +3,8 @@
 			"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.hrms.mappers.vacaMapper">
 	
-	<select id="selectMyVacaList" parameterType="Map" resultType="vacaVO">
+	<select id="selectMyVacaList" parameterType="vacaVO" resultType="vacaVO">
+		<![CDATA[
 		SELECT vacaNo, userid, rdate, reason, 
 				(CASE state
 					WHEN 0 THEN '대기'
@@ -13,7 +14,7 @@
 					WHEN 7 THEN '사용 완료'
 					WHEN 9 THEN '철회' END
 				) AS state
-				, startTime, endTime, startDate, endDate, subtime_nolunchtime
+				, startTime, endTime, startDate, endDate
 				, (CASE DAYOFWEEK(startDate) 
 						WHEN '1' THEN '(일)'
 						WHEN '2' THEN '(월)'
@@ -33,20 +34,9 @@
 						WHEN '7' THEN '(토)'
 						END) endDate_dayOfWeek
             , duration
-            , IF(duration>1
-				, ADDTIME(IF(startTime<![CDATA[<]]>'13:00:00' AND endTime<![CDATA[>=]]>'13:00:00'
-								, SUBTIME(subtime_nolunchtime,'01:00:00')
-								, subtime_nolunchtime), SEC_TO_TIME(TIME_TO_SEC('08:00:00')*(duration-1)))
-				, IF(startTime<![CDATA[<=]]>'12:00:00' AND endTime<![CDATA[>=]]>'13:00:00'
-						, SUBTIME(subtime_nolunchtime,'01:00:00')
-						, subtime_nolunchtime)) as useTime	
-			FROM (SELECT *, SUBTIME(
-											IF(endTime BETWEEN '12:00:01' AND '12:59:59','13:00:00',endTime), 
-											IF(startTime BETWEEN '12:00:00' AND '12:59:59','12:00:00',startTime))
-											AS subtime_nolunchtime
-							, DATEDIFF(endDate, startDate)+1 as duration
+			FROM (SELECT *, DATEDIFF(endDate, startDate)+1 as duration
 						FROM vacation
-						WHERE userid = #{userid}	
+						WHERE userid = #{userid}]]>
 							<if test='startDate != null and endDate == null'>
 								AND startDate <![CDATA[>=]]> #{startDate}
 				 			</if>
@@ -83,17 +73,17 @@
 			WHERE userid = #{userid}
 	</select>
 	
-	<select id="checkVacaAppCnt" parameterType="Map" resultType="int">
+	<select id="checkVacaAppCnt" parameterType="vacaVO" resultType="int">
 		SELECT COUNT(*) 
 			FROM vacation
 			WHERE state NOT IN (3,9)
-				AND (startDate BETWEEN #{startDate} AND #{endDate}
-	      			OR endDate BETWEEN #{startDate} AND #{endDate})
-	      	AND userid = #{userid}
+				AND ((#{startDate} BETWEEN startDate AND endDate)
+	      			OR (#{endDate} BETWEEN startDate AND endDate))
+	      	AND userid = #{userid};
 	</select>
 	
 	
-	<insert id="insertVaca" parameterType="String">
+	<insert id="insertVaca" parameterType="vacaVO">
 		INSERT INTO vacation (userid, reason, startTime, endTime, startDate, endDate)
 						  VALUES (#{userid}, #{reason}, #{startTime}, #{endTime}, #{startDate}, #{endDate})
 	</insert>

@@ -20,8 +20,8 @@ public class VacaDAO {
 	
 	private final String namespace = "edu.hrms.mappers.vacaMapper";
 	
-	public List<VacaVO> selectMyVacaList(Map<String, String> map){
-		return sqlSession.selectList(namespace+".selectMyVacaList", map);
+	public List<VacaVO> selectMyVacaList(VacaVO vo){
+		return sqlSession.selectList(namespace+".selectMyVacaList", vo);
 	}
 	
 	public VacaVO myRecentVacaApplication(String userid) {
@@ -32,16 +32,16 @@ public class VacaDAO {
 		return sqlSession.selectOne(namespace+".myRemainVaca", userid);
 	}
 	
-	public int insertVaca(Map<String, String> map) {
-		return sqlSession.insert(namespace+".insertVaca", map);
+	public int checkVacaAppCnt(VacaVO vo) {
+		return sqlSession.selectOne(namespace+".checkVacaAppCnt", vo);
+	}
+	
+	public int insertVaca(VacaVO vo) {
+		return sqlSession.insert(namespace+".insertVaca", vo);
 	}
 	
 	public int getMaxNoByUserId(String userid) {
 		return sqlSession.selectOne(namespace+".getMaxNoByUserId", userid);
-	}
-	
-	public int checkVacaAppCnt(Map<String, String> map) {
-		return sqlSession.selectOne(namespace+".checkVacaAppCnt", map);
 	}
 	
 	public int insertVacaSign(List<VacaSignVO> list) {

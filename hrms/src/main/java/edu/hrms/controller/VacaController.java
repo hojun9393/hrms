@@ -51,7 +51,7 @@ public class VacaController {
 			
 		}else {
 			String userid = login.getUserid();
-			model.addAttribute("myVacaList", vacaService.selectMyVacaList(Map.of("userid",userid)));
+			model.addAttribute("myVacaList", vacaService.selectMyVacaList(new VacaVO(userid)));
 			model.addAttribute("myRecentVacaApplication", vacaService.myRecentVacaApplication(userid));
 			model.addAttribute("user", vacaService.myRemainVaca(userid));
 		}
@@ -69,26 +69,19 @@ public class VacaController {
 	}
 	
 	@RequestMapping(value = "/application.do", method = RequestMethod.POST)
-	public void application(HttpServletResponse response, String startDate, String endDate, String startTime, String endTime, String reason, Authentication authentication) throws IOException {
+	public void application(HttpServletResponse response, VacaVO vo, Authentication authentication) throws IOException {
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
 		String userid = login.getUserid();
-		
-		Map<String, String> map = new HashMap<>();
-		map.put("userid", userid);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		map.put("startTime", startTime);
-		map.put("endTime", endTime);
-		map.put("reason", reason);
+		vo.setUserid(userid);
 		
 		// 해당 날짜 연차 신청 여부 확인
-		int cnt = vacaService.checkVacaAppCnt(map);
+		int cnt = vacaService.checkVacaAppCnt(vo);
 		
 		if(cnt>0) {
 			response.getWriter().append("<script>alert('해당 날짜에 이미 신청한 결재 대기\\(혹은 진행\\)중인 연차 내역이 있습니다.');location.href='main.do';</script>");
 		}else {
-			vacaService.insertVaca(map);
+			vacaService.insertVaca(vo);
 			int vacaNo = vacaService.getMaxNoByUserId(userid);
 			List<SignLineVO> signLineList = workService.getSignLineList(userid, login.getPosition(), "V");
 			List<VacaSignVO> vacaSignList = vacaService.getVacaSignList(signLineList, vacaNo);
@@ -111,7 +104,7 @@ public class VacaController {
 		list = (List<VacaSignVO>) workService.processList(list);
 		model.addAttribute("list", list);
 		
-		// 3. 1에서 얻은 리스트로 결재 현황 카운트, 진행상황  구한다
+		// 3. 2에서 얻은 리스트로 결재 현황 카운트, 진행상황  구한다
 		Map<String, Object> map = workService.getCountNowstate(list, vo.getState());
 		
 		model.addAttribute("count", map.get("count"));
@@ -133,18 +126,13 @@ public class VacaController {
 	
 	@RequestMapping(value = "/reloadList.do")
 	@ResponseBody
-	public List<VacaVO> reloadMyVacaList(String startDate, String endDate, Authentication authentication){
+	public List<VacaVO> reloadMyVacaList(VacaVO vo, Authentication authentication){
 		
 		UserVO login = (UserVO)authentication.getPrincipal();
-		startDate = (startDate.equals("") ? null : startDate);
-		endDate = (endDate.equals("") ? null : endDate);
+		vo.setUserid(login.getUserid());
+		System.out.println(vo.toString());
 		
-		Map<String, String> myVacaListMap = new HashMap<>();
-		myVacaListMap.put("userid", login.getUserid());
-		myVacaListMap.put("startDate", startDate);
-		myVacaListMap.put("endDate", endDate);
-		
-		List<VacaVO> list = vacaService.selectMyVacaList(myVacaListMap);
+		List<VacaVO> list = vacaService.selectMyVacaList(vo);
 		return list;
 	}
 	

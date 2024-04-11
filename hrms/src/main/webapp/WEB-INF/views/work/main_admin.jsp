@@ -145,42 +145,6 @@
 		</div>
 	</div>
 	</sec:authorize>
-	
-	<!-- 관리자용 퇴근시키기 버튼 -->
-	<script>
-		function leaveWork_admin(wNo){
-			let end = prompt("퇴근시간 입력","18:00:00");
-			if(end==null) return false;
-			
-			let regex = /^[0-2]{1}[0-9]{1}\:[0-5]{1}[0-9]{1}\:[0-5]{1}[0-9]{1}$/;
-			let test = regex.test(end);
-			if(test){
-				let conf = confirm("근무번호 "+wNo+"의 퇴근시간을 "+end+"로 입력하시겠습니까?");
-				if(conf){
-					$.ajax({
-						url: "workInsert_admin.do",
-						type: "POST",
-						data: {wNo : wNo, end : end},
-						success: function(data){
-							console.log(typeof data);
-							console.log(data);
-							if(data>0){
-								alert("퇴근 처리 되었습니다.");
-								location.reload(true);
-							}else{
-								alert("오류가 발생하였습니다.");
-								location.reload(true);
-							}
-						}
-						
-					})
-				}
-			}else{
-				alert("시간 형식이 올바르지 않습니다.");
-			}
-		}
-	</script>
-
 <!-- End of Main Content -->
 <%-- <script src="${pageContext.request.contextPath}/resources/js/work_menu.js"></script> --%>
 <%-- <script src="${pageContext.request.contextPath}/resources/js/clock.js"></script> --%>

@@ -39,7 +39,6 @@ public class WorkController {
 	@Autowired
 	CalcCalendar calcCalendar;
 	
-	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
 	public String main(Model model, Authentication authentication, HttpServletResponse response) {
 		
@@ -86,7 +85,7 @@ public class WorkController {
 			List<OvertimeVO> overtimeList = workService.selectAllMyOvertime(listMap);
 			model.addAttribute("overtimeList", overtimeList);
 			
-			// 로그인 한 사원 금일 초과근무 신청 여부
+			// 로그인 한 사원 금일 초과근무 신청 여부 : [0]=점심 초과근무, [1]=저녁 초과근무
 			OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);
 			if(ovoAppArr!=null) {
 				model.addAttribute("ovoAppArr", ovoAppArr);
@@ -132,7 +131,7 @@ public class WorkController {
 		}else if(goOrLeave.equals("LEAVE")) {
 			map.put("today", calcCalendar.getTodayDate());
 			
-			// 오늘 초과근무 신청 여부 확인
+			// 오늘 초과근무 신청 여부 : [0]=점심 초과근무, [1]=저녁 초과근무
 			OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);
 			
 			// 초과근무 신청이 없으면 퇴근처리한다.
@@ -155,7 +154,7 @@ public class WorkController {
 				String leaveTime = date + " " + time;
 				boolean isLeaveBeforeEndtime = calcCalendar.isParam1_beforeOrAfter_param2(leaveTime, lastEndTime, "before");
 				
-				// 초과시간 끝시간보다 먼저 퇴근하는경우
+				// 초과근무시간 끝시간보다 먼저 퇴근하는경우
 				if(isLeaveBeforeEndtime) return ovoAppArr;
 			}
 		}
@@ -238,7 +237,7 @@ public class WorkController {
 		map.put("end", end);
 		map.put("content", content);
 		
-		// 금일 초과근무 신청 여부 확인
+		// 오늘 초과근무 신청 여부 : [0]=점심 초과근무, [1]=저녁 초과근무
 		OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);
 		boolean flag = true;
 		if(start.equals("12:00")) {

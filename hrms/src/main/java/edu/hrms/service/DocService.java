@@ -36,5 +36,15 @@ public interface DocService {
 	
 	List<DocFileVO> selectDocFilesByDocNo(int docNo);
 	
+	int updateDoc(DocVO vo);
+	
+	int deleteDocFiles(Map<String, Object> map);
+	
+	int updateDocSign(int docNo);
+	
 	int withdrawl(int docNo);
+	
+	int deleteDocSign(int docNo);
+	
+	List<MultipartFile> getMultipartFileList(HttpServletRequest request, List<DocFileVO> list);
 }

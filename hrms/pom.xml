@@ -189,6 +189,12 @@
 		    <version>2.10.0.pr3</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.4</version>
+		</dependency>
+		
 		 <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.security</groupId>

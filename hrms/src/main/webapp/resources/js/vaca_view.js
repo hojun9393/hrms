@@ -15,4 +15,4 @@ function withdrawalFn(){
 		document.body.appendChild(f);
 		f.submit();
 	}
-}
+} 

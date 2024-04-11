@@ -220,7 +220,7 @@ public class WorkServiceImpl implements WorkService {
 		}
 		if(state.equals("9")) {
 			nowState = "Ã¶È¸";
-		}else if(state.equals("2")) {
+		}else if(state.equals("2") || state.equals("7")) {
 			nowState = "½ÂÀÎ";
 		}
 		

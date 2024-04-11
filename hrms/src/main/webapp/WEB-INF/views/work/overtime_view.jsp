@@ -134,25 +134,8 @@
 
 </div>
 <script>
-	function withdrawalFn(){
-		let select = confirm("초과근무 신청을 철회하시겠습니까?");
-		if(select===true){
-			let f = document.createElement('form');
-	    
-			let overtimeNoInput;
-			overtimeNoInput = document.createElement('input');
-			overtimeNoInput.setAttribute('type', 'hidden');
-			overtimeNoInput.setAttribute('name', 'overtimeNo');
-			overtimeNoInput.setAttribute('value', '${ovo.overtimeNo}');
-			f.appendChild(overtimeNoInput);
-			
-			f.setAttribute('method', 'post');
-			f.setAttribute('action', 'withdrawal.do');
-			document.body.appendChild(f);
-			f.submit();
-		}
-	}
-	
+	let value = '${ovo.overtimeNo}';
 </script>
+<script src="${pageContext.request.contextPath}/resources/js/overtime_view.js"></script>
 <!-- /.container-fluid -->
 <%@ include file="../include/footer.jsp"%>

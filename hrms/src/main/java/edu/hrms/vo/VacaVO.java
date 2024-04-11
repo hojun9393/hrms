@@ -17,6 +17,7 @@ public class VacaVO {
 	private String startDate_dayOfWeek;
 	private String endDate_dayOfWeek;
 	
+	private String userid;
 	private String name;
 	private String dept;
 	private String position;
@@ -29,6 +30,17 @@ public class VacaVO {
 	private List<SignLineVO> signLineVO;
 	
 	
+	public VacaVO() {}
+	public VacaVO(String userid) {
+		this.userid = userid;
+	}
+	
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
 	public String getStartDate_dayOfWeek() {
 		return startDate_dayOfWeek;
 	}
@@ -99,13 +111,21 @@ public class VacaVO {
 		return startDate;
 	}
 	public void setStartDate(String startDate) {
-		this.startDate = startDate;
+		if(startDate.equals("")) {
+			this.startDate = null;
+		}else {
+			this.startDate = startDate;
+		}
 	}
 	public String getEndDate() {
 		return endDate;
 	}
 	public void setEndDate(String endDate) {
-		this.endDate = endDate;
+		if(endDate.equals("")) {
+			this.endDate = null;
+		}else {
+			this.endDate = endDate;
+		}
 	}
 	public String getName() {
 		return name;
@@ -163,9 +183,11 @@ public class VacaVO {
 		return "VacaVO [vacaNo=" + vacaNo + ", userId=" + userId + ", rdate=" + rdate + ", reason=" + reason
 				+ ", state=" + state + ", startTime=" + startTime + ", endTime=" + endTime + ", startDate=" + startDate
 				+ ", endDate=" + endDate + ", duration=" + duration + ", useTime=" + useTime + ", startDate_dayOfWeek="
-				+ startDate_dayOfWeek + ", endDate_dayOfWeek=" + endDate_dayOfWeek + ", name=" + name + ", dept=" + dept
-				+ ", position=" + position + ", mySignState=" + mySignState + ", mySignOrder=" + mySignOrder
-				+ ", stateCount=" + stateCount + ", mySignLineNo=" + mySignLineNo + ", signLineVO=" + signLineVO + "]";
+				+ startDate_dayOfWeek + ", endDate_dayOfWeek=" + endDate_dayOfWeek + ", userid=" + userid + ", name="
+				+ name + ", dept=" + dept + ", position=" + position + ", mySignState=" + mySignState + ", mySignOrder="
+				+ mySignOrder + ", stateCount=" + stateCount + ", mySignLineNo=" + mySignLineNo + ", signLineVO="
+				+ signLineVO + "]";
 	}
+	
 	
 }

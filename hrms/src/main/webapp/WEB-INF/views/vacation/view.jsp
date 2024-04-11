@@ -19,6 +19,9 @@
 					<div class="py-5 pl-5">
 						<div class="my-4">
 							<span class="d-inline bg-primary card text-white py-1 px-3">연차</span>
+							<c:if test="${vo.state eq '7' }">
+								<div class="d-inline card bg-info text-white text-center px-3 py-1 border-info font-weight-bold">사용 완료</div>
+							</c:if>
 							<h1 class="d-inline h4 text-gray-900 font-weight-bold"></h1>
 						</div>
 						<hr>
@@ -127,7 +130,7 @@
 					<div class="mb-4 text-center">
 						<hr>
 						<a href="main.do" class="btn btn-light border-dark btn-user"> 목록으로 </a> 
-						<c:if test="${vo.state ne '9' || vo.state ne '3'}">
+						<c:if test="${vo.state ne '9' && vo.state ne '3' && vo.state ne '7'}">
 							<a onclick="withdrawalFn()" class="btn btn-dark btn-user"> 철회하기 </a>
 						</c:if>
 					</div>
@@ -138,25 +141,8 @@
 
 </div>
 <script>
-	function withdrawalFn(){
-		let select = confirm("연차 신청을 철회하시겠습니까?");
-		if(select===true){
-			let f = document.createElement('form');
-	    
-			let vacaNoInput;
-			vacaNoInput = document.createElement('input');
-			vacaNoInput.setAttribute('type', 'hidden');
-			vacaNoInput.setAttribute('name', 'vacaNo');
-			vacaNoInput.setAttribute('value', '${vo.vacaNo}');
-			f.appendChild(vacaNoInput);
-			
-			f.setAttribute('method', 'post');
-			f.setAttribute('action', 'withdrawal.do');
-			document.body.appendChild(f);
-			f.submit();
-		}
-	}
-	
+	let value = '${vo.vacaNo}';
 </script>
+<script src="${pageContext.request.contextPath}/resources/js/vaca_view.js"></script>
 <!-- /.container-fluid -->
 <%@ include file="../include/footer.jsp"%>

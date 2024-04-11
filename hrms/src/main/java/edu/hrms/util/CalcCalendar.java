@@ -20,18 +20,18 @@ public class CalcCalendar {
 
 	SimpleDateFormat sdf_date = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
 	SimpleDateFormat sdf_datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA);
-	Calendar calendar = Calendar.getInstance();
 	LocalDate todayDate = LocalDate.now();
 	LocalDateTime todayDateTime = LocalDateTime.now();
 	
 	public Map<String, String> getFirstLastDays(String date) {
-		String[] dates = date.split("-");    
+		Calendar calendar = Calendar.getInstance();
+		String[] dates = date.split("-");
 		int year = Integer.parseInt(dates[0]);    
-		int month = Integer.parseInt(dates[1]);    
-		int day = Integer.parseInt(dates[2]);    
-		calendar.set(year, month - 1, day);
+		int month = Integer.parseInt(dates[1]);
+		int day = Integer.parseInt(dates[2]);
 		
 		Map<String, String> map = new HashMap<>();
+		calendar.set(year, month - 1, day);
 		map.put("weekOfYear", Integer.toString(calendar.get(Calendar.WEEK_OF_YEAR)));
 		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 		map.put("startDay", sdf_date.format(calendar.getTime()));
@@ -57,6 +57,7 @@ public class CalcCalendar {
 		try{
 			time1 = sdf_datetime.parse(param1);
 			time2 = sdf_datetime.parse(param2);
+			
 			if(before_or_after.equals("before")) {
 				result = time1.before(time2);
 			}else if(before_or_after.equals("after")) {
@@ -117,8 +118,10 @@ public class CalcCalendar {
 		}else if(start_or_end.equals("end")) {
 			startTime = "09:00:00";
 			endTime = time;
+		}else {
+			startTime = time;
+			endTime = start_or_end;
 		}
-		
 		int hours = 0;
 		try {
 			Date startTime_date = sdf_datetime.parse(date+" "+startTime);
@@ -174,8 +177,11 @@ public class CalcCalendar {
 		int days = getVacationDays(startDate, endDate);
 		
 		// 2. 일수(1일, 2일, 3일 이상)에 따라 분기 처리한다
-		totalHours = getUseHours(startDate, startTime, "start");
+		if(days==1) {
+			totalHours = getUseHours(startDate, startTime, endTime);
+		}
 		if(days>=2) {
+			totalHours = getUseHours(startDate, startTime, "start");
 			totalHours += getUseHours(endDate, endTime, "end");
 		}
 		if(days>=3) {
@@ -184,6 +190,7 @@ public class CalcCalendar {
 		
 		System.out.println("-----------------------------------------");
 		System.out.println("userid: " + vo.getUserId());
+		System.out.println("days: " + days);
 		System.out.println("총 사용연차 시간: " + totalHours);
 		System.out.println("-----------------------------------------");
 		
@@ -215,10 +222,8 @@ public class CalcCalendar {
 	}
 	
 	
-	
-	
-	
-	
+
+
 	
 
 }

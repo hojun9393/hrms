@@ -11,15 +11,15 @@ import edu.hrms.vo.VacaVO;
 
 public interface VacaService {
 	
-	List<VacaVO> selectMyVacaList(Map<String, String> map);
+	List<VacaVO> selectMyVacaList(VacaVO vo);
 	
 	VacaVO myRecentVacaApplication(String userid);
 	
 	Map<String, Integer> myRemainVaca(String userid);
 	
-	int checkVacaAppCnt(Map<String, String> map);
+	int checkVacaAppCnt(VacaVO vo);
 	
-	int insertVaca(Map<String, String> map);
+	int insertVaca(VacaVO vo);
 	
 	int getMaxNoByUserId(String userid);
 	

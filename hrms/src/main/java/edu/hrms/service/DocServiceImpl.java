@@ -1,24 +1,30 @@
 package edu.hrms.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import edu.hrms.dao.DocDAO;
 import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocSignVO;
 import edu.hrms.vo.DocVO;
-import edu.hrms.vo.OvertimeSignVO;
 import edu.hrms.vo.SignLineVO;
-import edu.hrms.vo.VacaSignVO;
 
 @Service
 public class DocServiceImpl implements DocService {
@@ -49,8 +55,12 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public List<DocFileVO> createFiles(List<MultipartFile> files, String path, int docNo) {
 
-		List<DocFileVO> list = new ArrayList<>();
+		File dir = new File(path);
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
 		
+		List<DocFileVO> list = new ArrayList<>();
 		for(MultipartFile data : files) {
 			if(!data.getOriginalFilename().isEmpty()) {
 				DocFileVO vo = new DocFileVO();
@@ -60,7 +70,6 @@ public class DocServiceImpl implements DocService {
 				String ext = fileNmArr[fileNmArr.length-1].toLowerCase();
 				
 				String realNm = null;
-				
 				int i = 1;
 				while(true) {
 					realNm = fileNmArr[0] + "_" + i + "." + ext;
@@ -87,6 +96,21 @@ public class DocServiceImpl implements DocService {
 	@Override
 	public int insertDocFile(List<DocFileVO> list) {
 		return docDAO.insertDocFile(list);
+	}
+	
+	@Override
+	public int updateDoc(DocVO vo) {
+		return docDAO.updateDoc(vo);
+	}
+	
+	@Override
+	public int deleteDocFiles(Map<String, Object> map) {
+		return docDAO.deleteDocFiles(map);
+	}
+	
+	@Override
+	public int updateDocSign(int docNo) {
+		return docDAO.updateDocSign(docNo);
 	}
 	
 	@Override
@@ -127,6 +151,33 @@ public class DocServiceImpl implements DocService {
 	public int withdrawl(int docNo) {
 		return docDAO.withdrawl(docNo);
 	}
+	
+	@Override
+	public int deleteDocSign(int docNo) {
+		return docDAO.deleteDocSign(docNo);
+	}
+	
+	@Override
+	public List<MultipartFile> getMultipartFileList(HttpServletRequest request, List<DocFileVO> list) {
+		
+		List<MultipartFile> mfList = new ArrayList<>();
+		String path = getPath(request);
+		for(int i=0; i<list.size(); i++) {
+			try {
+				File f = new File(path, list.get(i).getRealNm());
+				FileItem fileItem = new DiskFileItem("originFile", Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
+				InputStream input = new FileInputStream(f);
+				OutputStream os = fileItem.getOutputStream();
+				IOUtils.copy(input, os);
+				MultipartFile mf = new CommonsMultipartFile(fileItem);
+				mfList.add(mf);
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+        return mfList;
+    }
 	
 	
 }

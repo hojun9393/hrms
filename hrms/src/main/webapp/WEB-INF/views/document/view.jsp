@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="../include/navigator.jsp"%>
+<% pageContext.setAttribute("nl", "\n"); %>
 <!DOCTYPE html>
 <head>
 	<meta name="content-disposition" content="inline; filename=filename.pdf">
@@ -40,7 +42,7 @@
 						</div>
 						<hr>
 						<div class="py-2 doc-content">
-							${vo.content }
+							<c:out value="${fn:replace(vo.content, nl, '<br/>')}" escapeXml="false"/>
 						</div>
 						<hr>
 						<div class="py-2">
@@ -138,6 +140,9 @@
 						<hr>
 						<a href="main.do" class="btn btn-light border-dark btn-user"> 목록으로 </a> 
 						<sec:authorize access="principal.userid.equals('${vo.userid }')">
+							<c:if test="${vo.state eq '3'}">
+								<a href="modify.do?docNo=${vo.docNo }" class="btn btn-primary btn-user"> 수정하기 </a>
+							</c:if>
 							<c:if test="${vo.state ne '9' || vo.state ne '3'}">
 								<a onclick="withdrawalFn()" class="btn btn-dark btn-user"> 철회하기 </a>
 							</c:if>
@@ -150,45 +155,8 @@
 
 </div>
 <script>
-	function withdrawalFn(){
-		let select = confirm("기안을 철회하시겠습니까?");
-		if(select===true){
-			let f = document.createElement('form');
-			let docNoInput;
-			docNoInput = document.createElement('input');
-			docNoInput.setAttribute('type', 'hidden');
-			docNoInput.setAttribute('name', 'docNo');
-			docNoInput.setAttribute('value', '${vo.docNo}');
-			f.appendChild(docNoInput);
-			
-			f.setAttribute('method', 'post');
-			f.setAttribute('action', 'withdrawal.do');
-			document.body.appendChild(f);
-			f.submit();
-		}
-	}
-	
-	function downloadFn(fileNo, docNo, realNm, originNm){
-		let f = document.createElement('form');
-		let nameArr = ["fileNo", "docNo", "realNm", "originNm"];
-		let valueArr = [fileNo, docNo, realNm, originNm];
-		let inputArr = [];
-		for(let i=0; i<valueArr.length; i++){
-			let input = document.createElement('input');
-			input.setAttribute('type', 'hidden');
-			input.setAttribute('name', nameArr[i]);
-			input.setAttribute('value', valueArr[i]);
-			inputArr[i] = input;
-			f.appendChild(inputArr[i]);
-		}
-		f.setAttribute('method', 'post');
-		f.setAttribute('action', 'download.do');
-		document.body.appendChild(f);
-		f.submit();
-	}
-	
-	
-	
+	let value = '${vo.docNo}';
 </script>
+<script src="${pageContext.request.contextPath }/resources/js/doc_view.js"></script>
 <!-- /.container-fluid -->
 <%@ include file="../include/footer.jsp"%>

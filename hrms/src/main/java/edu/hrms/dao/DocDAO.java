@@ -40,6 +40,18 @@ public class DocDAO {
 		return sqlSession.insert(namespace+".insertDocSign", list);
 	}
 	
+	public int updateDoc(DocVO vo) {
+		return sqlSession.update(namespace+".updateDoc", vo);
+	}
+	
+	public int deleteDocFiles(Map<String, Object> map) {
+		return sqlSession.delete(namespace+".deleteDocFiles", map);
+	}
+	
+	public int updateDocSign(int docNo) {
+		return sqlSession.update(namespace+".updateDocSign", docNo);
+	}
+	
 	public DocVO selectDocByDocNo(int docNo) {
 		return sqlSession.selectOne(namespace+".selectDocByDocNo", docNo);
 	}
@@ -55,6 +67,11 @@ public class DocDAO {
 	public int withdrawl(int docNo) {
 		return sqlSession.update(namespace+".withdrawl", docNo);
 	}
+	
+	public int deleteDocSign(int docNo) {
+		return sqlSession.delete(namespace+".deleteDocSign", docNo);
+	}
+	
 	
 	
 }

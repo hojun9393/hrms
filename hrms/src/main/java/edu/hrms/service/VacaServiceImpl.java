@@ -28,8 +28,17 @@ public class VacaServiceImpl implements VacaService {
 	CalcCalendar calcCalendar;
 	
 	@Override
-	public List<VacaVO> selectMyVacaList(Map<String, String> map) {
-		return vacaDAO.selectMyVacaList(map);
+	public List<VacaVO> selectMyVacaList(VacaVO vvo) {
+		List<VacaVO> list = vacaDAO.selectMyVacaList(vvo);
+		for(VacaVO vo : list) {
+			String useTime = Integer.toString(calcCalendar.getTotalUseHour(vo));
+			if(useTime.length()==1) {
+				useTime = "0" + useTime;
+			}
+			useTime += ":00:00";
+			vo.setUseTime(useTime);
+		}
+		return list;
 	}
 	@Override
 	public VacaVO myRecentVacaApplication(String userid) {
@@ -40,8 +49,8 @@ public class VacaServiceImpl implements VacaService {
 		return vacaDAO.myRemainVaca(userid);
 	}
 	@Override
-	public int insertVaca(Map<String, String> map) {
-		return vacaDAO.insertVaca(map);
+	public int insertVaca(VacaVO vo) {
+		return vacaDAO.insertVaca(vo);
 	}
 	@Override
 	public int getMaxNoByUserId(String userid) {
@@ -49,8 +58,8 @@ public class VacaServiceImpl implements VacaService {
 	}
 	
 	@Override
-	public int checkVacaAppCnt(Map<String, String> map) {
-		return vacaDAO.checkVacaAppCnt(map);
+	public int checkVacaAppCnt(VacaVO vo) {
+		return vacaDAO.checkVacaAppCnt(vo);
 	}
 	
 	@Override
@@ -97,7 +106,6 @@ public class VacaServiceImpl implements VacaService {
 	@Override
 	public int minusUserVaca(List<VacaVO> volist) {
 		List<Map<String, Integer>> list = new ArrayList<>();
-		
 		for(VacaVO vo : volist) {
 			Map<String, Integer> map = new HashMap<>();
 			map.put("userid", vo.getUserId());
