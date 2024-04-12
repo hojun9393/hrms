@@ -32,6 +32,13 @@ public class DocVO {
 		this.title = title;
 		this.content = content;
 	}
+
+	public DocVO(String userid, String title, String content) {
+		super();
+		this.userid = userid;
+		this.title = title;
+		this.content = content;
+	}
 	
 	public List<DocFileVO> getDocFileVO() {
 		return docFileVO;

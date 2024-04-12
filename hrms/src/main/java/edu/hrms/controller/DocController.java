@@ -83,7 +83,7 @@ public class DocController {
 		
 		// 기안 작성 로직 순서
 		// 1. doc 테이블에 insert 한다
-		DocVO vo = new DocVO(userid, title, content);
+		DocVO vo = new DocVO(Integer.toString(userid), title, content);
 		int docInsert = docService.insert(vo);
 		int docSignInsert = 0; 
 		

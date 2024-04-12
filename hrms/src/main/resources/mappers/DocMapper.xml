@@ -64,7 +64,7 @@
 	
 	<insert id="insert" parameterType="docVO">
 		INSERT INTO doc (userid, title, content)
-					values (#{userId}, #{title}, #{content})
+					values (#{userid}, #{title}, #{content})
 	</insert>
 	
 	<select id="getMaxNoByUserId" parameterType="int" resultType="int">
