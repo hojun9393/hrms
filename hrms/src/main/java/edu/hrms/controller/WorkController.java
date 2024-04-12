@@ -75,11 +75,12 @@ public class WorkController {
 			model.addAttribute("myThisWeekOvertimeTime", myThisWeekOvertimeTime);
 			model.addAttribute("myThisWeekTotalWorkTime", myThisWeekTotalWorkTime);
 			
-			// 로그인 한 사원 근무 리스트
 			Map<String, Object> listMap = new HashMap<>();
 			listMap.put("userid", userid);
 			listMap.put("startDate", null);
 			listMap.put("endDate", today);
+			
+			// 로그인 한 사원 근무 리스트
 			List<WorkVO> workList = workService.selectAllMyWork(listMap);
 			model.addAttribute("workList", workList);
 			List<OvertimeVO> overtimeList = workService.selectAllMyOvertime(listMap);
@@ -135,7 +136,7 @@ public class WorkController {
 			OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);
 			
 			// 초과근무 신청이 없으면 퇴근처리한다.
-			if(ovoAppArr==null) {
+			if(ovoAppArr[0]!=null && ovoAppArr[1]!=null) {
 				workService.update(map);
 				
 			// 초과근무 신청이 있을 경우 퇴근시간과 초과근무 시간을 대조한다.
