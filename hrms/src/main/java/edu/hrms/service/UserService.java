@@ -11,7 +11,7 @@ public interface UserService {
 
 	public EmployeeVO selectUser(int userid);
 	
-	public List<EmployeeVO> selectUserAll();
+	public List<EmployeeVO> selectUserAll(Map<String,Object> map);
 
 	public int updateUser(EmployeeVO employee);
 

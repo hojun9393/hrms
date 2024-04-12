@@ -1,7 +1,9 @@
 package edu.hrms.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,15 +34,31 @@ public class UserController {
 	private PasswordEncoder encoder;
 	
 	@RequestMapping(value = "/main.do" , method = RequestMethod.GET)
-	public String main(Authentication authentication, Model model, String selected) {
+	public String main(Authentication authentication, Model model, String selected, String dept, String position, String searchName) {
 		UserVO userVO = (UserVO)authentication.getPrincipal();
-		List<EmployeeVO> list = userService.selectUserAll();
+		if(dept != null && (dept.equals("all") || dept.equals(""))) {
+			dept = null;
+		}
+		if(position != null && (position.equals("all") || position.equals(""))) {
+			position = null;
+		}
+		if(searchName != null && searchName.equals("")) {
+			searchName = null;
+		}
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("dept", dept);
+		map.put("position", position);
+		map.put("searchName", searchName);
+		List<EmployeeVO> list = userService.selectUserAll(map);
 		
 		if(selected != null) {
 			model.addAttribute("selected", selected);
 		}
 		model.addAttribute("list", list);
 		model.addAttribute("loginUser", userVO);
+		model.addAttribute("dept", dept);
+		model.addAttribute("position", position);
+		model.addAttribute("searchName", searchName);
 		return "/user/main";
 	}
 	

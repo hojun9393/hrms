@@ -25,8 +25,8 @@ public class UserDAO {
 		return sqlSession.selectOne(namespace+".selectUser", userid);
 	}
 
-	public List<EmployeeVO> selectUserAll() {
-		return sqlSession.selectList(namespace+".selectUserAll");
+	public List<EmployeeVO> selectUserAll(Map<String,Object> map) {
+		return sqlSession.selectList(namespace+".selectUserAll", map);
 	}
 
 	public int updateUser(EmployeeVO employee) {

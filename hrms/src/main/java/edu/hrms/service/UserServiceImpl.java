@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<EmployeeVO> selectUserAll() {
-		return userDAO.selectUserAll();
+	public List<EmployeeVO> selectUserAll(Map<String,Object> map) {
+		return userDAO.selectUserAll(map);
 	}
 
 	@Override

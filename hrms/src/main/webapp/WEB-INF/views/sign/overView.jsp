@@ -160,9 +160,16 @@
 <script>
 	function socketFn(type){
 		console.debug('socket',socket);
-		if(socket && ${login.userid}=='99000'){
-			let socketMsg = type+","+`${vo.userId},${login.userid}`;
-			socket.send(socketMsg);
+		if(socket){
+			if(type == 'approvedOver'){
+				if(${login.userid}=='99000'){
+					let socketMsg = type+","+`${vo.userId},${login.userid}`;
+					socket.send(socketMsg);
+				}
+			}else{
+				let socketMsg = type+","+`${vo.userId},${login.userid}`;
+				socket.send(socketMsg);
+			}
 		}
 		
 	}

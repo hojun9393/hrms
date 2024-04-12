@@ -78,9 +78,6 @@ public class EchoHandler extends TextWebSocketHandler {
 				}else if(receiveSession != null && type.equals("sendMessage")) {
 					TextMessage tmpMsg = new TextMessage("새로운 메시지 도착");
 					receiveSession.sendMessage(tmpMsg);
-				}else if(receiveSession != null && type.equals("modifyDoc")) {
-					TextMessage tmpMsg = new TextMessage("반려했던 기안이 수정되었습니다.");
-					receiveSession.sendMessage(tmpMsg);
 				}
 				
 			}else if(strs != null && strs.length > 3){

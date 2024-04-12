@@ -85,7 +85,7 @@
 		SELECT MAX(userid) FROM user WHERE dept = #{dept};
 	</select>
 	
-	<select id="selectUserAll" resultType="employeeVO">
+	<select id="selectUserAll" resultType="employeeVO" parameterType="Map">
 		SELECT *,
 		CASE LENGTH(phone)
 		WHEN 11 THEN CONCAT(LEFT(phone, 3), '-', MID(phone, 4, 4), '-', RIGHT(phone, 4))
@@ -102,8 +102,19 @@
         WHEN position = 'D' THEN '부장'
         WHEN position = 'L' THEN '팀장'
         WHEN position = 'E' THEN '사원'
-        ELSE '직급미정' END AS positionCase 
-		FROM user;
+        ELSE '직급미정' END AS positionCase
+		FROM user 
+		WHERE 1=1 
+		<if test="dept != null">
+        	and dept = #{dept} 
+        </if>
+        <if test="position != null">
+        	and position = #{position} 
+        </if>
+        <if test="searchName != null">
+        	and name like CONCAT('%', #{searchName}, '%') 
+        </if>
+        ;
 	</select>
 	
 	<update id="updateUser" parameterType="employeeVO">

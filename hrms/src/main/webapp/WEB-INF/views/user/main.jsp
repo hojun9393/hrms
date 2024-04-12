@@ -54,28 +54,31 @@
 						</sec:authorize>
 							
 					</div>
+					<form action="main.do" name="frm">
 					<div class="mb-3 col-auto">
-						<select class="inp">
-							<option>전체</option>
-							<option>기획부</option>
-							<option>개발부</option>
-							<option>인사부</option>
-							<option>영업부</option>
-							<option>관리부</option>
-						</select> <select class="inp">
-							<option>전체</option>
-							<option>사원</option>
-							<option>팀장</option>
-							<option>부장</option>
-							<option>대표</option>
-							<option>관리자</option>
-						</select> <input type="text" name="" value="" id="search" class="inp"
+						<select class="inp" name="dept">
+							<option value="all">전체</option>
+							<option value="D" <c:if test="${dept eq 'D'}">selected</c:if>>개발부</option>
+							<option value="P" <c:if test="${dept eq 'P'}">selected</c:if>>기획부</option>
+							<option value="H" <c:if test="${dept eq 'H'}">selected</c:if>>인사부</option>
+							<option value="S" <c:if test="${dept eq 'S'}">selected</c:if>>영업부</option>
+							<option value="M" <c:if test="${dept eq 'M'}">selected</c:if>>관리부</option>
+						</select>
+						<select class="inp" name="position">
+							<option value="all">전체</option>
+							<option value="E" <c:if test="${position eq 'E'}">selected</c:if>>사원</option>
+							<option value="L" <c:if test="${position eq 'L'}">selected</c:if>>팀장</option>
+							<option value="D" <c:if test="${position eq 'D'}">selected</c:if>>부장</option>
+							<option value="C" <c:if test="${position eq 'C'}">selected</c:if>>대표</option>
+							<option value="A" <c:if test="${position eq 'A'}">selected</c:if>>관리자</option>
+						</select> <input type="text" name="searchName" value="${searchName}" id="search" class="inp"
 							placeholder="이름을 입력하세요.">
-						<div class="d-inline px-2 py-2 bg-secondary" onclick=""
+						<div class="d-inline px-2 py-2 bg-secondary" onclick="javascript:frm.submit()"
 							style="cursor: pointer; border-radius: 5px;">
 							<i class="fas fa-lg fa-search text-white"></i>
 						</div>
 					</div>
+					</form>
 				</div>
 
 				<div class="table-responsive">
