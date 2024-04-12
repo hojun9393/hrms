@@ -239,7 +239,7 @@
 											</td>
 											<td>
 												<a href="overtime_view.do?no=${item.overtimeNo }">
-													<img class="icon-box" src="${pageContext.request.contextPath}/resources/img/document_icon.png">
+													<i class="fas fa-clipboard-list fa-lg"></i>
 												</a>
 											</td>
 										</tr>

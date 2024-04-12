@@ -66,7 +66,7 @@
 											<a href="main.do" class="btn btn-secondary btn-user btn-block">목록으로</a> 
 										</div>
 										<div class="col-lg-6">
-											<button type="button" onclick="submitForm()"class="btn btn-primary btn-user btn-block">작성완료</button> 
+											<button type="button" onclick="submitForm();"class="btn btn-primary btn-user btn-block">작성완료</button> 
 										</div>
 									</div>
 								</form>
@@ -214,5 +214,6 @@
 			})
 		}
 	}
+	
 </script>
 <%@ include file="../include/footer.jsp"%>
