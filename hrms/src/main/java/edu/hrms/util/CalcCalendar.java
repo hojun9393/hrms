@@ -188,11 +188,11 @@ public class CalcCalendar {
 			totalHours += (days-2)*8;
 		}
 		
-		System.out.println("-----------------------------------------");
-		System.out.println("userid: " + vo.getUserId());
-		System.out.println("days: " + days);
-		System.out.println("총 사용연차 시간: " + totalHours);
-		System.out.println("-----------------------------------------");
+//		System.out.println("-----------------------------------------");
+//		System.out.println("userid: " + vo.getUserId());
+//		System.out.println("days: " + days);
+//		System.out.println("총 사용연차 시간: " + totalHours);
+//		System.out.println("-----------------------------------------");
 		
 		return totalHours;
 	}
