@@ -18,10 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.hrms.service.MessageService;
+import edu.hrms.vo.DocVO;
 import edu.hrms.vo.MsgReceiveVO;
 import edu.hrms.vo.MsgVO;
+import edu.hrms.vo.OverVO;
 import edu.hrms.vo.PagingVO;
+import edu.hrms.vo.SignVO;
 import edu.hrms.vo.UserVO;
+import edu.hrms.vo.VacaVO;
 
 @Controller
 @RequestMapping(value = "/message")
@@ -33,11 +37,24 @@ public class MessageController {
 	MessageService messageService;
 	
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
-	public String main(Authentication authentication, Model model, String nowPage, String recNowPage, String selected) {
+	public String main(Authentication authentication, Model model, String nowPage, String recNowPage, String selected, String dept, String position, String searchName) {
 		UserVO loginUser = (UserVO)authentication.getPrincipal();
 		userId = Integer.parseInt(loginUser.getUserid());
+		if(dept != null && (dept.equals("all") || dept.equals(""))) {
+			dept = null;
+		}
+		if(position != null && (position.equals("all") || position.equals(""))) {
+			position = null;
+		}
+		if(searchName != null && searchName.equals("")) {
+			searchName = null;
+		}
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
+		map.put("dept", dept);
+		map.put("position", position);
+		map.put("searchName", searchName);
 		List<MsgVO> list = messageService.selectMsgAll(map);
 		List<MsgVO> recList = messageService.selectMsgReceiveAll(map);
 		
@@ -61,6 +78,9 @@ public class MessageController {
 		model.addAttribute("pagingVO", pagingVO);
 		model.addAttribute("recPagingVO", recPagingVO);
 		model.addAttribute("selected", selected);
+		model.addAttribute("dept", dept);
+		model.addAttribute("position", position);
+		model.addAttribute("searchName", searchName);
 		
 		return "/message/main";
 	}
@@ -143,6 +163,5 @@ public class MessageController {
 		List<MsgVO> msgList = messageService.selectMsgAllNav(Integer.parseInt(user.getUserid()));
 		return msgList;
 	}
-	
 	
 }

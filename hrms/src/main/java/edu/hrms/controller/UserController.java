@@ -100,25 +100,35 @@ public class UserController {
 	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/regist.do", method = RequestMethod.POST)
 	public void regist(EmployeeVO employeeVO, HttpServletResponse res) throws IOException {
-		System.out.println(employeeVO.toString());
-		int userid = 0;
-		String dept = employeeVO.getDept();
-		if(dept.equals("P") || dept.equals("H") || dept.equals("D") || dept.equals("S") || dept.equals("M")) {
-			int result = userService.selectMaxUserid(dept);
-			userid = result + 1;
-			employeeVO.setUserid(Integer.toString(userid));
-			String encodedPassword = encoder.encode(employeeVO.getPassword());
-			employeeVO.setPassword(encodedPassword);
-			String phone = employeeVO.getPhone().replaceAll("-", "");
-			employeeVO.setPhone(phone);
-			int result2 = userService.insertUser(employeeVO);
-			if(result2>0) {
-				res.getWriter().append("<script>alert('사원이 등록 되었습니다. \\n사원번호는 "+employeeVO.getUserid()+" 입니다.');location.href='main.do'</script>");
-			}
+		int state = 0;
+		state = employeeVO.getState();
+		if(employeeVO.getPassword()==null || employeeVO.getPassword().equals("") || employeeVO.getName()==null 
+				|| employeeVO.getName().equals("")  || employeeVO.getDept()==null || employeeVO.getDept().equals("") 
+				|| employeeVO.getJoinDate()==null || employeeVO.getJoinDate().equals("") 
+				|| employeeVO.getPosition()==null || employeeVO.getPosition().equals("")  || state == 0) {
+			res.getWriter().append("<script>alert('필수 입력항목을 모두 입력해 주세요.');location.href='main.do'</script>");
+			res.getWriter().flush();
 		}else {
-			res.getWriter().append("<script>alert('사원이 등록 되지 않았습니다.');location.href='main.do'</script>");
+			System.out.println(employeeVO.toString());
+			int userid = 0;
+			String dept = employeeVO.getDept();
+			if(dept.equals("P") || dept.equals("H") || dept.equals("D") || dept.equals("S") || dept.equals("M")) {
+				int result = userService.selectMaxUserid(dept);
+				userid = result + 1;
+				employeeVO.setUserid(Integer.toString(userid));
+				String encodedPassword = encoder.encode(employeeVO.getPassword());
+				employeeVO.setPassword(encodedPassword);
+				String phone = employeeVO.getPhone().replaceAll("-", "");
+				employeeVO.setPhone(phone);
+				int result2 = userService.insertUser(employeeVO);
+				if(result2>0) {
+					res.getWriter().append("<script>alert('사원이 등록 되었습니다. \\n사원번호는 "+employeeVO.getUserid()+" 입니다.');location.href='main.do'</script>");
+				}
+			}else {
+				res.getWriter().append("<script>alert('사원이 등록 되지 않았습니다.');location.href='main.do'</script>");
+			}
+			res.getWriter().flush();
 		}
-		res.getWriter().flush();
 	}
 	
 	@Secured("ROLE_ADMIN")

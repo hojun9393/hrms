@@ -325,8 +325,9 @@
 								url:"${pageContext.request.contextPath}/message/msgRoad.do",
 								success:function(data){
 								let html = '';
+								let msgModal = '';
 									for(let i=0; i<data.length; i++){
-										html += '<a class="dropdown-item d-flex align-items-center" data-toggle="modal" data-target="#messageModalNav'+data[i].msgNo+'" href="#" onclick="msgReadNavFn('+data[i].msgNo+',this)" id="msgNav'+data[i].msgNo+'">';
+										html += '<a class="dropdown-item d-flex align-items-center" data-toggle="modal" data-target="#messageModalNav'+data[i].msgNo+'" href="#" onclick="msgReadNavFn('+data[i].msgRNo+',this)" id="msgNav'+data[i].msgRNo+'">';
 										html += '	<div class="dropdown-list-image mr-3">';
 										html += '		<img class="rounded-circle" src="${pageContext.request.contextPath}/resources/img/undraw_profile_1.svg" alt="...">';
 										html += '		<div class="status-indicator bg-success"></div>';
@@ -339,10 +340,54 @@
 										html += '		<div class="small text-gray-500">'+data[i].dept+' '+data[i].name+' '+data[i].position+'</div>';
 										html += '	</div>';
 										html += '</a> ';
+										
+										msgModal += '<div class="modal fade" id="messageModalNav'+data[i].msgNo+'" tabindex="-1" role="dialog"';
+										msgModal += '	aria-labelledby="exampleModalLabel" aria-hidden="true">';
+										msgModal += '	<div class="modal-dialog" role="document">';
+										msgModal += '		<div class="modal-content">';
+										msgModal += '			<div class="modal-header bg-primary text-white">';
+										msgModal += '				<h5 class="modal-title" id="exampleModalLabel">쪽지 읽기</h5>';
+										msgModal += '				<button class="close" type="button" data-dismiss="modal"';
+										msgModal += '					aria-label="Close">';
+										msgModal += '					<span aria-hidden="true" class="text-white">x</span>';
+										msgModal += '				</button>';
+										msgModal += '			</div>';
+										msgModal += '			<div class="modal-body">';
+										msgModal += '				<div class="row m-2">';
+										msgModal += '					<div class="col-2 pr-0">';
+										msgModal += '						<img class="img-profile rounded-circle"';
+										msgModal += '							src="${pageContext.request.contextPath}/resources/img/undraw_profile.svg" width="50px">';
+										msgModal += '					</div>';
+										msgModal += '					<div class="col-5 pl-0">';
+										msgModal += '						<span class="card border-primary px-2 d-inline text-primary">'+data[i].dept+'</span><br>';
+										msgModal += '						<span class="text-dark font-weight-bold">'+data[i].name+'</span> <span';
+										msgModal += '							class="text-xs font-weight-bold">'+data[i].position+'</span>';
+										msgModal += '					</div>';
+										msgModal += '					<div class="col-5">'+data[i].sendDate+'</div>';
+										msgModal += '				</div>';
+										msgModal += '				<div class="row m-3">';
+										msgModal += '					<div';
+										msgModal += '						class="col-12 card bg-gray-200 p-3 text-dark font-weight-bold messageContent" style="height:300px;">';
+										msgModal += '						'+data[i].content+'</div>';
+										msgModal += '				</div>';
+										msgModal += '			</div>';
+										msgModal += '			<div class="modal-footer">';
+										msgModal += '				<button class="btn btn-secondary" type="button"';
+										msgModal += '					data-dismiss="modal">닫기</button>';
+										msgModal += '				<form action="${pageContext.request.contextPath}/message/reply.do" method="post">';
+										msgModal += '					<input type="hidden" name="sendUserId" value="'+data[i].userId+'">';
+										msgModal += '					<button type="submit" class="btn btn-primary">답장</button>';
+										msgModal += '				</form>';
+										msgModal += '			</div>';
+										msgModal += '		</div>';
+										msgModal += '	</div>';
+										msgModal += '</div>';
 									}
 									alert(event.data);
 									$('#messages').html(html);
+									$('body').append(msgModal);
 									$('#messagesDropdown').append('<span class="badge badge-danger badge-counter" id="msgBadge">'+data.length+'</span>');
+									
 								}
 							})
 						}, 500);

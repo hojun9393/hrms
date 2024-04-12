@@ -36,29 +36,32 @@
 							<span class="text"><i class="fas fa-pen"></i> 쪽지 쓰기</span>
 						</a>
 					</div>
+					<form action="main.do" name="frm">
+					<input type="hidden" value="" name="selected" id="menu">
 					<div class="mb-3 col-auto">
-						<select class="inp">
-							<option>전체</option>
-							<option>개발부</option>
-							<option>기획부</option>
-							<option>인사부</option>
-							<option>영업부</option>
-							<option>관리부</option>
+						<select class="inp" name="dept">
+							<option value="all">전체</option>
+							<option value="D" <c:if test="${dept eq 'D'}">selected</c:if>>개발부</option>
+							<option value="P" <c:if test="${dept eq 'P'}">selected</c:if>>기획부</option>
+							<option value="H" <c:if test="${dept eq 'H'}">selected</c:if>>인사부</option>
+							<option value="S" <c:if test="${dept eq 'S'}">selected</c:if>>영업부</option>
+							<option value="M" <c:if test="${dept eq 'M'}">selected</c:if>>관리부</option>
 						</select>
-						<select class="inp">
-							<option>전체</option>
-							<option>사원</option>
-							<option>팀장</option>
-							<option>부장</option>
-							<option>대표</option>
-							<option>관리자</option>
-						</select> <input type="text" name="" value="" id="search" class="inp"
+						<select class="inp" name="position">
+							<option value="all">전체</option>
+							<option value="E" <c:if test="${position eq 'E'}">selected</c:if>>사원</option>
+							<option value="L" <c:if test="${position eq 'L'}">selected</c:if>>팀장</option>
+							<option value="D" <c:if test="${position eq 'D'}">selected</c:if>>부장</option>
+							<option value="C" <c:if test="${position eq 'C'}">selected</c:if>>대표</option>
+							<option value="A" <c:if test="${position eq 'A'}">selected</c:if>>관리자</option>
+						</select> <input type="text" name="searchName" value="" id="search" class="inp"
 							placeholder="이름을 입력하세요.">
-						<div class="d-inline px-2 py-2 bg-secondary" onclick=""
+						<div class="d-inline px-2 py-2 bg-secondary" onclick="javascript:frm.submit()"
 							style="cursor: pointer; border-radius: 5px;">
 							<i class="fas fa-lg fa-search text-white"></i>
 						</div>
 					</div>
+					</form>
 				</div>
 
 				<div class="table-responsive">
@@ -118,7 +121,7 @@
 								<tr>
 									<td>
 										<div
-											class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">기획부</div>
+											class="d-inline card text-primary text-center px-1 mr-1 border-primary font-weight-bold">${vo.dept}</div>
 										<span class="text-dark font-weight-bold">${vo.name}</span> <span
 										class="text-xs font-weight-bold">${vo.position}</span>
 									</td>
@@ -155,26 +158,26 @@
 					<ul class="pagination justify-content-center" id="paging">
 						<c:if test="${pagingVO.startPage > pagingVO.cntPage}">
 							<li class="paginate_button page-item previous" id="dataTable_previous">
-								<a href="main.do?nowPage=${pagingVO.startPage-1}&selected=received&searchType=${searchType}&searchValue=${searchValue}" aria-controls="dataTable" class="page-link">이전</a>
+								<a href="main.do?nowPage=${pagingVO.startPage-1}&selected=received&dept=${dept}&position=${position}&searchName=${searchName}" aria-controls="dataTable" class="page-link">이전</a>
 							</li>
 						</c:if>
 						<c:forEach var="i" begin="${pagingVO.startPage}" end="${pagingVO.endPage}">
 							<c:choose>
 								<c:when test="${pagingVO.nowPage eq i}">
 									<li class="paginate_button page-item active">
-										<a href="main.do?nowPage=${i}&selected=received" aria-controls="dataTable" class="page-link">${i}</a>
+										<a href="main.do?nowPage=${i}&selected=received&dept=${dept}&position=${position}&searchName=${searchName}" aria-controls="dataTable" class="page-link">${i}</a>
 									</li>
 								</c:when>
 								<c:otherwise>
 									<li class="paginate_button page-item">
-										<a href="main.do?nowPage=${i}&selected=received" aria-controls="dataTable" class="page-link">${i}</a>
+										<a href="main.do?nowPage=${i}&selected=received&dept=${dept}&position=${position}&searchName=${searchName}" aria-controls="dataTable" class="page-link">${i}</a>
 									</li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 						<c:if test="${pagingVO.endPage < pagingVO.lastPage}">
 							<li class="paginate_button page-item next" id="datatable_next">
-								<a href="main.do?nowPage=${pagingVO.endPage+1}&selected=received" aria-controls="dataTable" class="page-link">다음</a>
+								<a href="main.do?nowPage=${pagingVO.endPage+1}&selected=received&dept=${dept}&position=${position}&searchName=${searchName}" aria-controls="dataTable" class="page-link">다음</a>
 							</li>
 						</c:if>
 					</ul>
@@ -182,26 +185,26 @@
 					<ul class="pagination justify-content-center d-none" id="recPaging">
 						<c:if test="${recPagingVO.startPage > recPagingVO.cntPage}">
 							<li class="paginate_button page-item previous" id="dataTable_previous">
-								<a href="main.do?recNowPage=${recPagingVO.startPage-1}&selected=sent&searchType=${searchType}&searchValue=${searchValue}" aria-controls="dataTable" class="page-link">이전</a>
+								<a href="main.do?recNowPage=${recPagingVO.startPage-1}&selected=sent&dept=${dept}&position=${position}&searchName=${searchName}" aria-controls="dataTable" class="page-link">이전</a>
 							</li>
 						</c:if>
 						<c:forEach var="i" begin="${recPagingVO.startPage}" end="${recPagingVO.endPage}">
 							<c:choose>
 								<c:when test="${recPagingVO.nowPage eq i}">
 									<li class="paginate_button page-item active">
-										<a href="main.do?recNowPage=${i}&selected=sent" aria-controls="dataTable" class="page-link">${i}</a>
+										<a href="main.do?recNowPage=${i}&selected=sent&dept=${dept}&position=${position}&searchName=${searchName}" aria-controls="dataTable" class="page-link">${i}</a>
 									</li>
 								</c:when>
 								<c:otherwise>
 									<li class="paginate_button page-item">
-										<a href="main.do?recNowPage=${i}&selected=sent" aria-controls="dataTable" class="page-link">${i}</a>
+										<a href="main.do?recNowPage=${i}&selected=sent&dept=${dept}&position=${position}&searchName=${searchName}" aria-controls="dataTable" class="page-link">${i}</a>
 									</li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 						<c:if test="${recPagingVO.endPage < recPagingVO.lastPage}">
 							<li class="paginate_button page-item next" id="datatable_next">
-								<a href="main.do?recNowPage=${recPagingVO.endPage+1}&selected=sent" aria-controls="dataTable" class="page-link">다음</a>
+								<a href="main.do?recNowPage=${recPagingVO.endPage+1}&selected=sent&dept=${dept}&position=${position}&searchName=${searchName}" aria-controls="dataTable" class="page-link">다음</a>
 							</li>
 						</c:if>
 					</ul>

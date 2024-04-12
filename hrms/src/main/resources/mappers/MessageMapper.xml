@@ -58,7 +58,17 @@
         ELSE '직급미정' END AS position,
         m.msgNo, m.content, m.sendDate, mr.msgRNo,
         mr.state FROM user u INNER JOIN msg m on u.userid = m.userid INNER JOIN msgReceive mr on m.msgNO = mr.msgNo 
-        WHERE mr.userid = #{userId} ORDER BY m.sendDate DESC 
+        WHERE mr.userid = #{userId} 
+        <if test="dept != null">
+        	and u.dept = #{dept} 
+        </if>
+        <if test="position != null">
+        	and u.position = #{position} 
+        </if>
+        <if test="searchName != null">
+        	and  u.name like CONCAT('%', #{searchName}, '%') 
+        </if>
+        ORDER BY m.sendDate DESC 
         <if test="pagingVO != null">
         	LIMIT #{pagingVO.startLimit}, #{pagingVO.perPage}
         </if>
@@ -100,7 +110,17 @@
         ELSE '직급미정' END AS position,
 		m.msgNo, m.content, m.sendDate, mr.msgRno,
         mr.state FROM user u INNER JOIN msgReceive mr on u.userid = mr.userid INNER JOIN msg m on mr.msgNo = m.msgNo 
-        WHERE m.userid= #{userId} ORDER BY m.sendDate DESC
+        WHERE m.userid= #{userId} 
+        <if test="dept != null">
+        	and u.dept = #{dept} 
+        </if>
+        <if test="position != null">
+        	and u.position = #{position} 
+        </if>
+        <if test="searchName != null">
+        	and  u.name like CONCAT('%', #{searchName}, '%') 
+        </if>
+        ORDER BY m.sendDate DESC 
         <if test="pagingVO != null">
         	LIMIT #{recPagingVO.startLimit}, #{recPagingVO.perPage}
         </if>

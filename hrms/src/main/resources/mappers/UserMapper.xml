@@ -116,33 +116,53 @@
 	</update>
 	
 	<update id="updateFromAdmin" parameterType="employeeVO">
-		UPDATE user SET 
-		password = #{password}, 
-		name = #{name}, 
-		dept = #{dept}, 
-		position = #{position}, 
-		state = #{state}, 
-		phone = #{phone}, 
-		email = #{email}, 
-		addr = #{addr}, 
-		authority = 
-		<choose>
-			<when test='position == "E"'>
-				'ROLE_EMPLOYEE' 
-			</when>
-			<when test='position == "L"'>
-				'ROLE_LEADER' 
-			</when>
-			<when test='position == "D"'>
-				'ROLE_DIRECTOR' 
-			</when>
-			<when test='position == "A"'>
-				'ROLE_ADMIN' 
-			</when>
-			<when test='position == "C"'>
-				'ROLE_CEO' 
-			</when>
-		</choose>
+		UPDATE user 
+		<trim prefix="SET" suffixOverrides=",">
+			<if test='password != null and !password.equals("")'>
+				password = #{password}, 
+			</if>
+			<if test='name != null and !name.equals("")'>
+				name = #{name}, 
+			</if>
+			<if test='dept != null and !dept.equals("")'>
+				dept = #{dept}, 
+			</if>
+			<if test='position != null and !position.equals("")'>
+				position = #{position}, 
+			</if>
+			<if test='state != null and !state.equals("")'>
+				state = #{state}, 
+			</if>
+			<if test='phone != null and !phone.equals("")'>
+				phone = #{phone}, 
+			</if>
+			<if test='email != null and !email.equals("")'>
+				email = #{email}, 
+			</if>
+			<if test='addr != null and !addr.equals("")'>
+				addr = #{addr}, 
+			</if>
+			<if test='position != null and !position.equals("")'>
+				authority = 
+				<choose>
+					<when test='position == "E"'>
+						'ROLE_EMPLOYEE', 
+					</when>
+					<when test='position == "L"'>
+						'ROLE_LEADER', 
+					</when>
+					<when test='position == "D"'>
+						'ROLE_DIRECTOR', 
+					</when>
+					<when test='position == "A"'>
+						'ROLE_ADMIN', 
+					</when>
+					<when test='position == "C"'>
+						'ROLE_CEO', 
+					</when>
+				</choose>
+			</if>
+   		</trim>
 		WHERE userid = #{userid};
 	</update>
 	
