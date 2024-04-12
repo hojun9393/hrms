@@ -87,7 +87,7 @@ public class WorkController {
 			
 			// 로그인 한 사원 금일 초과근무 신청 여부 : [0]=점심 초과근무, [1]=저녁 초과근무
 			OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);
-			if(ovoAppArr!=null) {
+			if(ovoAppArr[0]!=null && ovoAppArr[1]!=null) {
 				model.addAttribute("ovoAppArr", ovoAppArr);
 			}
 			
@@ -239,7 +239,6 @@ public class WorkController {
 		
 		// 오늘 초과근무 신청 여부 : [0]=점심 초과근무, [1]=저녁 초과근무
 		OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);
-		System.out.println(Arrays.toString(ovoAppArr));
 		boolean flag = true;
 		if(ovoAppArr!=null) {
 			if(start.equals("12:00")) {

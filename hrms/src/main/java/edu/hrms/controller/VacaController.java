@@ -55,6 +55,7 @@ public class VacaController {
 			model.addAttribute("myRecentVacaApplication", vacaService.myRecentVacaApplication(userid));
 			model.addAttribute("user", vacaService.myRemainVaca(userid));
 		}
+		
 		return "/vacation/main";
 	}
 	
@@ -176,7 +177,7 @@ public class VacaController {
 		List<Map<String, Object>> list = vacaService.selectAllUserList(map);
 		
 		return new HashMap<String, Object>(){{
-			put("pagingVO",pagingVO); put("list", list);
+			put("pagingVO", pagingVO); put("list", list);
 		}};
 	}
 	

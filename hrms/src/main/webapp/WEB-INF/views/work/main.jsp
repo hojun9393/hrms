@@ -257,8 +257,10 @@
 								<input type="text" name="" value="${today }" id="endDate3" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(3,1)"> 
 								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate3)" style="cursor: pointer;"></i>
 								<div id="searchDiv" class="float-right">
-									<input type="text" id="searchVal" placeholder="이름을 입력하세요">
-									<button type="button" onclick="reloadListFn(3,1)">검색</button>
+									<input type="text" id="searchVal" class="inp" placeholder="이름을 입력하세요">
+									<div class="d-inline px-2 py-2 bg-secondary" onclick="reloadListFn(3,1)" style="cursor: pointer; border-radius: 5px;">
+										<i class="fas fa-lg fa-search text-white"></i>
+									</div>
 								</div>
 							</div>
 							<table>
@@ -329,7 +331,7 @@
 										</c:choose>
 									</c:forEach>
 									<c:if test="${pagingVO.endPage < pagingVO.lastPage }">
-										<a onclick="reloadListFn(${pagingVO.endPage+1})"></a>
+										<a class="arrow next" onclick="reloadListFn(${pagingVO.endPage+1})"></a>
 									</c:if>
 								</div>
 							</div>

@@ -1,6 +1,7 @@
 package edu.hrms.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,9 +151,8 @@ public class WorkServiceImpl implements WorkService {
 	@Override
 	public OvertimeVO[] overtimeApplicationToday(Map<String, String> map) {
 		List<OvertimeVO> ovoAppList = workDAO.overtimeApplicationToday(map);
-		OvertimeVO[] arr = null;
+		OvertimeVO[] arr = new OvertimeVO[2];
 		if(ovoAppList.size()!=0) {
-			arr = new OvertimeVO[2];
 			for(OvertimeVO data : ovoAppList) {
 				if(data.getStart().equals("12:00:00")) {
 					arr[0] = data;
@@ -190,6 +190,24 @@ public class WorkServiceImpl implements WorkService {
 	public List<? extends SuperSignVO> processList(List<? extends SuperSignVO> list){
 		boolean returningFlag = false;
 		for(SuperSignVO data : list) {
+			if(data.getPrev_state()==2 && data.getState()==0) {
+				data.setState(1);
+			}
+			if(returningFlag) {
+				data.setState(9);
+			}
+			if(data.getPrev_state()==3) {
+				data.setState(9);
+				returningFlag = true;
+			}
+		}
+		return list;
+	}
+	
+	// Å×½ºÆ®
+	public <T extends SuperSignVO> List<T> test(List<T> list){
+		boolean returningFlag = false;
+		for(T data : list) {
 			if(data.getPrev_state()==2 && data.getState()==0) {
 				data.setState(1);
 			}
