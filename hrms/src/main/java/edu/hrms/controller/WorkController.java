@@ -134,9 +134,10 @@ public class WorkController {
 			
 			// 오늘 초과근무 신청 여부 : [0]=점심 초과근무, [1]=저녁 초과근무
 			OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);
+			System.out.println(Arrays.toString(ovoAppArr));
 			
 			// 초과근무 신청이 없으면 퇴근처리한다.
-			if(ovoAppArr[0]!=null && ovoAppArr[1]!=null) {
+			if(ovoAppArr[0]==null && ovoAppArr[1]==null) {
 				workService.update(map);
 				
 			// 초과근무 신청이 있을 경우 퇴근시간과 초과근무 시간을 대조한다.
@@ -144,8 +145,7 @@ public class WorkController {
 				OvertimeVO ovoAfternoon = ovoAppArr[0];
 				OvertimeVO ovoEvening = ovoAppArr[1];
 				
-				// 1. 퇴근시간이 초과근무 신청 시간보다 전인지 체크
-				// 2. 전일 경우 퇴근신청 맵에서 최종 초과근무 끝시간 찾는다
+				// 퇴근시간이 초과근무 신청 시간보다 전인지 체크
 				String lastEndTime = null;
 				if(ovoEvening!=null) {
 					lastEndTime = ovoEvening.getDate() + " " + ovoEvening.getEnd();
@@ -203,16 +203,16 @@ public class WorkController {
 				if(isNowBeforeStartTime) {
 					workService.withdrawal(ovoAppArr[i].getOvertimeNo());
 					workService.overtimesignDelete(ovoAppArr[i].getOvertimeNo());
+					
 				// 시작시간 후 퇴근
 				}else {
-					// 끝시간 전 퇴근 : 업데이트
+					// 끝시간 후 퇴근이 아니면 초과근무 끝시간 업데이트
 					if(!isNowAfterEndTime) {
 						workService.updateOvertime(Map.of("overtimeNo", ovoAppArr[i].getOvertimeNo(), "end", time));
 					}
 				}
 			}
 		}
-		
 	}
 	
 	@RequestMapping(value = "/overtime_application.do", method = RequestMethod.GET)
@@ -231,12 +231,9 @@ public class WorkController {
 		UserVO login = (UserVO)authentication.getPrincipal();
 		String userid = login.getUserid();
 		
-		Map<String, String> map = new HashMap<>();
-		map.put("userid", userid);
-		map.put("today", date);
-		map.put("start", start);
-		map.put("end", end);
-		map.put("content", content);
+		Map<String, String> map = Map.of(
+				"userid", userid, "today", date, "start", start,
+				"end", end, "content", content);
 		
 		// 오늘 초과근무 신청 여부 : [0]=점심 초과근무, [1]=저녁 초과근무
 		OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);

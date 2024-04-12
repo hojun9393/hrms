@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import edu.hrms.service.AlarmService;
 import edu.hrms.service.DocService;
+import edu.hrms.service.SignService;
 import edu.hrms.service.WorkService;
 import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocSignVO;
@@ -42,6 +43,12 @@ public class DocController {
 	
 	@Autowired
 	DocService docService;
+	
+	@Autowired
+	AlarmService alarmService;
+	
+	@Autowired
+	SignService signService;
 	
 	@RequestMapping(value = "/main.do")
 	public String main(Model model, Authentication authentication) {
@@ -164,6 +171,7 @@ public class DocController {
 			
 			List<SignLineVO> signLineList = workService.getSignLineList(login.getUserid(), login.getPosition(), "D");
 			model.addAttribute("signLineList", signLineList);
+			
 			List<DocFileVO> dfList = docService.selectDocFilesByDocNo(docNo);
 			model.addAttribute("dfList", dfList);
 			
@@ -204,6 +212,7 @@ public class DocController {
 			
 		// 5. docSign update วัดู.
 		int docSignUpdate = docService.updateDocSign(docNo);
+		Map<String, Object> map = new HashMap<String, Object>();
 		
 		return docSignUpdate;
 	}

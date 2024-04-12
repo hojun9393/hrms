@@ -7,6 +7,7 @@ public class DocSignVO extends SuperSignVO {
 	private int signLineNo;
 	private int state;
 	
+	private String userid;
 	private String name;
 	private String dept;
 	private String position;
@@ -15,6 +16,12 @@ public class DocSignVO extends SuperSignVO {
 	private int prev_state;
 	
 	
+	public String getUserid() {
+		return userid;
+	}
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
 	public int getDocSignNo() {
 		return docSignNo;
 	}
@@ -74,9 +81,10 @@ public class DocSignVO extends SuperSignVO {
 	@Override
 	public String toString() {
 		return "DocSignVO [docSignNo=" + docSignNo + ", docNo=" + docNo + ", signLineNo=" + signLineNo + ", state="
-				+ state + ", name=" + name + ", dept=" + dept + ", position=" + position + ", signOrder=" + signOrder
-				+ ", prev_state=" + prev_state + "]";
+				+ state + ", userid=" + userid + ", name=" + name + ", dept=" + dept + ", position=" + position
+				+ ", signOrder=" + signOrder + ", prev_state=" + prev_state + "]";
 	}
+	
 	
 	
 }

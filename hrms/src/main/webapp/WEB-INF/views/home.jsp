@@ -17,7 +17,7 @@
 	<sec:authorize access="!hasRole('ROLE_ADMIN')">
 	<!-- Content Row -->
 	<div class="row">
-
+		
 		<!-- Earnings (Monthly) Card Example -->
 		<div class="col-xl-3 col-md-6 mb-4">
 			<div class="card border-left-primary shadow h-100 py-2">
@@ -166,6 +166,7 @@
 				<div class="card-body">
 					<div class="h5 mb-3 ml-2 font-weight-bold text-gray-800 today-date">안내드립니다.</div>
 					<c:forEach items="${noticeList}" var="vo" end="1">
+						
 						<div class="card mt-3 bg-light text-black">
 							<div class="card-body">
 								<div class="row">

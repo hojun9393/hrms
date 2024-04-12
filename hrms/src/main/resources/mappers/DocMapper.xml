@@ -137,7 +137,7 @@
 	</select>
 	
 	<select id="getDocSignList" parameterType="int" resultType="docSignVO">
-		SELECT ds.*, u.name, u.dept, 
+		SELECT ds.*, u.userid, u.name, u.dept, 
 				(CASE 
 					WHEN u.position = 'C' THEN '대표'
 	            WHEN u.position = 'D' THEN '부장'
