@@ -87,7 +87,7 @@ public class WorkController {
 			
 			// 로그인 한 사원 금일 초과근무 신청 여부 : [0]=점심 초과근무, [1]=저녁 초과근무
 			OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);
-			if(ovoAppArr!=null) {
+			if(ovoAppArr[0]!=null && ovoAppArr[1]!=null) {
 				model.addAttribute("ovoAppArr", ovoAppArr);
 			}
 			
@@ -240,15 +240,17 @@ public class WorkController {
 		// 오늘 초과근무 신청 여부 : [0]=점심 초과근무, [1]=저녁 초과근무
 		OvertimeVO[] ovoAppArr = workService.overtimeApplicationToday(map);
 		boolean flag = true;
-		if(start.equals("12:00")) {
-			if(ovoAppArr[0]!=null) {
-				response.getWriter().append("<script>alert('오늘 이미 결재 대기중인 점심 초과근무가 있습니다.');location.href='main.do';</script>");
-				flag = false;
-			}
-		}else {
-			if(ovoAppArr[1]!=null) {
-				response.getWriter().append("<script>alert('오늘 이미 결재 대기중인 저녁 초과근무가 있습니다.');location.href='main.do';</script>");
-				flag = false;
+		if(ovoAppArr!=null) {
+			if(start.equals("12:00")) {
+				if(ovoAppArr[0]!=null) {
+					response.getWriter().append("<script>alert('오늘 이미 결재 대기중인 점심 초과근무가 있습니다.');location.href='main.do';</script>");
+					flag = false;
+				}
+			}else {
+				if(ovoAppArr[1]!=null) {
+					response.getWriter().append("<script>alert('오늘 이미 결재 대기중인 저녁 초과근무가 있습니다.');location.href='main.do';</script>");
+					flag = false;
+				}
 			}
 		}
 		if(flag) {

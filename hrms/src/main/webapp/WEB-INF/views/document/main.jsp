@@ -94,14 +94,16 @@
 							<input type="text" name="" value="${today }" id="endDate2" class="datepicker inp" placeholder="종료일 선택" readonly="true" onchange="reloadListFn(2)"> 
 							<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate2)" style="cursor: pointer;"></i>
 							<div class="float-right">
-								<select name="category">
+								<select class="inp" name="category">
 									<option value="">전체</option>
 									<option value="D">부장</option>
 									<option value="L">팀장</option>
 									<option value="E">사원</option>
 								</select>
-								<input type="text" name="searchVal" placeholder="이름을 입력해주세요.">
-								<button onclick="reloadListFn(2)">검색</button>
+								<input type="text" name="searchVal" class="inp" placeholder="이름을 입력해주세요.">
+								<div class="d-inline px-2 py-2 bg-secondary" onclick="reloadListFn(2)" style="cursor: pointer; border-radius: 5px;">
+									<i class="fas fa-lg fa-search text-white"></i>
+								</div>
 							</div>
 						</div>
 						<table>

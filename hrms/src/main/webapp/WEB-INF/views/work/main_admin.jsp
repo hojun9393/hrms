@@ -44,21 +44,23 @@
 								<i class="fas fa-lg fa-calendar" onclick="iClickFn(endDate1)" style="cursor: pointer;"></i>
 							</div>
 							<div id="searchDiv" class="float-right">
-								<select name="category_dept">
+								<select class="inp" name="category_dept">
 									<option value="">전체</option>
 									<option value="D">개발부</option>
 									<option value="S">영업부</option>
 									<option value="P">기획부</option>
 									<option value="H">인사부</option>
 								</select>
-								<select name="category_position">
+								<select class="inp" name="category_position">
 									<option value="">전체</option>
 									<option value="D">부장</option>
 									<option value="L">대표</option>
 									<option value="E">사원</option>
 								</select>
-								<input type="text" id="searchVal">
-								<button type="button" onclick="reloadListFn(3,1)">검색</button>
+								<input type="text" id="searchVal" class="inp">
+								<div class="d-inline px-2 py-2 bg-secondary" onclick="reloadListFn(3,1)" style="cursor: pointer; border-radius: 5px;">
+									<i class="fas fa-lg fa-search text-white"></i>
+								</div>
 							</div>
 						</div>
 						<table>
@@ -135,7 +137,7 @@
 									</c:choose>
 								</c:forEach>
 								<c:if test="${pagingVO.endPage < pagingVO.lastPage }">
-									<a onclick="reloadListFn(${pagingVO.endPage+1})"></a>
+									<a class="arrow next" onclick="reloadListFn(${pagingVO.endPage+1})"></a>
 								</c:if>
 							</div>
 						</div>

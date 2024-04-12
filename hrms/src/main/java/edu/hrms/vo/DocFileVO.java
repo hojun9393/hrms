@@ -8,6 +8,14 @@ public class DocFileVO {
 	private String originNm;
 	
 	
+	public DocFileVO() {};
+	public DocFileVO(int docNo, String originNm, String realNm) {
+		this.docNo = docNo;
+		this.originNm = originNm;
+		this.realNm = realNm;
+	}
+	
+	
 	public int getFileNo() {
 		return fileNo;
 	}

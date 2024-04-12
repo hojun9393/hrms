@@ -62,10 +62,8 @@ public class DocServiceImpl implements DocService {
 		
 		List<DocFileVO> list = new ArrayList<>();
 		for(MultipartFile data : files) {
-			if(!data.getOriginalFilename().isEmpty()) {
-				DocFileVO vo = new DocFileVO();
+			try {
 				String originNm = data.getOriginalFilename();
-				
 				String[] fileNmArr = originNm.split("\\.");
 				String ext = fileNmArr[fileNmArr.length-1].toLowerCase();
 				
@@ -75,19 +73,15 @@ public class DocServiceImpl implements DocService {
 					realNm = fileNmArr[0] + "_" + i + "." + ext;
 					File file = new File(path, realNm);
 					if(!file.exists()) {
+						data.transferTo(file);
+						list.add(new DocFileVO(docNo, originNm, realNm));
 						break;
 					}
 					i++;
 				}
-				try {
-					data.transferTo(new File(path, realNm));
-				} catch (IllegalStateException | IOException e) {
-					e.printStackTrace();
-				}
-				vo.setOriginNm(originNm);
-				vo.setRealNm(realNm);
-				vo.setDocNo(docNo);
-				list.add(vo);
+				
+			}catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
 			}
 		}
 		return list;
