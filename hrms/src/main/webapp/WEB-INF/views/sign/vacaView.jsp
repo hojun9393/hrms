@@ -147,12 +147,12 @@
 </div>
 
 <form action="approvedVaca.do" method="post" id="approvedVaca">
-	<input type="hidden" name="userId" value="${vo.userId}" >
+	<input type="hidden" name="userId" value="${vo.userid}" >
 	<input type="hidden" name="vacaNo" value="${vo.vacaNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
 <form action="rejectedVaca.do" method="post" id="rejectedVaca">
-	<input type="hidden" name="userId" value="${vo.userId}" >
+	<input type="hidden" name="userId" value="${vo.userid}" >
 	<input type="hidden" name="vacaNo" value="${vo.vacaNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
@@ -160,7 +160,7 @@
 <script>
 	function socketFn(type){
 		console.debug('socket',socket);
-		if(socket){
+		if(socket && ${login.userid}=='99000'){
 			let socketMsg = type+","+`${vo.userid},${login.userid}`;
 			socket.send(socketMsg);
 		}

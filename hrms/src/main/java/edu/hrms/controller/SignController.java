@@ -121,7 +121,6 @@ public class SignController {
 		}
 		vacaVO.setStateCount(count);
 		vacaVO.setSignLineVO(signLineVO);
-		
 		model.addAttribute("vo", vacaVO);
 		
 		return "/sign/vacaView";

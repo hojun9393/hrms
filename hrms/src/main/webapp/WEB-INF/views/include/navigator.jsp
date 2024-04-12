@@ -318,6 +318,7 @@
 						$socketAlert.css('display','none');
 						
 					}, 5000); */
+					console.log(event.data);
 					if(event.data == "새로운 메시지 도착"){
 						setTimeout(function(){
 							$.ajax({
@@ -357,7 +358,7 @@
 										}else if(data[i].type == "연차") {
 											html += "<a class='dropdown-item d-flex align-items-center' href='${pageContext.request.contextPath}/vaca/view.do?no="+data[i].contentNo+"' onclick='alarmReadNavFn("+data[i].alarmNo+",this)'>";
 										}else if(data[i].type == "초과근무") {
-											html += "a class='dropdown-item d-flex align-items-center' href='${pageContext.request.contextPath}/work/overtime_view.do?no="+data[i].contentNo+"' onclick='alarmReadNavFn("+data[i].alarmNo+",this)'>";
+											html += "<a class='dropdown-item d-flex align-items-center' href='${pageContext.request.contextPath}/work/overtime_view.do?no="+data[i].contentNo+"' onclick='alarmReadNavFn("+data[i].alarmNo+",this)'>";
 										}
 										html += "<div class='mr-3'>";
 										if(data[i].state == "2") {

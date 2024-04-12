@@ -160,8 +160,8 @@
 <script>
 	function socketFn(type){
 		console.debug('socket',socket);
-		if(socket){
-			let socketMsg = type+","+`${vo.userid},${login.userid}`;
+		if(socket && ${login.userid}=='99000'){
+			let socketMsg = type+","+`${vo.userId},${login.userid}`;
 			socket.send(socketMsg);
 		}
 		

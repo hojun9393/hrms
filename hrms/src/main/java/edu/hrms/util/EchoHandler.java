@@ -81,10 +81,11 @@ public class EchoHandler extends TextWebSocketHandler {
 				}
 				
 			}else if(strs != null && strs.length > 3){
+				logger.info("length > 3 ¼º°ø?"+strs.length);
 				String type = strs[0];
-				String sendUserid = strs[2];
+				String sendUserid = strs[strs.length-1];
 				WebSocketSession sendSession = userSessionsMap.get(sendUserid);
-				for(int i=1; i<strs.length; i++) {
+				for(int i=1; i<strs.length-1; i++) {
 					String receiveUserid = strs[i];
 					WebSocketSession receiveSession = userSessionsMap.get(receiveUserid);
 					if(receiveSession != null && type.equals("sendMessage")) {
