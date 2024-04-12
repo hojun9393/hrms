@@ -144,8 +144,8 @@
 					<div class="mb-4 text-center">
 						<hr>
 						<a href="main.do" class="btn btn-secondary btn-user"> 목록으로 </a>
-						<button type="submit" form="approvedDoc" class="btn btn-primary btn-user"> 승인하기 </button>
-						<button type="submit" form="rejectedDoc" class="btn btn-dark btn-user"> 반려하기 </button>
+						<button onclick="socketFn('approvedDoc')" type="submit" form="approvedDoc" class="btn btn-primary btn-user"> 승인하기 </button>
+						<button onclick="socketFn('rejectedDoc')" type="submit" form="rejectedDoc" class="btn btn-dark btn-user"> 반려하기 </button>
 					</div>
 				</div>
 			</div>
@@ -165,18 +165,13 @@
 </form>
 
 <script>
-	function socketFn(type, signType){
+	function socketFn(type){
 		console.debug('socket',socket);
 		if(socket){
-			if(type == "doc"){
-				let socketMsg = type+","+signType+","+`${vo.userid},${login.userid},${vo.docNo},${vo.title}`;
-			}else if(type == "vaca"){
-				let socketMsg = type+","+signType+","+`${vo.userid},${login.userid},${vo.docNo},${vo.title}`;
-			}else if(type == "overtime"){
-				let socketMsg = type+","+signType+","+`${vo.userid},${login.userid},${vo.docNo},${vo.title}`;
-			}
+			let socketMsg = type+","+`${vo.userid},${login.userid}`;
 			socket.send(socketMsg);
 		}
+		
 	}
 
 	function downloadFn(fileNo, docNo, realNm, originNm){

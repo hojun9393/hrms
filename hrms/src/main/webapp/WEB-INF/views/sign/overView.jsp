@@ -137,8 +137,8 @@
 					<div class="mb-4 text-center">
 						<hr>
 						<a href="main.do" class="btn btn-secondary btn-user"> 목록으로 </a>
-						<button type="submit" form="approvedOver" class="btn btn-primary btn-user"> 승인하기 </button>
-						<button type="submit" form="rejectedOver" class="btn btn-dark btn-user"> 반려하기 </button>
+						<button onclick="socketFn('approvedOver')" type="submit" form="approvedOver" class="btn btn-primary btn-user"> 승인하기 </button>
+						<button onclick="socketFn('rejectedOver')" type="submit" form="rejectedOver" class="btn btn-dark btn-user"> 반려하기 </button>
 					</div>
 				</div>
 			</div>
@@ -156,6 +156,17 @@
 	<input type="hidden" name="overTimeNo" value="${vo.overTimeNo}" >
 	<input type="hidden" name="mySignLineNo" value="${vo.mySignLineNo}" >
 </form>
+
+<script>
+	function socketFn(type){
+		console.debug('socket',socket);
+		if(socket){
+			let socketMsg = type+","+`${vo.userid},${login.userid}`;
+			socket.send(socketMsg);
+		}
+		
+	}
+</script>
 
 <!-- /.container-fluid -->
 <%@ include file="../include/footer.jsp"%>

@@ -136,4 +136,13 @@ public class MessageController {
 		res.getWriter().flush();
 	}
 	
+	@RequestMapping(value = "/msgRoad.do")
+	@ResponseBody
+	public List<MsgVO> msgRead(Authentication authentication) {
+		UserVO user = (UserVO)authentication.getPrincipal();
+		List<MsgVO> msgList = messageService.selectMsgAllNav(Integer.parseInt(user.getUserid()));
+		return msgList;
+	}
+	
+	
 }

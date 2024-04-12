@@ -274,8 +274,18 @@ function sumitFn(){
 	}else if(content == ""){
 		alert("쪽지 내용을 입력해 주세요.");
 	}else{
-		let checked = $('input[type=checkbox][id^=checkBox]:disabled');
-		checked.prop('disabled', false);
+		let submitChecked = $('input[type=checkbox][id^=checkBox]:disabled');
+		submitChecked.prop('disabled', false);
+		
+		let socketChecked = $('input[type=checkbox][id^=checkBox][name=receiver]:checked');
+		let socketMsg = "sendMessage,";
+		for(let i=0; i<socketChecked.length; i++){
+			socketMsg += socketChecked[i].value+",";
+		}
+		socketMsg += "${login.userid}";
+		if(socket){
+			socket.send(socketMsg);
+		}
 		$('[name=frm]').submit();
 	}
 }

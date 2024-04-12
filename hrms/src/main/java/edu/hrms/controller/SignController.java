@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.hrms.service.AlarmService;
 import edu.hrms.service.SignService;
+import edu.hrms.vo.AlarmVO;
 import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.DocVO;
 import edu.hrms.vo.OverVO;
@@ -417,6 +417,14 @@ public class SignController {
 	public int alarmRead(int alarmNo) {
 		int result = alarmService.updateAlarmRead(alarmNo);
 		return result;
+	}
+	
+	@RequestMapping(value = "/alarmRoad.do")
+	@ResponseBody
+	public List<AlarmVO> alarmRoad(Authentication authentication) {
+		UserVO user = (UserVO)authentication.getPrincipal();
+		List<AlarmVO> alarmList = alarmService.selectAlarm(Integer.parseInt(user.getUserid()));
+		return alarmList;
 	}
 	
 }

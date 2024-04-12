@@ -38,12 +38,14 @@
 				<span>연차</span>
 			</a>
 		</li>
+		<sec:authorize access="!hasAnyRole('ROLE_ADMIN','ROLE_CEO')">
 		<li class="nav-item ${ navSelected.equals('docu') ? 'active' : '' }">
 			<a class="nav-link" href="${pageContext.request.contextPath}/docu/main.do">
 				<i class="fas fa-fw fa-folder-open"></i> 
 				<span>기안</span>
 			</a>
 		</li>
+		</sec:authorize>
 		<sec:authorize access="!hasRole('ROLE_EMPLOYEE')">
 		<li class="nav-item ${ navSelected.equals('sign') ? 'active' : '' }">
 			<a class="nav-link" href="${pageContext.request.contextPath}/sign/main.do"> 
@@ -90,10 +92,10 @@
 	
 			<!-- Topbar -->
 			<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-	
+	           	
 				<!-- Topbar Navbar -->
 				<ul class="navbar-nav ml-auto">
-	
+
 					<!-- Nav Item - Alerts -->
 					<li class="nav-item dropdown no-arrow mx-1">
 						<a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -106,6 +108,7 @@
 						<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
 							aria-labelledby="alertsDropdown">
 							<h6 class="dropdown-header">Alerts Center</h6>
+							<div id="alerts">
 							<c:if test="${fn:length(alarmList) eq '0'}">
 								<a class="dropdown-item align-items-center">
 									<div class="font-weight-bold text-gray-500 text-center p-3">
@@ -170,6 +173,7 @@
 								</div>
 								</a>
 							</c:forEach>
+							</div>
 							<a class="dropdown-item text-center small text-gray-500">알림은 최대 10개까지 표시됩니다.</a>
 						</div>
 					</li>
@@ -187,6 +191,7 @@
 						<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
 							aria-labelledby="messagesDropdown">
 							<h6 class="dropdown-header">MESSAGE CENTER</h6>
+							<div id="messages">
 							<c:if test="${fn:length(msgList) eq '0'}">
 								<a class="dropdown-item align-items-center">
 									<div class="font-weight-bold text-gray-500 text-center p-3">
@@ -209,6 +214,7 @@
 									</div>
 								</a> 
 							</c:forEach>
+							</div>
 							<a class="dropdown-item text-center small text-gray-500" href="${pageContext.request.contextPath}/message/main.do">메시지 탭으로 이동</a>
 						</div>
 					</li>
@@ -303,20 +309,100 @@
 				socket = ws;
 				
 				ws.onopen = function() {
-				 	console.log('open');
+				 	/* console.log('open'); */
 				};
 				
 				ws.onmessage = function(event) {
-					console.log("onmessage"+event.data);
-					alert('onmessage'+event.data);
+					/* $('#socketAlert').html('새로운 알림이 도착하였습니다.'); */
 					/* setTimeout(function(){
 						$socketAlert.css('display','none');
 						
 					}, 5000); */
+					if(event.data == "새로운 메시지 도착"){
+						setTimeout(function(){
+							$.ajax({
+								url:"${pageContext.request.contextPath}/message/msgRoad.do",
+								success:function(data){
+								let html = '';
+									for(let i=0; i<data.length; i++){
+										html += '<a class="dropdown-item d-flex align-items-center" data-toggle="modal" data-target="#messageModalNav'+data[i].msgNo+'" href="#" onclick="msgReadNavFn('+data[i].msgNo+',this)" id="msgNav'+data[i].msgNo+'">';
+										html += '	<div class="dropdown-list-image mr-3">';
+										html += '		<img class="rounded-circle" src="${pageContext.request.contextPath}/resources/img/undraw_profile_1.svg" alt="...">';
+										html += '		<div class="status-indicator bg-success"></div>';
+										html += '	</div>';
+										html += '	<div class="font-weight-bold">';
+										html += '		<div class="small text-gray-500">'+data[i].sendDate+'</div>';
+										html += '		<div class="text-truncate">';
+										html += '			'+data[i].content+' ';
+										html += '		</div>';
+										html += '		<div class="small text-gray-500">'+data[i].dept+' '+data[i].name+' '+data[i].position+'</div>';
+										html += '	</div>';
+										html += '</a> ';
+									}
+									alert(event.data);
+									$('#messages').html(html);
+									$('#messagesDropdown').append('<span class="badge badge-danger badge-counter" id="msgBadge">'+data.length+'</span>');
+								}
+							})
+						}, 500);
+					}else{
+						setTimeout(function(){
+							$.ajax({
+								url:"${pageContext.request.contextPath}/sign/alarmRoad.do",
+								success:function(data){
+									let html = "";
+									for(let i=0; i<data.length; i++){
+										if(data[i].type == "기안") {
+											html += "<a class='dropdown-item d-flex align-items-center' href='${pageContext.request.contextPath}/docu/view.do?docNo="+data[i].contentNo+"' onclick='alarmReadNavFn("+data[i].alarmNo+",this)'>";
+										}else if(data[i].type == "연차") {
+											html += "<a class='dropdown-item d-flex align-items-center' href='${pageContext.request.contextPath}/vaca/view.do?no="+data[i].contentNo+"' onclick='alarmReadNavFn("+data[i].alarmNo+",this)'>";
+										}else if(data[i].type == "초과근무") {
+											html += "a class='dropdown-item d-flex align-items-center' href='${pageContext.request.contextPath}/work/overtime_view.do?no="+data[i].contentNo+"' onclick='alarmReadNavFn("+data[i].alarmNo+",this)'>";
+										}
+										html += "<div class='mr-3'>";
+										if(data[i].state == "2") {
+											html += "<div class='icon-circle bg-success'>";
+										}else if(data[i].state == "3") {
+											html += "<div class='icon-circle bg-warning'>";
+										}else {
+											html += "<div class='icon-circle bg-primary'>";
+										}
+										if(data[i].type == "기안") {
+											html += "<i class='fas fa-file-alt text-white'></i>";
+										}else if(data[i].type == "연차") {
+											html += "<i class='fas fa-plane text-white'></i>";
+										}else if(data[i].type == "초과근무") {
+											html += "<i class='fas fa-briefcase text-white'></i>";
+										}
+										html += "</div>";
+										html += "</div>";
+										html += "<div>";
+										html += "<div class='small text-gray-500'>"+data[i].rdate+"</div>";
+										html += "<span class='font-weight-bold'>";
+										if(data[i].state == "2") {
+											html += "["+data[i].type+"]";
+											html += ""+data[i].content+"...가 <br>";
+											html += "<span class='d-inline text-success text-center font-weight-bold'>승인</span>되었습니다.</span>";
+										}else if(data[i].state == "3"){
+											html += "["+data[i].type+"]";
+											html += ""+data[i].content+"...가 <br>";
+											html += "<span class='d-inline text-warning text-center font-weight-bold'>반려</span>되었습니다.</span>";
+										}
+										html += "</div>";
+										html += "</a>";
+									}
+									
+									alert(event.data);
+									$('#alerts').html(html);
+									$('#alertsDropdown').append('<span class="badge badge-danger badge-counter" id="msgBadge">'+data.length+'</span>');
+								}
+							})
+						}, 500);
+					}
 				};
 	
 				ws.onclose = function() {
-					console.log('close');
+					/* console.log('close'); */
 				};
 			};
 			

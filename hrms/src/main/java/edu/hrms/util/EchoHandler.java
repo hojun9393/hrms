@@ -30,9 +30,9 @@ public class EchoHandler extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {//클라이언트와 서버가 연결
-		logger.info("Socket 연결");
+		/* logger.info("Socket 연결"); */
 		sessions.add(session);
-		logger.info(currentUserName(session));//현재 접속한 사람
+		/* logger.info(currentUserName(session)); *///현재 접속한 사람
 		String senderId = currentUserName(session);
 		userSessionsMap.put(senderId,session);
 	}
@@ -44,46 +44,54 @@ public class EchoHandler extends TextWebSocketHandler {
 		logger.info("msg="+msg);
 		
 		if(!StringUtils.isEmpty(msg)) {
-			logger.info("if문 들어옴?");
 			String[] strs = msg.split(",");
-			if(strs != null && strs.length == 6) {
+			if(strs != null && strs.length == 3) {
 				String type = strs[0];
-				String signType = strs[1];
-				String writerUserid = strs[2];
-				String signUserid = strs[3];
-				String contentNo = strs[4];
-				String content = strs[5];
+				String receiveUserid = strs[1];
+				String sendUserid = strs[2];
+
 				logger.info("length 성공?"+type);
-				System.out.println(writerUserid+""+signUserid);
-				WebSocketSession writerSession = userSessionsMap.get(writerUserid);
-				WebSocketSession signUserSession = userSessionsMap.get(signUserid);
-				logger.info("writerSession="+userSessionsMap.get(writerUserid));
-				logger.info("writerSession"+writerSession);
+				System.out.println(receiveUserid+""+sendUserid);
+				WebSocketSession receiveSession = userSessionsMap.get(receiveUserid);
+				WebSocketSession sendSession = userSessionsMap.get(sendUserid);
+				logger.info("receiveSession="+userSessionsMap.get(receiveUserid));
+				logger.info("receiveSession"+receiveSession);
 				
-				//댓글
-				if ("doc".equals(type) && writerSession != null) {
-					logger.info("onmessage되나?");
-					TextMessage tmpMsg = new TextMessage(signUserid + "님이 "
-							+ content+" 을 결재 했습니다.</a>"
-							+ "<a class='dropdown-item d-flex align-items-center' href='/controller/docu/view.do?docNo=47' onclick='alarmReadNavFn(52,this)'>"
-							+ "	<div class='mr-3'>"
-							+ "		<div class='icon-circle bg-success'>"
-							+ "			<i class='fas fa-file-alt text-white'></i>	"
-							+ "		</div>"
-							+ "	</div>"
-							+ "	<div>"
-							+ "		<div class='small text-gray-500'>2024-04-11 16:11:33</div>"
-							+ "		<span class='font-weight-bold'>"
-							+ "			[기안]"
-							+ "			asdf...가 <br>"
-							+ "			<span class='d-inline text-success text-center font-weight-bold'>승인</span>되었습니다."
-							+ "		</span>"
-							+ "	</div>"
-							+ "</a>");
-						
-					writerSession.sendMessage(tmpMsg);
+				if(receiveSession != null && type.equals("approvedDoc")) {
+					TextMessage tmpMsg = new TextMessage("새로운 기안 승인 알림 도착");
+					receiveSession.sendMessage(tmpMsg);
+				}else if(receiveSession != null && type.equals("rejectedDoc")) {
+					TextMessage tmpMsg = new TextMessage("새로운 기안 반려 알림 도착");
+					receiveSession.sendMessage(tmpMsg);
+				}else if(receiveSession != null && type.equals("approvedVaca")) {
+					TextMessage tmpMsg = new TextMessage("새로운 연차 승인 알림 도착");
+					receiveSession.sendMessage(tmpMsg);
+				}else if(receiveSession != null && type.equals("rejectedVaca")) {
+					TextMessage tmpMsg = new TextMessage("새로운 연차 반려 알림 도착");
+					receiveSession.sendMessage(tmpMsg);
+				}else if(receiveSession != null && type.equals("approvedOver")) {
+					TextMessage tmpMsg = new TextMessage("새로운 초과근무 승인 알림 도착");
+					receiveSession.sendMessage(tmpMsg);
+				}else if(receiveSession != null && type.equals("rejectedOver")) {
+					TextMessage tmpMsg = new TextMessage("새로운 초과근무 반려 알림 도착");
+					receiveSession.sendMessage(tmpMsg);
+				}else if(receiveSession != null && type.equals("sendMessage")) {
+					TextMessage tmpMsg = new TextMessage("새로운 메시지 도착");
+					receiveSession.sendMessage(tmpMsg);
 				}
 				
+			}else if(strs != null && strs.length > 3){
+				String type = strs[0];
+				String sendUserid = strs[2];
+				WebSocketSession sendSession = userSessionsMap.get(sendUserid);
+				for(int i=1; i<strs.length; i++) {
+					String receiveUserid = strs[i];
+					WebSocketSession receiveSession = userSessionsMap.get(receiveUserid);
+					if(receiveSession != null && type.equals("sendMessage")) {
+						TextMessage tmpMsg = new TextMessage("새로운 메시지 도착");
+						receiveSession.sendMessage(tmpMsg);
+					}
+				}
 			}
 			
 		}
@@ -91,7 +99,7 @@ public class EchoHandler extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {//연결 해제
-		logger.info("Socket 끊음");
+		/* logger.info("Socket 끊음"); */
 		sessions.remove(session);
 		userSessionsMap.remove(currentUserName(session),session);
 	}
