@@ -54,7 +54,7 @@
 							<option value="D" <c:if test="${position eq 'D'}">selected</c:if>>부장</option>
 							<option value="C" <c:if test="${position eq 'C'}">selected</c:if>>대표</option>
 							<option value="A" <c:if test="${position eq 'A'}">selected</c:if>>관리자</option>
-						</select> <input type="text" name="searchName" value="" id="search" class="inp"
+						</select> <input type="text" name="searchName" value="${searchName}" id="search" class="inp"
 							placeholder="이름을 입력하세요.">
 						<div class="d-inline px-2 py-2 bg-secondary" onclick="javascript:frm.submit()"
 							style="cursor: pointer; border-radius: 5px;">
