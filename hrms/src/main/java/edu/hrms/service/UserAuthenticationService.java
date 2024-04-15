@@ -28,11 +28,6 @@ public class UserAuthenticationService implements UserDetailsService {
 	
 		Map<String, Object> user = sqlSession.selectOne("edu.hrms.mappers.userMapper.selectLogin", username);
 		
-		// 아이디 없을 시 36번라인 실행됨
-		// 아이디 있고 비밀번호 불일치 시 리턴 전까지 실행됨
-		// state=9인 아이디 : 비밀번호 불일치시 47번라인 실행됨
-		// state=9인 아이디 : 비밀번호 일치시 47번라인 실행됨
-		
 		if(user == null) {
 			System.out.println("UsernameNotFoundException if문 들어옴");
 			throw new UsernameNotFoundException(username);

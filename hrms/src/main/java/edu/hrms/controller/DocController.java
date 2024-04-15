@@ -44,11 +44,6 @@ public class DocController {
 	@Autowired
 	DocService docService;
 	
-	@Autowired
-	AlarmService alarmService;
-	
-	@Autowired
-	SignService signService;
 	
 	@RequestMapping(value = "/main.do")
 	public String main(Model model, Authentication authentication) {
@@ -190,6 +185,8 @@ public class DocController {
 		
 		String path = docService.getPath(request);
 //		String path = request.getSession().getServletContext().getRealPath("/resources/upload"); // °³¹ß
+		
+		System.out.println(deletedFiles);
 		
 		int docNo = vo.getDocNo();
 		

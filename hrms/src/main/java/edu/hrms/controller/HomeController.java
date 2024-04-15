@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +46,26 @@ public class HomeController {
 	@Autowired
 	NoticeService noticeService;
 	
+	
 	@RequestMapping(value = "/login.do", method = RequestMethod.GET)
-	public String login(Model model) {
+	public String login(Model model, HttpServletRequest request) {
+		
+		Cookie[] cookies = request.getCookies();
+		String rememberedId = null;
+		for(Cookie c : cookies) {
+			String name = c.getName();
+            if (name.equals("rememberedId")) {
+            	rememberedId = c.getValue(); break;
+            }
+		}
+		model.addAttribute("rememberedId", rememberedId);
+		
 		return "login";
 	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model, Authentication authentication) {
+		
 		UserVO login = (UserVO)authentication.getPrincipal();
 		
 		// ±Ù¹« //////////////////////////////////////////////
@@ -110,7 +125,7 @@ public class HomeController {
 		model.addAttribute("vacaSignCount", vacaSignCount);
 		model.addAttribute("overSignCount", overSignCount);
 		model.addAttribute("noticeList", noticeList);
-
+		
 		return "home";
 	}
 	

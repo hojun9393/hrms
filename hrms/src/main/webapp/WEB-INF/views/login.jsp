@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,7 +41,7 @@
 										<div class="form-group">
 											<input type="text" name="username" class="form-control form-control-user"
 												id="exampleInputEmail" aria-describedby="emailHelp"
-												placeholder="사원번호를 입력해 주세요.">
+												placeholder="사원번호를 입력해 주세요." value="${rememberedId }">
 										</div>
 										<div class="form-group">
 											<input type="password" name="password" class="form-control form-control-user"
@@ -48,7 +49,7 @@
 										</div>
 										<div class="form-group">
 											<div class="custom-control custom-checkbox small">
-												<input type="checkbox" class="custom-control-input" id="customCheck"> 
+												<input type="checkbox" name="checkRemember" class="custom-control-input" id="customCheck" value="isChecked" ${ rememberedId == null ? '' : 'checked' }> 
 												<label class="custom-control-label" for="customCheck">사원번호 기억하기</label>
 											</div>
 										</div>

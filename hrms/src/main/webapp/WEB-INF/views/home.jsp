@@ -166,7 +166,6 @@
 				<div class="card-body">
 					<div class="h5 mb-3 ml-2 font-weight-bold text-gray-800 today-date">안내드립니다.</div>
 					<c:forEach items="${noticeList}" var="vo" end="1">
-						
 						<div class="card mt-3 bg-light text-black">
 							<div class="card-body">
 								<div class="row">
