@@ -122,7 +122,7 @@
 	        	, s.signorder,
 	        	LAG(vs.state) OVER() AS prev_state
 			FROM vacasign vs
-			INNER JOIN signline s ON vs.signlineno = s.signlineno
+			INNER JOIN signLine s ON vs.signLineNo = s.signLineNo
 		   INNER JOIN user u ON s.userid = u.userid
 		   WHERE vs.vacaNo = #{vacaNo}
 		   ORDER BY signOrder

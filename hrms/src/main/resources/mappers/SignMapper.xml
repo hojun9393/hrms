@@ -98,7 +98,7 @@
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
-        FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overTimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
+        FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overtimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
         WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and (prevState is null or prevState = 2) ORDER BY o.rdate DESC;
 	</select>
 	
@@ -118,7 +118,7 @@
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
-        FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overTimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
+        FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overtimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
         WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and (prevState is null or prevState = 2) and s.state = 0 ORDER BY o.rdate DESC
         ) as myOverSign;
 	</select>
@@ -212,7 +212,7 @@
         WHEN u.position = 'E' THEN '사원'
         ELSE '직급미정' END AS position,
         s.state as mySignState, s.signLineNo as mySignLineNo 
-        FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overTimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
+        FROM overtime o inner join user u on o.userid = u.userid inner join (SELECT o.*, s.signOrder, LAG(o.state) OVER(partition by o.overtimeNo order by s.signOrder) as prevState FROM overtimesign o inner join signLine s on o.signLineNo = s.signLineNo) s on o.overtimeNo = s.overtimeNo 
         WHERE s.signLineNo = (SELECT s.signLineNo FROM signLine s inner join user u on s.userid = u.userid WHERE u.userid = #{userid} and (type = 'O' or type = 'A')) and (prevState is null or prevState = 2) 
 		<choose>
 			<when test="startDate != null and endDate != null">
@@ -353,27 +353,27 @@
 	</select>
 	
 	<update id="updateApprovedDoc" parameterType="docVO">
-		UPDATE docSign set state = 2 where signLineNo = #{mySignLineNo} and docNo = #{docNo};
+		UPDATE docsign set state = 2 where signLineNo = #{mySignLineNo} and docNo = #{docNo};
 	</update>
 	
 	<update id="updateRejectedDoc" parameterType="docVO">
-		UPDATE docSign set state = 3 where signLineNo = #{mySignLineNo} and docNo = #{docNo};
+		UPDATE docsign set state = 3 where signLineNo = #{mySignLineNo} and docNo = #{docNo};
 	</update>
 	
 	<update id="updateApprovedVaca" parameterType="vacaVO">
-		UPDATE vacaSign set state = 2 where signLineNo = #{mySignLineNo} and vacaNo = #{vacaNo};
+		UPDATE vacasign set state = 2 where signLineNo = #{mySignLineNo} and vacaNo = #{vacaNo};
 	</update>
 	
 	<update id="updateRejectedVaca" parameterType="vacaVO">
-		UPDATE vacaSign set state = 3 where signLineNo = #{mySignLineNo} and vacaNo = #{vacaNo};
+		UPDATE vacasign set state = 3 where signLineNo = #{mySignLineNo} and vacaNo = #{vacaNo};
 	</update>
 	
 	<update id="updateApprovedOver" parameterType="overVO">
-		UPDATE overtimeSign set state = 2 where signLineNo = #{mySignLineNo} and overTimeNo = #{overTimeNo};
+		UPDATE overtimesign set state = 2 where signLineNo = #{mySignLineNo} and overtimeNo = #{overTimeNo};
 	</update>
 	
 	<update id="updateRejectedOver" parameterType="overVO">
-		UPDATE overtimeSign set state = 3 where signLineNo = #{mySignLineNo} and overTimeNo = #{overTimeNo};
+		UPDATE overtimesign set state = 3 where signLineNo = #{mySignLineNo} and overtimeNo = #{overTimeNo};
 	</update>
 	
 	<update id="updateDocState" parameterType="int">
@@ -406,6 +406,6 @@
 	</update>
 	
 	<update id="updateOverAlarm" parameterType="map">
-		UPDATE overtime SET alarmNo = #{alarmNo} WHERE overTimeNo = #{overTimeNo};		
+		UPDATE overtime SET alarmNo = #{alarmNo} WHERE overtimeNo = #{overTimeNo};		
 	</update>
 </mapper>
