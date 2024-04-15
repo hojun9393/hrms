@@ -75,8 +75,8 @@ public class DocController {
 	
 	@RequestMapping(value = "/write.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String write(Authentication authentication, HttpServletRequest request, String title, 
-			String content, @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
+	public String write(Authentication authentication, HttpServletRequest request, 
+			String title, String content, @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IllegalStateException, IOException {
 		
 		UserVO login = (UserVO) authentication.getPrincipal();
 		int userid = Integer.parseInt(login.getUserid());

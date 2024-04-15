@@ -73,7 +73,7 @@ function deleteFile(num) {
 
 /* 폼 전송 */
 function submitForm() {
-	let form = document.querySelector("form");
+	let form = document.getElementById("form");
 	
 	if(!form.checkValidity()){
 		form.reportValidity();
