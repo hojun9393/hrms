@@ -20,21 +20,20 @@ public class VacaScheduler {
 	CalcCalendar calcCalendar;
 	
 	@Scheduled(cron = "0 00 12 * * ?")
-//	@Scheduled(cron = "0/10 * * * * ? ")
 	public void updateVacaStateToUse() {
 		
 		// 연차 사용완료로 변경 로직
-		// 1. 업데이트 할 연차 리스트를 뽑는다.
+		// 1. 업데이트 할 연차 리스트를 얻는다.
 		List<VacaVO> list = vacaService.selectVacaListToUpdate(calcCalendar.getTodayDate());
+		System.out.println("리스트 사이즈: "+list.size());
 		
 		if(list.size()!=0) {
-			// 2. 1의 연차 리스트의 유저 보유, 사용 연차를 업데이트한다.
+			// 2. 1의 유저 보유 연차 및 사용 연차 시간을 업데이트한다.
 			int updateTimeCnt = vacaService.minusUserVaca(list);
 			
 			// 3. 1의 연차 상태를 사용완료로 변경한다.
 			int updateStateCnt = vacaService.updateVacaStateToUse(list);
 			
-			System.out.println("리스트 사이즈: "+list.size());
 			System.out.println("user 업데이트 여부: "+updateTimeCnt);
 			System.out.println("vaca 업데이트 여부: "+updateStateCnt);
 			

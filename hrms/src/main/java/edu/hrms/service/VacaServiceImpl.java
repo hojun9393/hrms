@@ -108,10 +108,11 @@ public class VacaServiceImpl implements VacaService {
 		List<Map<String, Integer>> list = new ArrayList<>();
 		for(VacaVO vo : volist) {
 			Map<String, Integer> map = new HashMap<>();
-			map.put("userid", vo.getUserId());
+			map.put("userid", Integer.parseInt(vo.getUserid()));
 			map.put("useVaca", calcCalendar.getTotalUseHour(vo));
 			list.add(map);
 		}
+		
 		return vacaDAO.minusUserVaca(list);
 	}
 	
