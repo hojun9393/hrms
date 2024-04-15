@@ -30,7 +30,7 @@ public class UserLoginFailureHandler implements AuthenticationFailureHandler {
 			msg = "휴직중인 사원은 로그인할 수 없습니다.";
 		}
 		if(exception instanceof AccountExpiredException) {
-			msg = "퇴직한 사원입니다.";
+			msg = "퇴사한 사원입니다.";
 		}
 		
 		response.getWriter().append("<script>alert('"+msg+"'); location.href='login.do';</script>");

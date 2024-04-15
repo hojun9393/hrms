@@ -52,11 +52,13 @@ public class HomeController {
 		
 		Cookie[] cookies = request.getCookies();
 		String rememberedId = null;
-		for(Cookie c : cookies) {
-			String name = c.getName();
-            if (name.equals("rememberedId")) {
-            	rememberedId = c.getValue(); break;
-            }
+		if(cookies!=null) {
+			for(Cookie c : cookies) {
+				String name = c.getName();
+	            if (name.equals("rememberedId")) {
+	            	rememberedId = c.getValue(); break;
+	            }
+			}
 		}
 		model.addAttribute("rememberedId", rememberedId);
 		
