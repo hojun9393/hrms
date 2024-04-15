@@ -252,6 +252,9 @@
 	<update id="giveVaca" parameterType="Map">
 		UPDATE user
 			SET keepVaca = keepVaca + #{hour}
+			<if test='hour lt 0'>
+				, useVaca = useVaca - #{hour}
+			</if>
 			WHERE userid = #{userid}
 	</update>
 	

@@ -23,9 +23,8 @@ public class UserLoginFailureHandler implements AuthenticationFailureHandler {
 		response.setContentType("text/html; charset=utf-8");
 		response.setCharacterEncoding("UTF-8");
 		
-		String msg = "사원번호와 아이디를 확인해주세요.";
+		String msg = "사원번호와 비밀번호를 확인해주세요.";
 		
-		// 넘어온 예외에 따른 처리
 		if(exception instanceof LockedException) {
 			msg = "휴직중인 사원은 로그인할 수 없습니다.";
 		}

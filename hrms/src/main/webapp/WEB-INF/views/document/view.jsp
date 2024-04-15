@@ -143,7 +143,7 @@
 							<c:if test="${vo.state eq '3'}">
 								<a href="modify.do?docNo=${vo.docNo }" class="btn btn-primary btn-user"> 수정하기 </a>
 							</c:if>
-							<c:if test="${vo.state ne '9' || vo.state ne '3'}">
+							<c:if test="${vo.state ne '9' && vo.state ne '3' && vo.state ne '2'}">
 								<a onclick="withdrawalFn()" class="btn btn-dark btn-user"> 철회하기 </a>
 							</c:if>
 						</sec:authorize>

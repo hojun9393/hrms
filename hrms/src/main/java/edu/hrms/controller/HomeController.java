@@ -48,20 +48,24 @@ public class HomeController {
 	
 	
 	@RequestMapping(value = "/login.do", method = RequestMethod.GET)
-	public String login(Model model, HttpServletRequest request) {
+	public String login(Model model, HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 		
-		Cookie[] cookies = request.getCookies();
-		String rememberedId = null;
-		if(cookies!=null) {
-			for(Cookie c : cookies) {
-				String name = c.getName();
-	            if (name.equals("rememberedId")) {
-	            	rememberedId = c.getValue(); break;
-	            }
+		if(authentication!=null) {
+			response.sendRedirect(request.getContextPath());
+			
+		}else {
+			Cookie[] cookies = request.getCookies();
+			String rememberedId = null;
+			if(cookies!=null) {
+				for(Cookie c : cookies) {
+					String name = c.getName();
+					if (name.equals("rememberedId")) {
+						rememberedId = c.getValue(); break;
+					}
+				}
 			}
+			model.addAttribute("rememberedId", rememberedId);
 		}
-		model.addAttribute("rememberedId", rememberedId);
-		
 		return "login";
 	}
 	
