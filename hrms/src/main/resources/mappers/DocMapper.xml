@@ -25,7 +25,7 @@
 					WHEN 3 THEN '반려'
 					WHEN 9 THEN '철회' END
 				) AS state
-			FROM ( SELECT @ROWNUM:=@ROWNUM+1 AS ROWNUM
+			FROM ( SELECT @ROWNUM:=@ROWNUM+1 AS rownum
               			, d.*
 						FROM ( SELECT @ROWNUM := 0) R
 								, doc d
@@ -90,7 +90,7 @@
 	</insert>
 	
 	<delete id="deleteDocFiles" parameterType="Map">
-		DELETE FROM docFile
+		DELETE FROM docfile
 			WHERE docNo = #{docNo}
 				<if test="array != null">
 					AND originNm IN 
@@ -109,7 +109,7 @@
 	</update>
 	
 	<update id="updateDocSign" parameterType="int">
-		UPDATE docSign
+		UPDATE docsign
 			SET state = 0
 			WHERE docNo = #{docNo}
 				AND state = 3
@@ -144,11 +144,11 @@
 	            WHEN u.position = 'L' THEN '팀장'
 	            WHEN u.position = 'E' THEN '사원' END
 				) AS position
-	        	, s.signorder,
+	        	, s.signOrder,
 	        	LAG(ds.state) OVER() AS prev_state
 			FROM docsign ds
-			INNER JOIN signline s 
-				ON ds.signlineno = s.signlineno
+			INNER JOIN signLine s 
+				ON ds.signLineNo = s.signLineNo
 		   INNER JOIN user u 
 		   	ON s.userid = u.userid
 		   WHERE ds.docNo = #{docNo}

@@ -186,8 +186,6 @@ public class DocController {
 		String path = docService.getPath(request);
 //		String path = request.getSession().getServletContext().getRealPath("/resources/upload"); // 개발
 		
-		System.out.println(deletedFiles);
-		
 		int docNo = vo.getDocNo();
 		
 		// 기안 수정 로직

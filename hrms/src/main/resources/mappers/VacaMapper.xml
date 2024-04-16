@@ -122,7 +122,7 @@
 	        	, s.signorder,
 	        	LAG(vs.state) OVER() AS prev_state
 			FROM vacasign vs
-			INNER JOIN signline s ON vs.signlineno = s.signlineno
+			INNER JOIN signLine s ON vs.signLineNo = s.signLineNo
 		   INNER JOIN user u ON s.userid = u.userid
 		   WHERE vs.vacaNo = #{vacaNo}
 		   ORDER BY signOrder
@@ -148,9 +148,9 @@
 	
 	<update id="minusUserVaca" parameterType="java.util.List">
 		<foreach collection="list" item="item">
-			UPDATE user SET 
-				useVaca = useVaca + #{item.useVaca}
-				, keepVaca = keepVaca - #{item.useVaca}
+			UPDATE user 
+				SET useVaca = useVaca + #{item.useVaca}
+					, keepVaca = keepVaca - #{item.useVaca}
 				WHERE userid = #{item.userid};
 		</foreach>
 	</update>
@@ -159,7 +159,8 @@
 		<foreach collection="list" item="item">
 			UPDATE vacation
 				SET state = 7
-				WHERE userid = #{item.userId};
+				WHERE userid = #{item.userid}
+					AND startDate = #{item.startDate};
 		</foreach>
 	</update>
 
@@ -251,6 +252,9 @@
 	<update id="giveVaca" parameterType="Map">
 		UPDATE user
 			SET keepVaca = keepVaca + #{hour}
+			<if test='hour lt 0'>
+				, useVaca = useVaca - #{hour}
+			</if>
 			WHERE userid = #{userid}
 	</update>
 	

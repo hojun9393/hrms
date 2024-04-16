@@ -6,7 +6,7 @@
 	<select id="selectMyWork" parameterType="java.util.Map" resultType="edu.hrms.vo.WorkVO">
 		SELECT * FROM work
 			WHERE userid = #{userid} 
-				AND DATE = #{today}
+				AND date = #{today}
 	</select>
 	
 	<select id="selectMyThisWeekWorkTime" parameterType="java.util.Map" resultType="String">
@@ -102,7 +102,7 @@
 	            WHEN u.position = 'E' THEN '사원' END
 				) AS position
 				, s.type, s.signOrder 
-			FROM signline s 
+			FROM signLine s 
 			INNER JOIN user u ON s.userid = u.userid
 			WHERE (type=#{type} OR type='A') AND
 		  			(SUBSTRING(s.userid,1,2) = SUBSTRING(#{userid},1,2) OR s.userid='99000') AND
@@ -115,7 +115,7 @@
 	
 	<select id="getMaxNoByUserId" parameterType="String" resultType="int">
 		SELECT * FROM overtime 
-			WHERE overtimeno = (SELECT MAX(overtimeNo) FROM overtime WHERE userid = #{userid})
+			WHERE overtimeNo = (SELECT MAX(overtimeNo) FROM overtime WHERE userid = #{userid})
 	</select>
 	
 	<insert id="insertOvertimeSign" parameterType="java.util.List">
@@ -218,10 +218,10 @@
 	            WHEN u.position = 'L' THEN '팀장'
 	            WHEN u.position = 'E' THEN '사원' END
 				) AS position
-	        	, s.signorder,
+	        	, s.signOrder,
 	        	LAG(os.state) OVER() AS prev_state
 			FROM overtimesign os
-			INNER JOIN signline s ON os.signlineno = s.signlineno
+			INNER JOIN signLine s ON os.signLineNo = s.signLineNo
 		   INNER JOIN user u ON s.userid = u.userid
 		   WHERE os.overtimeNo = #{overtimeNo}
 		   ORDER BY signOrder
@@ -310,7 +310,7 @@
 				 			</if>
  				) temp
  		GROUP BY date, wno
-		ORDER BY date DESC limit #{pagingVO.startLimit}, #{pagingVO.perPage}
+		ORDER BY date DESC LIMIT #{pagingVO.startLimit}, #{pagingVO.perPage}
 	</select>
 	
 	<select id="getCountOfAllWorkList" parameterType="Map" resultType="int">

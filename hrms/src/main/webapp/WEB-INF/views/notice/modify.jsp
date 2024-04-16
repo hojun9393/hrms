@@ -26,7 +26,7 @@
 						<div class="col-lg-3 d-none d-lg-block"></div>
 						<div class="col-lg-6">
 							<div class="p-5">
-								<form class="user" action="modify.do" method="post">
+								<form class="user" id="form" action="modify.do" method="post">
 								<input type="hidden" name="noticeNo" value="${vo.noticeNo}">
 									<div class="form-group">
 										<div class="row">
@@ -167,7 +167,7 @@
 	
 	/* 폼 전송 */
 	function submitForm() {
-		let form = document.querySelector("form");
+		let form = document.querySelector("#form");
 				
 		if(!form.checkValidity()){
 			form.reportValidity();
