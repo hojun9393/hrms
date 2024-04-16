@@ -17,24 +17,21 @@ public class UserLoginFailureHandler implements AuthenticationFailureHandler {
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		
-		System.out.println("UserLoginFailureHandler 들어옴");
-		System.out.println(exception);
-		
 		response.setContentType("text/html; charset=utf-8");
 		response.setCharacterEncoding("UTF-8");
 		
-		String msg = "사원번호와 비밀번호를 확인해주세요.";
+		String msg = "";
 		
 		if(exception instanceof LockedException) {
 			msg = "휴직중인 사원은 로그인할 수 없습니다.";
-		}
-		if(exception instanceof AccountExpiredException) {
+		}else if(exception instanceof AccountExpiredException) {
 			msg = "퇴사한 사원입니다.";
+		}else {
+			msg = "사원번호와 비밀번호를 확인해주세요.";
 		}
 		
 		response.getWriter().append("<script>alert('"+msg+"'); location.href='login.do';</script>");
 		response.getWriter().flush();
-		
 	}
 
 }

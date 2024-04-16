@@ -188,25 +188,16 @@ public class CalcCalendar {
 			totalHours += (days-2)*8;
 		}
 		
-//		System.out.println("-----------------------------------------");
-//		System.out.println("userid: " + vo.getUserId());
-//		System.out.println("days: " + days);
-//		System.out.println("총 사용연차 시간: " + totalHours);
-//		System.out.println("-----------------------------------------");
-		
 		return totalHours;
 	}
 	
 	public boolean isParam1BetweenParam2AndParam3_date(String param1, String param2, String param3) {
 		
-		Date date1;
-		Date date2;
-		Date date3;
 		boolean result = false;
 		try {
-			date1 = sdf_date.parse(param1);
-			date2 = sdf_date.parse(param2);
-			date3 = sdf_date.parse(param3);
+			Date date1 = sdf_date.parse(param1);
+			Date date2 = sdf_date.parse(param2);
+			Date date3 = sdf_date.parse(param3);
 			
 			if(date1.compareTo(date2)==0 || date1.after(date2)) {
 				if(date1.compareTo(date3)==0 || date1.before(date3)) {

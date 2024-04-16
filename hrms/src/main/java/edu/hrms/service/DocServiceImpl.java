@@ -49,7 +49,10 @@ public class DocServiceImpl implements DocService {
 	
 	@Override
 	public String getPath(HttpServletRequest request) {
-		return request.getSession().getServletContext().getRealPath("/resources/upload"); // ¿î¿µ
+		String path = request.getSession().getServletContext().getRealPath("/resources/upload");
+//		String path = "C:/Users/MYCOM/git/hrms/hrms/src/main/webapp/resources/upload";
+//		String path = request.getContextPath()+"/resources/upload";
+		return path;
 	}
 	
 	@Override
@@ -59,6 +62,7 @@ public class DocServiceImpl implements DocService {
 		if(!dir.exists()) {
 			dir.mkdirs();
 		}
+		System.out.println("path: "+path);
 		
 		List<DocFileVO> list = new ArrayList<>();
 		for(MultipartFile data : files) {
