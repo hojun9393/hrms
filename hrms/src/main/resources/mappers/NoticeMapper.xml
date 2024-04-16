@@ -43,6 +43,17 @@
 			WHERE userid = #{userid}
 	</select>
 	
+	<delete id="deleteNoticeFiles" parameterType="Map">
+		DELETE FROM noticeFile
+			WHERE noticeNo = #{noticeNo}
+				<if test="array != null">
+					AND originNm IN 
+					<foreach item="item" collection="array" open="(" separator="," close=")">
+			  			#{item}
+				  	</foreach>
+			  	</if>
+	</delete>
+	
 	<update id="updateNotice" parameterType="noticeVO">
 		UPDATE notice 
 		SET title = #{title},

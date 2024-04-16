@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +40,9 @@ public class NoticeController {
 	@Autowired
 	NoticeService noticeService;
 	
-	@Autowired
-	DocService docService;
+	/*
+	 * @Autowired DocService docService;
+	 */
 	
 	//리스트
 	@RequestMapping(value = "/main.do", method = RequestMethod.GET)
@@ -53,7 +55,7 @@ public class NoticeController {
 		int pnumInt;
 		if(pnum==null) {
 			pnumInt = 1;
-		}else {
+		}else{
 			pnumInt = Integer.parseInt(pnum);
 		}
 		pagingVO = new PagingVO(pnumInt, count, 10);
@@ -84,18 +86,44 @@ public class NoticeController {
 	}
 	
 	//수정페이지로이동
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/modify.do", method = RequestMethod.GET)
 	public String modify(int noticeNo, Model model) {
 		NoticeVO noticeVO = noticeService.selectNoticeByNoticeNo(noticeNo);
 		model.addAttribute("vo", noticeVO);
+		List<NoticeFileVO> nfList = noticeService.selectNoticeFileByNoticeNo(noticeNo);
+		model.addAttribute("nfList", nfList);
 		return "/notice/modify";
 	}
 	//수정글 업데이트
+	@ResponseBody
 	@RequestMapping(value = "/modify.do", method = RequestMethod.POST)
-	public String modifyupdate(NoticeVO noticeVO, Model model) {
-		noticeService.updateNotice(noticeVO);
-		return "redirect:main.do";
+	public int modifyupdate(HttpServletRequest request, @RequestParam(value= "files", required = false) List<MultipartFile> files
+			, NoticeVO noticeVO, String[] deletedFiles) {
+		
+		String path = noticeService.getPath(request);
+		
+		int noticeNo = noticeVO.getNoticeNo();
+		System.out.println(Arrays.toString(deletedFiles));
+		
+		//notice update
+		int result = noticeService.updateNotice(noticeVO);
+		if(deletedFiles.length>0) {
+			//delete noticeFile in table.
+			noticeService.deleteNoticeFiles(Map.of("noticeNo", noticeNo, "array", deletedFiles));
+			System.out.println("if문 실행");
+		}
+		if(files.size()>0) {
+			// 3. 파일 생성 및 파일 vo리스트 리턴한다.
+			List<NoticeFileVO> fileList = noticeService.createFiles(files, path, noticeNo);
+			
+			// 4. noticefile 테이블에 insert 한다.
+			noticeService.insertNoticeFile(fileList);
+		}
+		
+		return result;
 	}
+	
 	//delyn 업데이트
 	@RequestMapping(value = "/delyn.do", method = RequestMethod.POST)
 	public void delyn(HttpServletResponse response, int noticeNo) throws IOException {
@@ -122,7 +150,6 @@ public class NoticeController {
 		if(!dir.exists()) {
 			dir.mkdirs(); // 존재하지 않는 모든 상위 폴더 생성
 		}
-		System.out.println(files.size());
 		
 		// 공지 작성 로직 순서
 		// 1. 공지 테이블에 insert 한다
@@ -157,7 +184,7 @@ public class NoticeController {
 	@RequestMapping(value = "/download.do", method = RequestMethod.POST)
 	public void download(HttpServletResponse response, HttpServletRequest request, NoticeFileVO vo) throws IOException {
 		
-		File f = new File(docService.getPath(request), vo.getRealNm());
+		File f = new File(noticeService.getPath(request), vo.getRealNm());
         // file 다운로드 설정
         response.setContentType("application/download");
         response.setContentLength((int)f.length());

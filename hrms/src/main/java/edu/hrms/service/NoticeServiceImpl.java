@@ -1,18 +1,27 @@
 package edu.hrms.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import edu.hrms.dao.NoticeDAO;
+import edu.hrms.vo.DocFileVO;
 import edu.hrms.vo.NoticeFileVO;
 import edu.hrms.vo.NoticeVO;
 
@@ -108,6 +117,31 @@ public class NoticeServiceImpl implements NoticeService{
 	@Override
 	public String getPath(HttpServletRequest request) {
 		return request.getSession().getServletContext().getRealPath("/resources/upload"); // ¿î¿µ
+	}
+	@Override
+	public int deleteNoticeFiles(Map<String, Object> map) {
+		return noticeDAO.deleteNoticeFiles(map);
+	}
+	@Override
+	public List<MultipartFile> getMultipartFileList(HttpServletRequest request, List<DocFileVO> list) {
+		
+		List<MultipartFile> mfList = new ArrayList<>();
+		String path = getPath(request);
+		for(int i=0; i<list.size(); i++) {
+			try {
+				File f = new File(path, list.get(i).getRealNm());
+				FileItem fileItem = new DiskFileItem("originFile", Files.probeContentType(f.toPath()), false, f.getName(), (int) f.length(), f.getParentFile());
+				InputStream input = new FileInputStream(f);
+				OutputStream os = fileItem.getOutputStream();
+				IOUtils.copy(input, os);
+				MultipartFile mf = new CommonsMultipartFile(fileItem);
+				mfList.add(mf);
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 	
 }

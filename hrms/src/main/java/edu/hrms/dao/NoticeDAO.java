@@ -38,6 +38,10 @@ public class NoticeDAO {
 	public int insertNoticeFile(List<NoticeFileVO> list) {
 		return sqlSession.insert(namespace + ".insertNoticeFile", list);
 	}
+	//노티스의 파일삭제
+	public int deleteNoticeFiles(Map<String, Object> map) {
+		return sqlSession.delete(namespace+".deleteNoticeFiles", map);
+	}
 	//공지 하나 선택
 	public NoticeVO selectNoticeByNoticeNo(int noticeNo) {
 		return sqlSession.selectOne(namespace+".selectNoticeByNoticeNo", noticeNo);
@@ -46,6 +50,7 @@ public class NoticeDAO {
 	public List <NoticeFileVO> selectNoticeFileByNoticeNo(int noticeNo) {
 		return sqlSession.selectList(namespace+".selectNoticeFileByNoticeNo", noticeNo);
 	}
+	//노티스의 파일들 셀렉트
 	public List<NoticeVO> selectNoticeFilesByNoticeNo(int noticeNo) {
 		return sqlSession.selectList(namespace+".selectNotiecFilesByNoticeNo", noticeNo);
 	}
